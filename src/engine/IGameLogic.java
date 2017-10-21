@@ -8,7 +8,7 @@ public interface IGameLogic {
 
     void update(float interval, MouseInput mouseInput);
     
-    void render(Window window);
+    void render(Window window) throws Exception;
     
     void cleanup();
 }
