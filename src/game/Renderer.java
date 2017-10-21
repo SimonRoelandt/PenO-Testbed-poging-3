@@ -155,7 +155,7 @@ public class Renderer {
         ByteBuffer pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*3);  
         glReadPixels(0, 0, imageWidth, imageHeight, GL_RGB, GL_BYTE, pixels); 
         
-        //Scrijf naar een file om te testen voor de input/output tussen tesbed en autopilot gemaakt is
+      //Scrijf naar een file om te testen voor de input/output tussen tesbed en autopilot gemaakt is
         File file = new File("C:\\Image\\pixels.txt");
         boolean append = false;
         FileChannel wChannel = new FileOutputStream(file, append).getChannel();
