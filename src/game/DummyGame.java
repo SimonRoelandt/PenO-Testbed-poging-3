@@ -55,7 +55,7 @@ public class DummyGame implements IGameLogic {
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(1, -2, -5);
         gameItem.setPosition(0, 0, -2);
-        gameItems = new GameItem[] { gameItem , gameItem2, gameItem3};
+        gameItems = new GameItem[] { gameItem , gameItem2, gameItem3, gameItem4};
 
     }
 

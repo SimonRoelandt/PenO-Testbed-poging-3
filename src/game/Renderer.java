@@ -159,13 +159,15 @@ public class Renderer {
         for (int i = 0; i < imageWidth*imageHeight*3; i++)
         	pixelsarray[i] = pixels.get(i);
         
-      //Scrijf naar een file om te testen voor de input/output tussen tesbed en autopilot gemaakt is
+        
+        /*
+      	//Scrijf naar een file om te testen voor de input/output tussen tesbed en autopilot gemaakt is
         File file = new File("C:\\Image\\pixels.txt");
         boolean append = false;
         FileChannel wChannel = new FileOutputStream(file, append).getChannel();
         wChannel.write(pixels);
         wChannel.close(); 
-        
+        */
      
 
        
