@@ -44,7 +44,6 @@ public class DummyGame implements IGameLogic {
         
         
         Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, new float[]{1f,0f,0f}, new float[]{1f,0f,0f},  new float[]{0f,1f,0f},  new float[]{0f,1f,0f},  new float[]{0f,0f,1f},  new float[]{0f,0f,1f});
-        Balk balk = new Balk(0f, 0f, 0f, 1f, 1f, 1f, new float[]{1f,0f,0f}, new float[]{1f,0f,0f},  new float[]{1f,0f,0f},  new float[]{1f,0f,0f},  new float[]{1f,0f,0f},  new float[]{1f,0f,0f});
         Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
         GameItem gameItem = new GameItem(mesh);
         GameItem gameItem2 = new GameItem(mesh);
@@ -56,9 +55,8 @@ public class DummyGame implements IGameLogic {
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(1, -2, -5);
         gameItem.setPosition(0, 0, -2);
-        gameItems = new GameItem[] { gameItem , gameItem2, gameItem3, gameItem4};
-        gameItem.setPosition(0, 0, -10);
-        gameItems = new GameItem[] { gameItem};
+        gameItems = new GameItem[] { gameItem , gameItem2, gameItem3};
+
     }
 
     @Override
@@ -98,7 +96,7 @@ public class DummyGame implements IGameLogic {
     }
 
     @Override
-    public void render(Window window) {
+    public void render(Window window) throws Exception {
         renderer.render(window, camera, cameraPlane, gameItems);
     }
 
