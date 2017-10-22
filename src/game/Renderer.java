@@ -37,6 +37,7 @@ public class Renderer {
     private int imageWidth;
     private int imageHeight;
     private ByteBuffer pixels;
+    private Byte[] pixelsarray;
     
 
     public Renderer() {
@@ -48,6 +49,10 @@ public class Renderer {
     	this.imageWidth = window.getWidth();
     	this.imageHeight = 100;
     	this.imageWidth = 100;
+    	ByteBuffer pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*4);  
+    	this.pixels = pixels;
+    	Byte[] pixelsarray = new Byte[imageWidth*imageHeight*4];
+    	this.pixelsarray = pixelsarray;
     	
     	
     	
@@ -151,23 +156,23 @@ public class Renderer {
         
         
         
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-        ByteBuffer pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*4);  
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);     
         glReadPixels(0, 0, imageWidth, imageHeight, GL_RGBA, GL_BYTE, pixels);
-        
+
        
+        for (int i = 0; i<imageHeight*imageWidth*4; i++)
+        	pixelsarray[i] = pixels.get(i);
         
-        this.pixels = pixels;
-       
         //TESTEN
 
-        //TESTEN GEDAAN
+        
         /*
         glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         glBlitFramebuffer(0, 0,imageWidth, imageHeight, 0, 0,window.getWidth(), window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         */
        
+        //TESTEN GEDAAN
         
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         glViewport(0,0,window.getWidth(), window.getHeight());
@@ -190,7 +195,8 @@ public class Renderer {
             glDeleteRenderbuffers(renderbuffer);
             glDeleteRenderbuffers(depthbuffer);
             
-            
+            for (int i = 0; i<imageHeight*imageWidth*4; i++)
+            System.out.println(pixelsarray[i]);
         }
     }
 }
