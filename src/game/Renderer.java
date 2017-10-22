@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -37,7 +38,6 @@ public class Renderer {
     private int imageWidth;
     private int imageHeight;
     private ByteBuffer pixels;
-    private Byte[] pixelsarray;
     
 
     public Renderer() {
@@ -47,12 +47,8 @@ public class Renderer {
     public void init(Window window) throws Exception {
     	this.imageHeight = window.getHeight();
     	this.imageWidth = window.getWidth();
-    	this.imageHeight = 100;
-    	this.imageWidth = 100;
-    	ByteBuffer pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*4);  
-    	this.pixels = pixels;
-    	Byte[] pixelsarray = new Byte[imageWidth*imageHeight*4];
-    	this.pixelsarray = pixelsarray;
+    	this.imageHeight = 200;
+    	this.imageWidth = 200;
     	
     	
     	
@@ -113,7 +109,7 @@ public class Renderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    public void render(Window window, Camera camera, Camera cameraPlane, GameItem[] gameItems) {
+    public void render(Window window, Camera camera, Camera cameraPlane, GameItem[] gameItems) throws Exception {
         clear();
 
         if ( window.isResized() ) {
@@ -153,26 +149,30 @@ public class Renderer {
         } 
         //glViewport(0, 0, window.getWidth(), window.getHeight());
         
+   
+        //Maak byte[] aan van het zicht van de drone
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+        ByteBuffer pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*3);  
+        glReadPixels(0, 0, imageWidth, imageHeight, GL_RGB, GL_BYTE, pixels); 
         
-        
-        
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);     
-        glReadPixels(0, 0, imageWidth, imageHeight, GL_RGBA, GL_BYTE, pixels);
+      //Scrijf naar een file om te testen voor de input/output tussen tesbed en autopilot gemaakt is
+        File file = new File("C:\\Image\\pixels.txt");
+        boolean append = false;
+        FileChannel wChannel = new FileOutputStream(file, append).getChannel();
+        wChannel.write(pixels);
+        wChannel.close(); 
+        this.pixels = pixels;
 
        
-        for (int i = 0; i<imageHeight*imageWidth*4; i++)
-        	pixelsarray[i] = pixels.get(i);
-        
         //TESTEN
 
-        
+        //TESTEN GEDAAN
         /*
         glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         glBlitFramebuffer(0, 0,imageWidth, imageHeight, 0, 0,window.getWidth(), window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         */
        
-        //TESTEN GEDAAN
         
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         glViewport(0,0,window.getWidth(), window.getHeight());
@@ -187,10 +187,6 @@ public class Renderer {
         
 
     }
-    
-    public Byte[] getPixelsarray() {
-    	return pixelsarray;
-    }
 
     public void cleanup() {
         if (shaderProgram != null) {
@@ -199,10 +195,7 @@ public class Renderer {
             glDeleteRenderbuffers(renderbuffer);
             glDeleteRenderbuffers(depthbuffer);
             
-            /*
-            for (int i = 0; i<imageHeight*imageWidth*4; i++)
-            System.out.println(pixelsarray[i]);
-            */
+            
         }
     }
 }
