@@ -38,7 +38,7 @@ public class Renderer {
     private int imageWidth;
     private int imageHeight;
     private ByteBuffer pixels;
-    
+    private Byte[] pixelsarray;
 
     public Renderer() {
     	transformation = new Transformation();
@@ -49,6 +49,8 @@ public class Renderer {
     	this.imageWidth = window.getWidth();
     	this.imageHeight = 200;
     	this.imageWidth = 200;
+        this.pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*3);  
+    	this.pixelsarray = new Byte[imageWidth*imageHeight*4];
     	
     	
     	
@@ -152,8 +154,10 @@ public class Renderer {
    
         //Maak byte[] aan van het zicht van de drone
         glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-        ByteBuffer pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*3);  
         glReadPixels(0, 0, imageWidth, imageHeight, GL_RGB, GL_BYTE, pixels); 
+        
+        for (int i = 0; i < imageWidth*imageHeight*3; i++)
+        	pixelsarray[i] = pixels.get(i);
         
       //Scrijf naar een file om te testen voor de input/output tussen tesbed en autopilot gemaakt is
         File file = new File("C:\\Image\\pixels.txt");
@@ -161,17 +165,20 @@ public class Renderer {
         FileChannel wChannel = new FileOutputStream(file, append).getChannel();
         wChannel.write(pixels);
         wChannel.close(); 
-        this.pixels = pixels;
+        
+     
 
        
         //TESTEN
 
-        //TESTEN GEDAAN
         /*
         glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         glBlitFramebuffer(0, 0,imageWidth, imageHeight, 0, 0,window.getWidth(), window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         */
+        
+        //TESTEN GEDAAN
+        
        
         
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
@@ -188,6 +195,10 @@ public class Renderer {
 
     }
 
+    public Byte[] getPixelsarray() {
+    	return this.pixelsarray;
+    }
+    
     public void cleanup() {
         if (shaderProgram != null) {
             shaderProgram.cleanup();
