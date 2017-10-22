@@ -187,6 +187,10 @@ public class Renderer {
         
 
     }
+    
+    public Byte[] getPixelsarray() {
+    	return pixelsarray;
+    }
 
     public void cleanup() {
         if (shaderProgram != null) {
@@ -195,8 +199,10 @@ public class Renderer {
             glDeleteRenderbuffers(renderbuffer);
             glDeleteRenderbuffers(depthbuffer);
             
+            /*
             for (int i = 0; i<imageHeight*imageWidth*4; i++)
             System.out.println(pixelsarray[i]);
+            */
         }
     }
 }
