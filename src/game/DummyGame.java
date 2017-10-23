@@ -76,18 +76,17 @@ public class DummyGame implements IGameLogic {
         gameItem.setPosition(0, 0, -2);
         gameItems = new GameItem[] { gameItem , gameItem2, gameItem3, gameItem4, droneItem};
 
-        
+        //Maak config file aan voor de autopilot
         AutopilotConfig config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailsize(), drone.getEngineMass(),
         							drone.getWingMass(), drone.getTailMass, drone.getMaxThrust(), drone.getMaxAOA(),
         							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
         							renderer.fov, renderer.fov, renderer.imageWidth, renderer.imageHeight);
         
+        //Maak eerste input aan voor autopilot
         AutopilotInputs input = new Inputs(renderer.getPixelsarray(), drone.getX(), drone.getY(), drone.getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
         
-        
+        //Start de simulatie in autopilot
         simulationStarted(config,input);
-        
-        
         
     }
 
