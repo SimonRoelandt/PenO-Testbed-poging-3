@@ -30,13 +30,13 @@ public class Renderer {
     private int renderbuffer;
     private int framebuffer;
     private int depthbuffer;
-    private static float fov = (float) Math.toRadians(120.0f);
+    float fov = (float) Math.toRadians(120.0f);
     private static float z_near = 0.01f;
     private static float z_far = 1000.f;
     private Matrix4f projectionMatrix = new Matrix4f();
     private final Transformation transformation;
-    private int imageWidth;
-    private int imageHeight;
+    int imageWidth;
+    int imageHeight;
     private ByteBuffer pixels;
     private Byte[] pixelsarray;
 
