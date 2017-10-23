@@ -43,18 +43,20 @@ public class DummyGame implements IGameLogic {
         // Create the Mesh
         
         
-        Balk balk = new Balk(0f, 0f, 0f, 1f, 1f, 1f, new float[]{1f,0f,0f}, new float[]{1f,0f,0f},  new float[]{1f,0f,0f},  new float[]{1f,0f,0f},  new float[]{1f,0f,0f},  new float[]{1f,0f,0f});
+        Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, new float[]{1f,0f,0f}, new float[]{1f,0f,0f},  new float[]{0f,1f,0f},  new float[]{0f,1f,0f},  new float[]{0f,0f,1f},  new float[]{0f,0f,1f});
         Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
         GameItem gameItem = new GameItem(mesh);
         GameItem gameItem2 = new GameItem(mesh);
         GameItem gameItem3 = new GameItem(mesh);
+        GameItem gameItem4 = new GameItem(mesh);
+        gameItem4.setPosition(-2, -2, -2);
+        gameItem4.setRotation(-60f, 20f, 40f);
         gameItem3.setPosition(-1, -1, -3);
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(1, -2, -5);
-        gameItem.setPosition(0, 0, -10);
-        gameItems = new GameItem[] { gameItem};
-        
-        
+        gameItem.setPosition(0, 0, -2);
+        gameItems = new GameItem[] { gameItem , gameItem2, gameItem3, gameItem4};
+
     }
 
     @Override
@@ -84,14 +86,13 @@ public class DummyGame implements IGameLogic {
             cameraInc.y * CAMERA_POS_STEP,
             cameraInc.z * CAMERA_POS_STEP);
 
-        //cameraPlane.movePosition(0, 0.01f, 0.01f);
-        //cameraPlane.moveRotation(0f, 0.3f, 0f);
+        cameraPlane.movePosition(0, 0.01f, 0.01f);
+        cameraPlane.moveRotation(0f, 0.3f, 0f);
         // Update camera based on mouse            
         if (mouseInput.isRightButtonPressed()) {
             Vector2f rotVec = mouseInput.getDisplVec();
             camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
         }
-        
     }
 
     @Override
