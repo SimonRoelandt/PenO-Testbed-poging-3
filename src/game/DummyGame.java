@@ -53,6 +53,8 @@ public class DummyGame implements IGameLogic {
         gameItem2.setPosition(1, -2, -5);
         gameItem.setPosition(0, 0, -10);
         gameItems = new GameItem[] { gameItem};
+        
+        
     }
 
     @Override
@@ -89,6 +91,7 @@ public class DummyGame implements IGameLogic {
             Vector2f rotVec = mouseInput.getDisplVec();
             camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
         }
+        
     }
 
     @Override
