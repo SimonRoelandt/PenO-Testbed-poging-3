@@ -76,7 +76,7 @@ public class DummyGame implements IGameLogic {
 
         //Maak config file aan voor de autopilot
         AutopilotConfig config = new AutopilotConfig(drone.getGravity(), drone.getWingX(), drone.getTailsize(), drone.getEngineMass(),
-        							drone.getWingMass(), drone.getTailMass, drone.getMaxThrust(), drone.getMaxAOA(),
+        							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
         							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
         							renderer.fov, renderer.fov, renderer.imageWidth, renderer.imageHeight);
         
