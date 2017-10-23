@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import Autopilot.AutopilotConfig;
+import Autopilot.AutopilotInputs;
 import Autopilot.Config;
 import Autopilot.Inputs;
 import Autopilot.Outputs;
@@ -35,8 +36,6 @@ public class DummyGame implements IGameLogic {
     private static final float CAMERA_POS_STEP = 0.05f;
     
     private GameItem[] gameItems;
-    
-    private AutopilotConfig config;
     
     private Drone drone;
     
@@ -78,12 +77,15 @@ public class DummyGame implements IGameLogic {
         gameItems = new GameItem[] { gameItem , gameItem2, gameItem3, gameItem4, droneItem};
 
         
-        this.config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailsize(), drone.getEngineMass(),
+        AutopilotConfig config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailsize(), drone.getEngineMass(),
         							drone.getWingMass(), drone.getTailMass, drone.getMaxThrust(), drone.getMaxAOA(),
         							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
         							renderer.fov, renderer.fov, renderer.imageWidth, renderer.imageHeight);
         
-        simulationStarted(config);
+        AutopilotInputs input = new Inputs(renderer.getPixelsarray(), drone.getX(), drone.getY(), drone.getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
+        
+        
+        simulationStarted(config,input);
         
         
         
