@@ -148,6 +148,7 @@ public class DummyGame implements IGameLogic {
         for (GameItem gameItem : gameItems) {
             gameItem.getMesh().cleanUp();
         }
+        simulationEnded();
     }
 
 }
