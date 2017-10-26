@@ -44,7 +44,7 @@ private Fysica  fysica;
 	private float roll;
 	
 	
-	public Drone(double xPos, double yPos, double zPos, float[] velocity ) {
+	public Drone(float xPos, float yPos, float zPos, float[] velocity ) {
 		this.leftWing         = new Airfoil(0, wingMass, 0);
 		this.rightWing        = new Airfoil(0,wingMass, 0);
 		this.horStabilization = new Airfoil(0, tailMass/2, 0);
@@ -53,9 +53,9 @@ private Fysica  fysica;
 		
 		fysica = new Fysica();
 		
-		this.xPos = (float) xPos;
-		this.yPos = (float) yPos;
-		this.zPos = (float) zPos;
+		this.xPos = xPos;
+		this.yPos = yPos;
+		this.zPos = zPos;
 		this.velocity = velocity;
 		
 		this.maxAOA = 0; //Moet nog aangepast worden
