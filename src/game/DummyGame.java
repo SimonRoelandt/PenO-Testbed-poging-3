@@ -6,7 +6,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import api.*;
+
 import drone.Drone;
 import engine.Balk;
 import engine.GameItem;
@@ -17,7 +17,9 @@ import engine.Window;
 import graph.Camera;
 import graph.Mesh;
 
+import api.*;
 import autopilotLibrary.CommunicatieTestbed;
+
 
 public class DummyGame implements IGameLogic {
 
