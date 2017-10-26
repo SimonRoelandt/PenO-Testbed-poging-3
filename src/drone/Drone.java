@@ -4,12 +4,19 @@ import fysica.Fysica;
 
 public class Drone {
 	
+private Fysica  fysica;
+	
+	private static float gravity = (float) 9.81;
+
+	
 	private Airfoil leftWing;
 	private Airfoil rightWing;
 	private Airfoil horStabilization;
 	private Airfoil verStabilization;
+	
+	
 	private Engine  engine;
-	private Fysica  fysica;
+	
 	
 	private float xPos;
 	private float yPos;
@@ -17,21 +24,32 @@ public class Drone {
 	
 	private float[] velocity;
 	
-	private float maxAOA;
-	private float wingX;
-	private float tailSize;
+	private static float wingX = 4;
+	private static float tailSize = 4;
 	
-	private float wingLiftSlope;
-	private float horStabLiftSlope;
-	private float verStabLiftSlope;
+	private static float engineMass = 50;
+	private static float wingMass = 50;
+	private static float tailMass = 50;
+	
+	private static float maxThrust = 1000;
+	private static float maxAOA = (float) (Math.PI /12);
+	
+	private static float wingLiftSlope = 1;
+	private static float horStabLiftSlope = 1;
+	private static float verStabLiftSlope = 1;
 	
 	
-	public Drone(double thrust, double leftwingi, double rightwingi, double horStabilization, double verStabilization, double xPos, double yPos, double zPos, float[] velocity ) {
-		this.leftWing         = new Airfoil(leftwingi, 5, 0);
-		this.rightWing        = new Airfoil(rightwingi,5, 0);
-		this.horStabilization = new Airfoil(horStabilization, 5, 0);
-		this.verStabilization = new Airfoil(verStabilization, 5, 0);
-		this.engine           = new Engine(thrust, 5);
+	private float heading;
+	private float pitch;
+	private float roll;
+	
+	
+	public Drone(double xPos, double yPos, double zPos, float[] velocity ) {
+		this.leftWing         = new Airfoil(0, wingMass, 0);
+		this.rightWing        = new Airfoil(0,wingMass, 0);
+		this.horStabilization = new Airfoil(0, tailMass/2, 0);
+		this.verStabilization = new Airfoil(0, tailMass/2, 1);
+		this.engine           = new Engine(0, engineMass);
 		
 		fysica = new Fysica();
 		
@@ -162,7 +180,7 @@ public class Drone {
 	}
 	
 	public float getWingSlope() {
-		return wingLiftSlope;
+		return this.wingLiftSlope;
 	}
 	
 	public void setThrust(float thrust) {
@@ -217,20 +235,29 @@ public class Drone {
 	public float getVerStabLiftSlope() {
 		return this.verStabLiftSlope;
 	}
+	
+	public void setHeading(float heading) {
+		this.heading = heading;
+	}
 
 	public float getHeading() {
-		// TODO Auto-generated method stub
-		return (Float) 0f;
+		return this.heading;
+	}
+	
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
 	}
 
 	public float getPitch() {
-		// TODO Auto-generated method stub
-		return (Float) 0f;
+		return this.pitch;
+	}
+	
+	public void setRoll(float roll) {
+		this.roll = roll;
 	}
 
 	public float getRoll() {
-		// TODO Auto-generated method stub
-		return (Float) 0f;
+		return this.roll;
 	}
 	
 	

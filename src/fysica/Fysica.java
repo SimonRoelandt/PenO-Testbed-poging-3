@@ -29,10 +29,24 @@ public class Fysica implements IFysica {
 	@Override
 	public float[] liftForce(Airfoil air) {
 		float[] normal = crossProduct(air.getAxisVector(),air.getAttackVector());
-		float[] airspeed = velocity;
+		System.out.print("Normal: ");
+		print(normal);
+		float[] airspeed = air.getVelocityAirfoil();
+		print(airspeed);
 		float[] projectedAirspeed = product(scalarProduct(airspeed,air.getAxisVector()) / scalarProduct(air.getAxisVector(), air.getAxisVector()), air.getAxisVector());
-		float   angleOfAttack = (float) -Math.atan2(scalarProduct(projectedAirspeed,normal), scalarProduct(airspeed,air.getAxisVector()));
+		System.out.print("ProjectedAirspeed: ");
+		print(projectedAirspeed);
+		System.out.print("AttackVector: ");
+		print(air.getAttackVector());
+		float angleOfAttack = (float) -Math.atan2(scalarProduct(projectedAirspeed,normal), scalarProduct(projectedAirspeed,air.getAttackVector()));
+		if (air.isVertical()) {
+			angleOfAttack = 0;
+		}
+		else angleOfAttack = (float) 1.2;
+		System.out.println("ScalarProduct: " + scalarProduct(projectedAirspeed,air.getAttackVector()));
 		float[] liftForce = product(angleOfAttack * scalarProduct(projectedAirspeed, projectedAirspeed), product(liftSlope, normal));
+		System.out.print("liftforce: ");
+		print(liftForce);
 		return liftForce;
 	}
 
@@ -101,6 +115,10 @@ public class Fysica implements IFysica {
 	public float[] sum(float[] v1, float[] v2) {
 		float[] sum = {v1[0]+v2[0], v1[1]+v2[1], v1[2]+v2[2]};
 		return sum;
+	}
+	
+	public void print(float[] force) {
+		System.out.println(force[0] + " " + force[1] + " " + force[2]);
 	}
 
 	
