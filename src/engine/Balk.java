@@ -38,16 +38,16 @@ public class Balk {
 		float[] positions = new float[]{
 				
 				//front 
-		        xpos,  ypos+heigth,  zpos,
-		        xpos,  ypos,  zpos,
-		        xpos+length,  ypos,  zpos,
-		        xpos+length,  ypos+heigth,  zpos,
-		         
-		       //back 
 		        xpos,  ypos+heigth,  zpos+width,
 		        xpos,  ypos,  zpos+width,
 		        xpos+length,  ypos,  zpos+width,
 		        xpos+length,  ypos+heigth,  zpos+width,
+		         
+		       //back 
+		        xpos,  ypos+heigth,  zpos,
+		        xpos,  ypos,  zpos,
+		        xpos+length,  ypos,  zpos,
+		        xpos+length,  ypos+heigth,  zpos,
 			         
 			    //left 
 		        xpos,  ypos+heigth,  zpos+width,
