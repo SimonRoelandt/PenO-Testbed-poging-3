@@ -51,8 +51,7 @@ public class Renderer {
     	this.imageWidth = 200;
         this.pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*3);  
     	this.pixelsarray = new byte[imageWidth*imageHeight*3];
-    	
-    	
+
     	
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Utils.loadResource("/vertex.vs"));
@@ -100,10 +99,7 @@ public class Renderer {
         
         //create the pixel buffer
         
-       
-        
-        
-        
+
         window.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 

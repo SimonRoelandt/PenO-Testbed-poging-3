@@ -118,6 +118,12 @@ public class Drone {
 		return v;
 	}
 	
+	public void setPos(float x, float y, float z){
+		this.xPos = x;
+		this.yPos = y;
+		this.zPos = z;
+	}
+	
 	public void setVelocity(float[] vel) {
 		this.velocity = vel;
 	}

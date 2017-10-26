@@ -50,7 +50,7 @@ public class DummyGame implements IGameLogic {
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
         timer = new Timer();
-        drone = new Drone(0, 0, 0, 0, 0, -3, -3, -3, new float[]{0,0,0});
+        drone = new Drone(0, 0, 0, 0, 0, 0, 0, 0, new float[]{0,0,0});
     }
 
     @Override
@@ -146,6 +146,8 @@ public class DummyGame implements IGameLogic {
         drone.setRightWingInclination(outputs.getRightWingInclination());
         drone.setHorStabInclination(outputs.getHorStabInclination());
         drone.setVerStabInclination(outputs.getVerStabInclination());
+        
+        drone.setPos(drone.getXPos()-1,drone.getXPos()-1,drone.getXPos()-1);
         
     }
 
