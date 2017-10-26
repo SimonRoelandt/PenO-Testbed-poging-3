@@ -6,6 +6,8 @@ public class Airfoil implements DroneObject {
 
 	private float inclination;
 	private float mass;
+	private float[] velocity;
+	private int vertical;
 	
 	private float[] axisVector = {0,0,0};
 	private float[] attackVector = {0,0,0};
@@ -67,7 +69,6 @@ public class Airfoil implements DroneObject {
 			attackVector[2] = (float) -Math.cos(incl);
 		}
 		else {
-			float [] v = {(float) Math.sin(incl),(float) Math.sin(0), (float) -Math.cos(incl)};
 			attackVector[0] = (float) Math.sin(incl);
 			attackVector[1] = (float) Math.sin(0);
 			attackVector[2] = (float) -Math.cos(incl);
@@ -76,6 +77,25 @@ public class Airfoil implements DroneObject {
 	
 	public float[] getAttackVector() {
 		return this.attackVector;
+	}
+	
+	public void setVelocityAirfoil(float[] vel) {
+		this.velocity = vel;
+	}
+	
+	public float[] getVelocityAirfoil() {
+		return this.velocity;
+	}
+	
+	public void setInclinationAngle(float angle) {
+		this.inclination = angle;
+	}
+	
+	public boolean isVertical() {
+		if (this.vertical == 1) {
+			return true;
+		}
+		else return false;
 	}
 	
 	
