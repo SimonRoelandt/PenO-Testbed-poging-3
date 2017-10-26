@@ -26,6 +26,8 @@ public class Window {
 
     private boolean vSync;
 
+    public boolean simulationEnded = false;
+    
     public Window(String title, int width, int height, boolean vSync) {
         this.title = title;
         this.width = width;
@@ -70,6 +72,7 @@ public class Window {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
             }
+           
         });
 
         // Get the resolution of the primary monitor
@@ -147,5 +150,7 @@ public class Window {
     public void update() {
         glfwSwapBuffers(windowHandle);
         glfwPollEvents();
+        if (simulationEnded == true)
+        	glfwSetWindowShouldClose(windowHandle, true);
     }
 }
