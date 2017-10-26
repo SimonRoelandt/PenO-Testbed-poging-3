@@ -59,7 +59,6 @@ public class DummyGame implements IGameLogic {
         timer.init();
         // Create the Mesh
         
-        //drone = new Drone(0, 0, 0, 0, 0, -3, -3, -3, new float[]{0,0,0});
         
         Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, drone.getXPos()+0.5f, drone.getYPos()+0.5f, drone.getZPos()+0.5f, new float[]{0f,0f,0f}, new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f});
         Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, new float[]{1f,0f,0f}, new float[]{1f,0f,0f},  new float[]{0f,1f,0f},  new float[]{0f,1f,0f},  new float[]{0f,0f,1f},  new float[]{0f,0f,1f});
@@ -75,7 +74,7 @@ public class DummyGame implements IGameLogic {
         gameItem3.setPosition(-1, -1, -3);
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(1, -2, -5);
-        gameItem.setPosition(0, 0, -2);
+        gameItem.setPosition(0, 0, -20);
         gameItems = new GameItem[] { gameItem, droneItem};
 
         //Maak config file aan voor de autopilot
