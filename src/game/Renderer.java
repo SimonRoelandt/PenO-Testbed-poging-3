@@ -195,8 +195,6 @@ public class Renderer {
         
         
         shaderProgram.unbind();
-        
-        
 
     }
 

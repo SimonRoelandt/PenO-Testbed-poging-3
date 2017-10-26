@@ -126,8 +126,8 @@ public class DummyGame implements IGameLogic {
             cameraInc.y * CAMERA_POS_STEP,
             cameraInc.z * CAMERA_POS_STEP);
 
-        cameraPlane.movePosition(0, 0.01f, 0.01f);
-        cameraPlane.moveRotation(0f, 0.3f, 0f);
+        cameraPlane.movePosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+        cameraPlane.moveRotation(0f, 0f, 0f);
         
         // Update camera based on mouse            
         if (mouseInput.isRightButtonPressed()) {
@@ -137,6 +137,8 @@ public class DummyGame implements IGameLogic {
         
         
         Outputs outputs =  (Outputs) CommunicatieTestbed.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime()));
+        
+        
         
         //Schrijf Output
         drone.setThrust(outputs.getThrust());
