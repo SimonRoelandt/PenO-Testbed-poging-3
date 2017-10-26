@@ -4,17 +4,19 @@ import fysica.Fysica;
 
 public class Engine implements DroneObject{
 
-	private double thrust;
-	private double mass;
+	private float thrust;
+	private float mass;
 	private float[] gravation;
+	private float maxThrust; //Misschien nog aanpassen
 	
 	private Fysica fysica;
 	
 	public Engine(double thrust, double mass) {
-		this.thrust = thrust;
-		this.mass = mass;
+		this.thrust = (float) thrust;
+		this.mass = (float) mass;
 		fysica = new Fysica();
-		this.gravation = fysica.gravitationForce();
+		this.gravation = fysica.gravitationForce(this);
+		this.maxThrust = 5000; //Misschien nog aanpassen
 	}
 	
 	public float[] getThrust() {
@@ -22,7 +24,11 @@ public class Engine implements DroneObject{
 		return v1;
 	}
 	
-	public double getMass() {
+	public float getThrustScalar() {
+		return this.thrust;
+	}
+	
+	public float getMass() {
 		return this.mass;
 	}
 	
@@ -34,6 +40,14 @@ public class Engine implements DroneObject{
 	@Override
 	public float[] getGraviation() {
 		return fysica.gravitationForce(this); 
+	}
+
+	public void setThrust(float thrust) {
+		this.thrust = thrust;
+	}
+	
+	public float getMaxThrust() {
+		return this.maxThrust;
 	}
 
 	
