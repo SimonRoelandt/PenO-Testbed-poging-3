@@ -4,17 +4,81 @@ import drone.Airfoil;
 import drone.Drone;
 import drone.DroneObject;
 import drone.Engine;
+import javax.vecmath.Matrix3f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Matrix3f;
+
 
 public class Fysica implements IFysica {
 	
 	final static float gravity = (float) 9.81;
 	
-	private float[] velocity= null;
+	private Vector3f velocity;
 
 	private float liftSlope;
 	
 	public float getGravity() {
 		return this.gravity;
+	}
+	
+	
+	
+	
+	private Matrix3f getRollMatrix(float roll){
+		
+		return new Matrix3f(
+				 (float) Math.cos(roll),
+				(float)  Math.sin(roll),
+				(float) 0.0,
+				
+				(float) Math.sin(roll),
+				(float) Math.cos(roll),
+				(float)0.0,
+				
+				(float) 0.0,
+				(float)0.0,
+				(float)1.0);
+	}
+	
+	private Matrix3f getPitchMatrix(float Pitch){
+		
+		return new Matrix3f(
+				(float) 1.0,
+				(float)0.0,
+				(float)0.0,
+				
+				(float)0,
+				(float) Math.cos(Pitch),
+				(float)-Math.sin(Pitch),
+				
+				(float) 0.0,
+				(float)Math.sin(Pitch),
+				(float)Math.cos(Pitch));
+	}
+	
+	private Matrix3f getHeadingMatrix(float Heading){
+		
+		return new Matrix3f(
+				 (float) Math.cos(Heading),
+				(float)  Math.sin(Heading),
+				(float) 0.0,
+				
+				(float) Math.sin(Heading),
+				(float) Math.cos(Heading),
+				(float)0.0,
+				
+				(float) 0.0,
+				(float)0.0,
+				(float)1.0);
+	}
+	
+	private Vector3f convertToWorldAxes(Vector3f vector,float Roll, float Pitch, float Heading){
+		Matrix3f temp= new Matrix3f();
+		Matrix3f temp1= new Matrix3f();
+		temp.mul(this.getRollMatrix(Roll),this.getPitchMatrix(Pitch));
+		temp1.mul(this.getHeadingMatrix(Heading),temp);
+		
+		return temp
 	}
 	
 	@Override
