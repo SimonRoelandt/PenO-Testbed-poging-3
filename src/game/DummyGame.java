@@ -66,7 +66,7 @@ public class DummyGame implements IGameLogic {
         
         
         Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, 1f, 1f, 1f, new float[]{0f,0f,0f}, new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f});
-        Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{255f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
+        Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{115f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
         Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
         Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
         GameItem gameItem = new GameItem(mesh,true);
@@ -156,6 +156,8 @@ drone.getEngine().setThrust(outputs.getThrust());
         
         cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         cameraPlane.setRotation(0f, 0f, 0f);
+        
+        System.out.println(drone.getZPos() - gameItems[0].getPosition().z);
         
         
         //bepaalt wanneerde simulatie stopt
