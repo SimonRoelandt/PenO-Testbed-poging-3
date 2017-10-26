@@ -14,6 +14,7 @@ public class Balk {
 	private float[] colorright;
 	private float[] colorup;
 	private float[] colordown;
+	
 
 	public Balk(float xpos, float ypos, float zpos, float length, float width, float heigth,
 			float[] colorfront,float[] colorback,float[] colorleft,float[] colorright,float[] colorup,float[] colordown ) {
@@ -30,6 +31,8 @@ public class Balk {
 	this.colorup = colorup;
 	this.colordown = colordown;
 	}
+	
+	
 	
 	public float[] positions() {
 		float[] positions = new float[]{

@@ -50,7 +50,7 @@ public class Renderer {
     	this.imageHeight = 200;
     	this.imageWidth = 200;
         this.pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*3);  
-    	this.pixelsarray = new byte[imageWidth*imageHeight*4];
+    	this.pixelsarray = new byte[imageWidth*imageHeight*3];
     	
     	
     	
@@ -145,9 +145,11 @@ public class Renderer {
         
         viewMatrix = transformation.getViewMatrix(cameraPlane);
         for(GameItem gameItem : gameItems) {
-        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
-        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-        	gameItem.getMesh().renderCameraPlane(framebuffer, imageWidth, imageHeight);
+        	if(gameItem.getRenderOnPlaneView()){
+        		Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+            	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+            	gameItem.getMesh().renderCameraPlane(framebuffer, imageWidth, imageHeight);
+        	}
         } 
         //glViewport(0, 0, window.getWidth(), window.getHeight());
         
@@ -155,6 +157,7 @@ public class Renderer {
         //Maak byte[] aan van het zicht van de drone
         glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
         glReadPixels(0, 0, imageWidth, imageHeight, GL_RGB, GL_BYTE, pixels); 
+        
         
         for (int i = 0; i < imageWidth*imageHeight*3; i++)
         	pixelsarray[i] = pixels.get(i);
@@ -192,8 +195,6 @@ public class Renderer {
         
         
         shaderProgram.unbind();
-        
-        
 
     }
 

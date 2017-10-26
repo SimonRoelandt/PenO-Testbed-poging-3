@@ -10,12 +10,18 @@ public class GameItem {
 	private final Vector3f position;
 	private float scale;
 	private final Vector3f rotation;
+	private boolean renderOnPlaneView;
 	
-	public GameItem(Mesh mesh) {
+	public GameItem(Mesh mesh,boolean render) {
 		this.mesh = mesh;
 		position = new Vector3f(0,0,0);
 		scale = 1;
 		rotation = new Vector3f(0,0,0);
+		this.renderOnPlaneView = render;
+	}
+	
+	public boolean getRenderOnPlaneView(){
+		return this.renderOnPlaneView;
 	}
 	
 	public Vector3f getPosition() {
