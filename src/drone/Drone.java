@@ -1,5 +1,7 @@
 package drone;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import fysica.Fysica;
 
 public class Drone {
@@ -22,7 +24,7 @@ private Fysica  fysica;
 	private float yPos;
 	private float zPos;
 	
-	private float[] velocity;
+	private Vector3f velocity;
 	
 	private static float wingX = 4;
 	private static float tailSize = 4;
@@ -44,7 +46,7 @@ private Fysica  fysica;
 	private float roll;
 	
 	
-	public Drone(float xPos, float yPos, float zPos, float[] velocity ) {
+	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {
 		this.leftWing         = new Airfoil(0, wingMass, 0);
 		this.rightWing        = new Airfoil(0,wingMass, 0);
 		this.horStabilization = new Airfoil(0, tailMass/2, 0);
@@ -58,35 +60,23 @@ private Fysica  fysica;
 		this.zPos = zPos;
 		this.velocity = velocity;
 		
-		this.maxAOA = 0; //Moet nog aangepast worden
-		this.wingX  = 0;
-		this.tailSize = 0;
-		
-		this.wingLiftSlope = 0;
-		this.horStabLiftSlope = 0;
-		this.verStabLiftSlope = 0;
 	}
 	
-	public float getThrust() {
-		return this.getEngine().getThrustScalar();
-	}
 	
-	public float getGravity() {
-		return fysica.getGravity();
-	}
-	
-	public float[] getTotalForceDrone() {
-		return fysica.totalForceDrone(this);
-	}
-	
-	public float[] getNewPosition() {
+	//Twee belangrijkste functies
+	public Vector3f getNewPosition() {
 		return fysica.nextPosition(this, 1);
 	}
 	
-	public float[] getNewVelocity() {
+	public Vector3f getNewVelocity() {
 		return fysica.velocity(this, 1);
 	}
 	
+	public Vector3f getTotalForceDrone() {
+		return fysica.totalForceDrone(this);
+	}
+	
+	//geeft alle airfoils + engine
 	public Airfoil getLeftWing() {
 		return this.leftWing;
 	}
@@ -105,6 +95,15 @@ private Fysica  fysica;
 	
 	public Engine getEngine() {
 		return this.engine;
+	}
+	
+	
+	public float getThrust() {
+		return this.getEngine().getThrustScalar();
+	}
+	
+	public float getGravity() {
+		return fysica.getGravity();
 	}
 	
 	public void setXPos(float x) {
@@ -131,8 +130,8 @@ private Fysica  fysica;
 		return this.zPos;
 	}
 	
-	public float[] getPos() {
-		float[] v = {getXPos(), getYPos(), getZPos()};
+	public Vector3f getPos() {
+		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
 		return v;
 	}
 	
@@ -142,45 +141,16 @@ private Fysica  fysica;
 		this.zPos = z;
 	}
 	
-	public void setVelocity(float[] vel) {
+	public void setVelocity(Vector3f vel) {
 		this.velocity = vel;
+		this.getLeftWing().setVelocityAirfoil(vel);
+		this.getRightWing().setVelocityAirfoil(vel);
+		this.getHorStabilization().setVelocityAirfoil(vel);
+		this.getVerStabilization().setVelocityAirfoil(vel);
 	}
 	
-	public float[] getVelocity() {
+	public Vector3f getVelocity() {
 		return this.velocity;
-	}
-	
-	public float getMaxThrust() {
-		return this.getEngine().getMaxThrust();
-	}
-	
-	public float getMaxAOA() {
-		return this.maxAOA;
-	}
-	
-	//Alle vleugels hebben dezelfde massa
-	public float getWingMass() {
-		return this.getLeftWing().getMass();
-	}
-	
-	public float getTailMass() {
-		return this.getHorStabilization().getMass() + this.getVerStabilization().getMass();
-	}
-	
-	public float getWingX() {
-		return this.wingX;
-	}
-	
-	public float getTailSize() {
-		return tailSize;
-	}
-	
-	public float getEngineMass() {
-		return this.getEngine().getMass();
-	}
-	
-	public float getWingSlope() {
-		return this.wingLiftSlope;
 	}
 	
 	public void setThrust(float thrust) {
@@ -223,18 +193,6 @@ private Fysica  fysica;
 		DroneObject[] droneObj = {getLeftWing(), getRightWing(), getHorStabilization(), getVerStabilization(), getEngine()};
 		return droneObj;
 	}
-
-	public float getWingLiftSlope() {
-		return this.wingLiftSlope;
-	}
-
-	public float getHorStabLiftSlope() {
-		return this.horStabLiftSlope;
-	}
-
-	public float getVerStabLiftSlope() {
-		return this.verStabLiftSlope;
-	}
 	
 	public void setHeading(float heading) {
 		this.heading = heading;
@@ -260,7 +218,48 @@ private Fysica  fysica;
 		return this.roll;
 	}
 	
+	//getters van alle finals
 	
+	public float getWingX() {
+		return this.wingX;
+	}
+	
+	public float getTailSize() {
+		return tailSize;
+	}
+	
+	public float getEngineMass() {
+		return this.getEngine().getMass();
+	}
+	
+	//Alle vleugels hebben dezelfde massa
+	public float getWingMass() {
+		return this.getLeftWing().getMass();
+	}
+		
+	public float getTailMass() {
+		return this.getHorStabilization().getMass() + this.getVerStabilization().getMass();
+	}
+	
+	public float getMaxThrust() {
+		return this.getEngine().getMaxThrust();
+	}
+	
+	public float getMaxAOA() {
+		return this.maxAOA;
+	}
+	
+	public float getWingLiftSlope() {
+		return this.wingLiftSlope;
+	}
+
+	public float getHorStabLiftSlope() {
+		return this.horStabLiftSlope;
+	}
+
+	public float getVerStabLiftSlope() {
+		return this.verStabLiftSlope;
+	}
 	
 	
 	

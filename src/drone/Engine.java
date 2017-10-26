@@ -1,12 +1,14 @@
 package drone;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import fysica.Fysica;
 
 public class Engine implements DroneObject{
 
 	private float thrust;
 	private float mass;
-	private float[] gravation;
+	private Vector3f gravation;
 	private float maxThrust; //Misschien nog aanpassen
 	
 	private Fysica fysica;
@@ -19,8 +21,8 @@ public class Engine implements DroneObject{
 		this.maxThrust = 5000; //Misschien nog aanpassen
 	}
 	
-	public float[] getThrust() {
-		float[] v1 = {0, 0 ,(float) - this.thrust};
+	public Vector3f getThrust() {
+		Vector3f v1 = new Vector3f(0, 0 ,(float) - this.thrust);
 		return v1;
 	}
 	
@@ -33,12 +35,12 @@ public class Engine implements DroneObject{
 	}
 	
 	@Override
-	public float[] getTotalForce() {
+	public Vector3f getTotalForce() {
 		return fysica.totalForce(this);
 	}
 
 	@Override
-	public float[] getGraviation() {
+	public Vector3f getGraviation() {
 		return fysica.gravitationForce(this); 
 	}
 

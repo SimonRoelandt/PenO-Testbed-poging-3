@@ -1,12 +1,14 @@
 package drone;
 
+import org.lwjgl.util.vector.Vector3f;
+
 public interface DroneObject {
 	
 	public float getMass();
 	
-	public float[] getGraviation();
+	public Vector3f getGraviation();
 	
-	public float[] getTotalForce();
+	public Vector3f getTotalForce();
 	
 
 }

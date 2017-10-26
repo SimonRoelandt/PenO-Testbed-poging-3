@@ -1,5 +1,7 @@
 package fysica;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import drone.Airfoil;
 import drone.Drone;
 import drone.DroneObject;
@@ -9,9 +11,11 @@ public class Fysica implements IFysica {
 	
 	final static float gravity = (float) 9.81;
 	
-	private float[] velocity= null;
+	private float[] velocity= {0,25,0};
 
-	private float liftSlope;
+	private float liftSlope = (float) 1.5;
+	
+	private static Vector3f vector = new Vector3f(0,0,0); //Voor berekeningen
 	
 	public float getGravity() {
 		return this.gravity;
@@ -65,13 +69,14 @@ public class Fysica implements IFysica {
 		DroneObject[] objArray = drone.getDroneObj();
 		float[] v = {0,0,0};
 		for (DroneObject obj: objArray) {
-			sum(obj.getTotalForce(), v);
+			v = sum(obj.getTotalForce(), v);
+			//print(obj.getTotalForce());
 		}
 		return v;
 	}
 	
 	public float[] acceleration(Drone drone) {
-		float[] force = drone.getTotalForceDrone();
+		Vector3f force = drone.getTotalForceDrone();
 		DroneObject[] objArray = drone.getDroneObj();
 		float mass = 0;
 		for (DroneObject obj : objArray) {
@@ -96,10 +101,8 @@ public class Fysica implements IFysica {
 	
 	//vector1.xcoordinaat*vector2.xcoordinaat+vector1.ycoordinaat*vector2.ycoordinaat+vector1.zcoordinaat*vector2.zcoordinaat;	
 	
-	public float[] crossProduct(float[] v1, float[] v2) {
-		float[] v = {v1[1] * v2[2] - v1[2] * v2[1],
-					 v1[2] * v2[0] - v1[0] * v2[2],
-					 v1[0] * v2[1] - v1[2] * v2[0] };
+	public Vector3f crossProduct(Vector3f v1, Vector3f v2) {
+		Vector3f v = vector.cross(v1,v2,null);
 		return v;
 	}
 	
@@ -108,12 +111,12 @@ public class Fysica implements IFysica {
 		return p;
 	}
 	
-	public float scalarProduct(float[] v1, float[] v2) {
-		return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+	public float scalarProduct(Vector3f v1, Vector3f v2) {
+		return vector.dot(v1,v2);
 	}
 	
-	public float[] sum(float[] v1, float[] v2) {
-		float[] sum = {v1[0]+v2[0], v1[1]+v2[1], v1[2]+v2[2]};
+	public Vector3f sum(Vector3f v1, Vector3f v2) {
+		Vector3f sum = vector.add(v1, v2, null);
 		return sum;
 	}
 	

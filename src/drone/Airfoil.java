@@ -1,16 +1,18 @@
 package drone;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import fysica.Fysica;
 
 public class Airfoil implements DroneObject {
 
 	private float inclination;
 	private float mass;
-	private float[] velocity;
+	private Vector3f velocity;
 	private int vertical;
 	
-	private float[] axisVector = {0,0,0};
-	private float[] attackVector = {0,0,0};
+	private Vector3f axisVector = new Vector3f(0,0,0);
+	private Vector3f attackVector = new Vector3f(0,0,0);
 	
 	private Fysica fysica;
 	
@@ -22,7 +24,7 @@ public class Airfoil implements DroneObject {
 		setAttackVector(inclination, vertical);
 	}
 	
-	public float[] getTotalForce() {
+	public Vector3f getTotalForce() {
 		return fysica.totalForce(this);
 	}
 	
@@ -39,24 +41,24 @@ public class Airfoil implements DroneObject {
 	}
 
 	@Override
-	public float[] getGraviation() {
+	public Vector3f getGraviation() {
 		return fysica.gravitationForce(this);
 	}
 	
 	public void setAxisVector(int vertical) {
 		if (vertical == 0) {
-			axisVector[0] = 1;
-			axisVector[1] = 0;
-			axisVector[2] = 0;
+			axisVector.x = 1;
+			axisVector.y = 0;
+			axisVector.z = 0;
 		}
 		else {
-			axisVector[0] = 0;
-			axisVector[1] = 1;
-			axisVector[2] = 0;
+			axisVector.x = 0;
+			axisVector.y = 1;
+			axisVector.z = 0;
 		}
 	}
 	
-	public float[] getAxisVector() {
+	public Vector3f getAxisVector() {
 		return this.axisVector;
 	}
 	
@@ -64,26 +66,26 @@ public class Airfoil implements DroneObject {
 	
 	public void setAttackVector(double incl, int vertical) {
 		if (vertical == 0) { 
-			attackVector[0] = (float) Math.sin(0);
-			attackVector[1] = (float) Math.sin(incl);
-			attackVector[2] = (float) -Math.cos(incl);
+			attackVector.x = (float) Math.sin(0);
+			attackVector.y = (float) Math.sin(incl);
+			attackVector.z = (float) -Math.cos(incl);
 		}
 		else {
-			attackVector[0] = (float) Math.sin(incl);
-			attackVector[1] = (float) Math.sin(0);
-			attackVector[2] = (float) -Math.cos(incl);
+			attackVector.x = (float) Math.sin(incl);
+			attackVector.y = (float) Math.sin(0);
+			attackVector.z = (float) -Math.cos(incl);
 		}
 	}
 	
-	public float[] getAttackVector() {
+	public Vector3f getAttackVector() {
 		return this.attackVector;
 	}
 	
-	public void setVelocityAirfoil(float[] vel) {
+	public void setVelocityAirfoil(Vector3f vel) {
 		this.velocity = vel;
 	}
 	
-	public float[] getVelocityAirfoil() {
+	public Vector3f getVelocityAirfoil() {
 		return this.velocity;
 	}
 	
