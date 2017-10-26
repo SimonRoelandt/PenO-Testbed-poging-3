@@ -38,7 +38,7 @@ public class Renderer {
     int imageWidth;
     int imageHeight;
     private ByteBuffer pixels;
-    private Byte[] pixelsarray;
+    private byte[] pixelsarray;
 
     public Renderer() {
     	transformation = new Transformation();
@@ -50,7 +50,7 @@ public class Renderer {
     	this.imageHeight = 200;
     	this.imageWidth = 200;
         this.pixels = ByteBuffer.allocateDirect(imageWidth*imageHeight*3);  
-    	this.pixelsarray = new Byte[imageWidth*imageHeight*4];
+    	this.pixelsarray = new byte[imageWidth*imageHeight*4];
     	
     	
     	
@@ -197,7 +197,7 @@ public class Renderer {
 
     }
 
-    public Byte[] getPixelsarray() {
+    public byte[] getPixelsarray() {
     	return this.pixelsarray;
     }
     

@@ -13,6 +13,10 @@ public class Fysica implements IFysica {
 
 	private float liftSlope;
 	
+	public float getGravity() {
+		return this.gravity;
+	}
+	
 	@Override
 	public float[] gravitationForce(DroneObject obj) {
 		float gravitationForce = (float) (obj.getMass() * gravity);

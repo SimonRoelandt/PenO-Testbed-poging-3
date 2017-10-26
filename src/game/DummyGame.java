@@ -47,6 +47,8 @@ public class DummyGame implements IGameLogic {
         cameraInc = new Vector3f(0,0,0);
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
+        timer = new Timer();
+        drone = new Drone(0, 0, 0, 0, 0, -3, -3, -3, new float[]{0,0,0});
     }
 
     @Override
@@ -55,7 +57,7 @@ public class DummyGame implements IGameLogic {
         timer.init();
         // Create the Mesh
         
-        drone = new Drone(0, 0, 0, 0, 0, -3, -3, -3, new float[]{0,0,0});
+        //drone = new Drone(0, 0, 0, 0, 0, -3, -3, -3, new float[]{0,0,0});
         
         Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, drone.getXPos()+0.5f, drone.getYPos()+0.5f, drone.getZPos()+0.5f, new float[]{0f,0f,0f}, new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f});
         Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, new float[]{1f,0f,0f}, new float[]{1f,0f,0f},  new float[]{0f,1f,0f},  new float[]{0f,1f,0f},  new float[]{0f,0f,1f},  new float[]{0f,0f,1f});
@@ -75,13 +77,13 @@ public class DummyGame implements IGameLogic {
         gameItems = new GameItem[] { gameItem , gameItem2, gameItem3, gameItem4, droneItem};
 
         //Maak config file aan voor de autopilot
-        AutopilotConfig config = new AutopilotConfig(drone.getGravity(), drone.getWingX(), drone.getTailsize(), drone.getEngineMass(),
+        Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
         							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
         							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
         							renderer.fov, renderer.fov, renderer.imageWidth, renderer.imageHeight);
         
         //Maak eerste input aan voor autopilot
-        AutopilotInputs input = new AutopilotInputs(renderer.getPixelsarray(), drone.getX(), drone.getY(), drone.getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
+        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
         
         //Start de simulatie in autopilot
         AutopilotOutputs outputs = CommunicatieTestbed.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
@@ -132,7 +134,7 @@ public class DummyGame implements IGameLogic {
         }
         
         
-        AutopilotOutputs outputs =  CommunicatieTestbed.timePassed((AutopilotInputs) new AutopilotInputs(renderer.getPixelsarray(), drone.getX(), drone.getY(), drone.getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
+        Outputs outputs =  (Outputs) CommunicatieTestbed.timePassed((AutopilotInputs) new Outputs(drone.getThrust(), drone.getLeftWingInclination(), drone.getRightWingInclination(), drone.getHorStabInclination(), drone.getVerStabInclination()));
         
         //Schrijf Output
         drone.setThrust(outputs.getThrust());

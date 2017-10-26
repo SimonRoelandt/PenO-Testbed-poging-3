@@ -17,6 +17,14 @@ public class Drone {
 	
 	private float[] velocity;
 	
+	private float maxAOA;
+	private float wingX;
+	private float tailSize;
+	
+	private float wingLiftSlope;
+	private float horStabLiftSlope;
+	private float verStabLiftSlope;
+	
 	
 	public Drone(double thrust, double leftwingi, double rightwingi, double horStabilization, double verStabilization, double xPos, double yPos, double zPos, float[] velocity ) {
 		this.leftWing         = new Airfoil(leftwingi, 5, 0);
@@ -31,6 +39,22 @@ public class Drone {
 		this.yPos = (float) yPos;
 		this.zPos = (float) zPos;
 		this.velocity = velocity;
+		
+		this.maxAOA = 0; //Moet nog aangepast worden
+		this.wingX  = 0;
+		this.tailSize = 0;
+		
+		this.wingLiftSlope = 0;
+		this.horStabLiftSlope = 0;
+		this.verStabLiftSlope = 0;
+	}
+	
+	public float getThrust() {
+		return this.getEngine().getThrustScalar();
+	}
+	
+	public float getGravity() {
+		return fysica.getGravity();
 	}
 	
 	public float[] getTotalForceDrone() {
@@ -102,10 +126,110 @@ public class Drone {
 		return this.velocity;
 	}
 	
+	public float getMaxThrust() {
+		return this.getEngine().getMaxThrust();
+	}
+	
+	public float getMaxAOA() {
+		return this.maxAOA;
+	}
+	
+	//Alle vleugels hebben dezelfde massa
+	public float getWingMass() {
+		return this.getLeftWing().getMass();
+	}
+	
+	public float getTailMass() {
+		return this.getHorStabilization().getMass() + this.getVerStabilization().getMass();
+	}
+	
+	public float getWingX() {
+		return this.wingX;
+	}
+	
+	public float getTailSize() {
+		return tailSize;
+	}
+	
+	public float getEngineMass() {
+		return this.getEngine().getMass();
+	}
+	
+	public float getWingSlope() {
+		return wingLiftSlope;
+	}
+	
+	public void setThrust(float thrust) {
+		this.getEngine().setThrust(thrust);
+	}
+	
+	public void setLeftWingInclination(float incl) {
+		this.getLeftWing().setInclination(incl);
+	}
+	
+	public float getLeftWingInclination() {
+		return this.getLeftWing().getInclination();
+	}
+	
+	public void setRightWingInclination(float incl) {
+		this.getRightWing().setInclination(incl);
+	}
+	
+	public float getRightWingInclination() {
+		return this.getRightWing().getInclination();
+	}
+	
+	public void setHorStabInclination(float incl) {
+		this.getHorStabilization().setInclination(incl);
+	}
+	
+	public float getHorStabInclination() {
+		return this.getHorStabilization().getInclination();
+	}
+	
+	public void setVerStabInclination(float incl) {
+		this.getVerStabilization().setInclination(incl);
+	}
+	
+	public float getVerStabInclination() {
+		return this.getVerStabilization().getInclination();
+	}
+	
 	public DroneObject[] getDroneObj() {
 		DroneObject[] droneObj = {getLeftWing(), getRightWing(), getHorStabilization(), getVerStabilization(), getEngine()};
 		return droneObj;
 	}
+
+	public float getWingLiftSlope() {
+		return this.wingLiftSlope;
+	}
+
+	public float getHorStabLiftSlope() {
+		return this.horStabLiftSlope;
+	}
+
+	public float getVerStabLiftSlope() {
+		return this.verStabLiftSlope;
+	}
+
+	public float getHeading() {
+		// TODO Auto-generated method stub
+		return (Float) 0f;
+	}
+
+	public float getPitch() {
+		// TODO Auto-generated method stub
+		return (Float) 0f;
+	}
+
+	public float getRoll() {
+		// TODO Auto-generated method stub
+		return (Float) 0f;
+	}
+	
+	
+	
+	
 	
 	
 	

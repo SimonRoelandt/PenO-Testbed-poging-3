@@ -4,16 +4,17 @@ import fysica.Fysica;
 
 public class Airfoil implements DroneObject {
 
-	private double inclination;
-	private double mass;
+	private float inclination;
+	private float mass;
 	
 	private float[] axisVector = {0,0,0};
-	private float[] attackVector;
+	private float[] attackVector = {0,0,0};
 	
 	private Fysica fysica;
 	
 	public Airfoil(double inclination, double mass, int vertical) {
-		this.inclination = inclination;
+		this.inclination = (float) inclination;
+		this.mass = (float) mass;
 		this.fysica = new Fysica();
 		setAxisVector(vertical);
 		setAttackVector(inclination, vertical);
@@ -23,13 +24,21 @@ public class Airfoil implements DroneObject {
 		return fysica.totalForce(this);
 	}
 	
-	public double getMass() {
+	public float getMass() {
 		return this.mass;
+	}
+	
+	public void setInclination(float incl) {
+		this.inclination = incl;
+	}
+	
+	public float getInclination() {
+		return this.inclination;
 	}
 
 	@Override
 	public float[] getGraviation() {
-		return fysica.gravitationForce();
+		return fysica.gravitationForce(this);
 	}
 	
 	public void setAxisVector(int vertical) {
