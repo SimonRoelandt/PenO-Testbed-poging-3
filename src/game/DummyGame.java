@@ -27,15 +27,19 @@ public class DummyGame implements IGameLogic {
 	
     private final Renderer renderer;
     
+    private Window window;
+    
     private final Vector3f cameraInc;
 
     private final Camera camera;
     
     private final Camera cameraPlane;
     
-    private static final float CAMERA_POS_STEP = 0.05f;
+    private static final float CAMERA_POS_STEP = 0.1f;
     
     private GameItem[] gameItems;
+    
+    private GameItem droneItem;
     
     private Drone drone;
     
@@ -57,12 +61,12 @@ public class DummyGame implements IGameLogic {
     public void init(Window window) throws Exception {
         renderer.init(window);
         timer.init();
+        this.window = window;
         // Create the Mesh
         
-        //drone = new Drone(0, 0, 0, 0, 0, -3, -3, -3, new float[]{0,0,0});
         
-        Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, drone.getXPos()+0.5f, drone.getYPos()+0.5f, drone.getZPos()+0.5f, new float[]{0f,0f,0f}, new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f});
-        Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, new float[]{1f,0f,0f}, new float[]{1f,0f,0f},  new float[]{0f,1f,0f},  new float[]{0f,1f,0f},  new float[]{0f,0f,1f},  new float[]{0f,0f,1f});
+        Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, 1f, 1f, 1f, new float[]{0f,0f,0f}, new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f});
+        Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{255f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
         Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
         Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
         GameItem gameItem = new GameItem(mesh,true);
@@ -70,12 +74,13 @@ public class DummyGame implements IGameLogic {
         GameItem gameItem3 = new GameItem(mesh,true);
         GameItem gameItem4 = new GameItem(mesh,true);
         GameItem droneItem = new GameItem(meshDrone,false);
+        this.droneItem = droneItem;
         gameItem4.setPosition(-2, -2, -2);
         gameItem4.setRotation(-60f, 20f, 40f);
         gameItem3.setPosition(-1, -1, -3);
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(1, -2, -5);
-        gameItem.setPosition(0, 0, -2);
+        gameItem.setPosition(0, 0, -20);
         gameItems = new GameItem[] { gameItem, droneItem};
 
         //Maak config file aan voor de autopilot
@@ -128,8 +133,7 @@ drone.getEngine().setThrust(outputs.getThrust());
             cameraInc.y * CAMERA_POS_STEP,
             cameraInc.z * CAMERA_POS_STEP);
 
-        cameraPlane.movePosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
-        cameraPlane.moveRotation(0f, 0f, 0f);
+       
         
         // Update camera based on mouse            
         if (mouseInput.isRightButtonPressed()) {
@@ -145,8 +149,21 @@ drone.getEngine().setThrust(outputs.getThrust());
         //Schrijf Output
         drone.getEngine().setThrust(outputs.getThrust());
         
-        drone.setPos(drone.getXPos()-1,drone.getXPos()-1,drone.getXPos()-1);
         
+        drone.setPos(drone.getXPos(),drone.getYPos(),drone.getZPos()-0.1f);
+        droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+        //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
+        
+        cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+        cameraPlane.setRotation(0f, 0f, 0f);
+        
+        
+        //bepaalt wanneerde simulatie stopt
+        
+        /*
+        if (drone.getZPos()<-20f)
+        	window.simulationEnded = true;
+        */
     }
 
     @Override
