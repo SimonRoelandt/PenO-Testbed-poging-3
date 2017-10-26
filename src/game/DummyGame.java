@@ -50,7 +50,6 @@ public class DummyGame implements IGameLogic {
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
         timer = new Timer();
-        drone = new Drone( -3, -3, -3, new float[]{0,0,0});
         drone = new Drone(0, 0, 0, new float[]{0,0,0});
     }
 
@@ -144,7 +143,7 @@ drone.getEngine().setThrust(outputs.getThrust());
         
         
         //Schrijf Output
-drone.getEngine().setThrust(outputs.getThrust());
+        drone.getEngine().setThrust(outputs.getThrust());
         
         drone.setPos(drone.getXPos()-1,drone.getXPos()-1,drone.getXPos()-1);
         
