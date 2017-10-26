@@ -50,6 +50,7 @@ public class DummyGame implements IGameLogic {
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
         timer = new Timer();
+        drone = new Drone( -3, -3, -3, new float[]{0,0,0});
         drone = new Drone(0, 0, 0, new float[]{0,0,0});
     }
 
@@ -91,11 +92,13 @@ public class DummyGame implements IGameLogic {
         AutopilotOutputs outputs = CommunicatieTestbed.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
         
         //Schrijf output
-        drone.setThrust(outputs.getThrust());
-        drone.setLeftWingInclination(outputs.getLeftWingInclination());
-        drone.setRightWingInclination(outputs.getRightWingInclination());
-        drone.setHorStabInclination(outputs.getHorStabInclination());
-        drone.setVerStabInclination(outputs.getVerStabInclination());
+drone.getEngine().setThrust(outputs.getThrust());
+        
+        drone.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
+        drone.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
+
+        drone.getHorStabilization().setInclinationAngle(outputs.getHorStabInclination());        
+        drone.getVerStabilization().setInclinationAngle(outputs.getVerStabInclination());
         
     }
 
@@ -141,11 +144,7 @@ public class DummyGame implements IGameLogic {
         
         
         //Schrijf Output
-        drone.setThrust(outputs.getThrust());
-        drone.setLeftWingInclination(outputs.getLeftWingInclination());
-        drone.setRightWingInclination(outputs.getRightWingInclination());
-        drone.setHorStabInclination(outputs.getHorStabInclination());
-        drone.setVerStabInclination(outputs.getVerStabInclination());
+drone.getEngine().setThrust(outputs.getThrust());
         
         drone.setPos(drone.getXPos()-1,drone.getXPos()-1,drone.getXPos()-1);
         
