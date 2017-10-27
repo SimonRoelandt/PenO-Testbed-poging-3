@@ -22,10 +22,9 @@ public class Fysica implements IFysica {
 	}
 	
 	@Override
-	public float[] gravitationForce(DroneObject obj) {
+	public Vector3f gravitationForce(DroneObject obj) {
 		float gravitationForce = (float) (obj.getMass() * gravity);
-		float[] gravitationVector = {0, -gravitationForce,0};
-		return gravitationVector;
+		return new Vector3f(0,-gravitationForce,0);
 	}
 	
 	//liftSlope ?????

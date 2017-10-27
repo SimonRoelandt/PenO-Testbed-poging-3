@@ -30,13 +30,9 @@ public class ShaderProgram {
     
     public void createUniform(String uniformName) {
     	int uniformLocation = glGetUniformLocation(programId, uniformName);
-    	//System.out.println(uniformLocation);
     	if (uniformLocation < 0) 
-    		System.out.println("WTFFFFFFFFFFFFFFFFFFFF");
+    		System.out.println("Uniform Error");
     	uniforms.put(uniformName, uniformLocation);
-    	//System.out.println(uniformName);
-    	//System.out.println(uniformLocation);
-    	//System.out.println(programId);
     }
     
     //put the matrix in a float buffer

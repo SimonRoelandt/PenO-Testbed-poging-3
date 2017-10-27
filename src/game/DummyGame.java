@@ -54,7 +54,7 @@ public class DummyGame implements IGameLogic {
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
         timer = new Timer();
-        drone = new Drone(0, 0, 0, new float[]{0,0,0});
+        drone = new Drone(0, 0, 0, new Vector3f(0,0,0));
     }
 
     @Override
@@ -62,9 +62,8 @@ public class DummyGame implements IGameLogic {
         renderer.init(window);
         timer.init();
         this.window = window;
-        // Create the Mesh
         
-        
+        // Maak de gameItem meshes aan
         Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, 1f, 1f, 1f, new float[]{0f,0f,0f}, new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f});
         Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{115f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
         Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
@@ -81,6 +80,7 @@ public class DummyGame implements IGameLogic {
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(1, -2, -5);
         gameItem.setPosition(0, 0, -20);
+        gameItem.setRotation(-60f, 20f, 40f);
         gameItems = new GameItem[] { gameItem, droneItem};
 
         //Maak config file aan voor de autopilot
@@ -96,11 +96,9 @@ public class DummyGame implements IGameLogic {
         AutopilotOutputs outputs = CommunicatieTestbed.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
         
         //Schrijf output
-drone.getEngine().setThrust(outputs.getThrust());
-        
+        drone.getEngine().setThrust(outputs.getThrust());
         drone.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
         drone.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
-
         drone.getHorStabilization().setInclinationAngle(outputs.getHorStabInclination());        
         drone.getVerStabilization().setInclinationAngle(outputs.getVerStabInclination());
         
@@ -128,28 +126,28 @@ drone.getEngine().setThrust(outputs.getThrust());
 
     @Override
     public void update(float interval, MouseInput mouseInput) {
-        // Update camera position
+        // Update camera positie
         camera.movePosition(cameraInc.x * CAMERA_POS_STEP,
             cameraInc.y * CAMERA_POS_STEP,
             cameraInc.z * CAMERA_POS_STEP);
 
-       
-        
-        // Update camera based on mouse            
+        // Update camera door muis            
         if (mouseInput.isRightButtonPressed()) {
             Vector2f rotVec = mouseInput.getDisplVec();
             camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
         }
         
-        
+        //Roep een timePassed op in Autopilot
         Outputs outputs =  (Outputs) CommunicatieTestbed.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime()));
-        
-        
         
         //Schrijf Output
         drone.getEngine().setThrust(outputs.getThrust());
+        drone.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
+        drone.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
+        drone.getHorStabilization().setInclinationAngle(outputs.getHorStabInclination());        
+        drone.getVerStabilization().setInclinationAngle(outputs.getVerStabInclination());
         
-        
+        //Vlieg recht door
         drone.setPos(drone.getXPos(),drone.getYPos(),drone.getZPos()-0.1f);
         droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
@@ -161,11 +159,9 @@ drone.getEngine().setThrust(outputs.getThrust());
         
         
         //bepaalt wanneerde simulatie stopt
-        
-        /*
-        if (drone.getZPos()<-20f)
+        if (drone.getZPos() - gameItems[0].getPosition().z < 1f)
         	window.simulationEnded = true;
-        */
+        
     }
 
     @Override
