@@ -177,14 +177,13 @@ public class Renderer {
        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
        glBlitFramebuffer(0, 0,imageWidth, imageHeight, 0, 0,window.getWidth(), window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         
-        
         //TESTEN GEDAAN
         
        
         
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         glViewport(0,0,window.getWidth(), window.getHeight());
-        window.setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        window.setClearColor(0.0f, 0.5f, 0.0f, 1.0f);
      
         
         //glBindFramebuffer(GL_FRAMEBUFFER, 0);
