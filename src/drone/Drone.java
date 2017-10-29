@@ -2,11 +2,12 @@ package drone;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import api.AutopilotOutputs;
 import fysica.Fysica;
 
 public class Drone {
 	
-private Fysica  fysica;
+	private Fysica  fysica;
 	
 	private static float gravity = (float) 9.81;
 
@@ -24,14 +25,14 @@ private Fysica  fysica;
 	private float yPos;
 	private float zPos;
 	
-	private Vector3f velocity;
+	private Vector3f velocity = new Vector3f(0,0,100);
 	
 	private static float wingX = 4;
 	private static float tailSize = 4;
 	
-	private static float engineMass = 50;
-	private static float wingMass = 50;
-	private static float tailMass = 50;
+	private static float engineMass = 5;
+	private static float wingMass = 5;
+	private static float tailMass = 5;
 	
 	private static float maxThrust = 1000;
 	private static float maxAOA = (float) (Math.PI /12);
@@ -45,11 +46,14 @@ private Fysica  fysica;
 	private float pitch;
 	private float roll;
 	
+	//-1.97864475 voor 1 wing
+	
 	
 	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {
-		this.leftWing         = new Airfoil(0, wingMass, 0);
-		this.rightWing        = new Airfoil(0,wingMass, 0);
-		this.horStabilization = new Airfoil(0, tailMass/2, 0);
+		float incl = (float) -2.08343282;
+		this.leftWing         = new Airfoil(incl, wingMass, 0);
+		this.rightWing        = new Airfoil(incl,wingMass, 0);
+		this.horStabilization = new Airfoil(incl, tailMass/2, 0);
 		this.verStabilization = new Airfoil(0, tailMass/2, 1);
 		this.engine           = new Engine(0, engineMass);
 		
@@ -60,16 +64,51 @@ private Fysica  fysica;
 		this.zPos = zPos;
 		this.velocity = velocity;
 		
+		setVelAirfoil(velocity);
+	}
+	
+	public void setVelAirfoil(Vector3f vel) {
+		this.getLeftWing().setVelocityAirfoil(vel);
+		this.getRightWing().setVelocityAirfoil(vel);
+		this.getHorStabilizator().setVelocityAirfoil(vel);
+		this.getVerStabilizator().setVelocityAirfoil(vel);
+	}
+	
+	//Bepaalt de verandering die elke stap gebeurt
+	public void update(AutopilotOutputs outputs,float time){
+		
+		//Schrijf Output
+        this.getEngine().setThrust(outputs.getThrust());
+        this.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
+        this.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
+        this.getHorStabilizator().setInclinationAngle(outputs.getHorStabInclination());        
+        this.getVerStabilizator().setInclinationAngle(outputs.getVerStabInclination());
+		
+		Vector3f p = this.getNewPosition(time);
+		this.setPosition(p);
+		
+		Vector3f v = this.getNewVelocity(time);
+		this.setVelocity(v);
+		
+		leftWing.setVelocityAirfoil(v);
+		rightWing.setVelocityAirfoil(v);
+		horStabilization.setVelocityAirfoil(v);
+		verStabilization.setVelocityAirfoil(v);
+		
 	}
 	
 	
 	//Twee belangrijkste functies
-	public Vector3f getNewPosition() {
-		return fysica.nextPosition(this, 1);
+	public Vector3f getNewPosition(float time) {
+		Vector3f vel = getNewVelocity(time);
+		this.setVelocity(vel);
+		return fysica.nextPosition(this, time);
 	}
 	
-	public Vector3f getNewVelocity() {
-		return fysica.velocity(this, 1);
+	public Vector3f getNewVelocity(float time) {
+		//System.out.println("New vel drone: " + fysica.velocity(this, 1));
+		Vector3f v = fysica.velocity(this, time);
+		return v;
 	}
 	
 	public Vector3f getTotalForceDrone() {
@@ -85,11 +124,11 @@ private Fysica  fysica;
 		return this.rightWing;
 	}
 	
-	public Airfoil getHorStabilization() {
+	public Airfoil getHorStabilizator() {
 		return this.horStabilization;
 	}
 	
-	public Airfoil getVerStabilization() {
+	public Airfoil getVerStabilizator() {
 		return this.verStabilization;
 	}
 	
@@ -97,13 +136,19 @@ private Fysica  fysica;
 		return this.engine;
 	}
 	
-	
+	//
 	public float getThrust() {
 		return this.getEngine().getThrustScalar();
 	}
 	
 	public float getGravity() {
 		return fysica.getGravity();
+	}
+	
+	public void setPosition(Vector3f pos) {
+		this.xPos = pos.getX();
+		this.yPos = pos.getY();
+		this.zPos = pos.getZ();
 	}
 	
 	public void setXPos(float x) {
@@ -145,8 +190,8 @@ private Fysica  fysica;
 		this.velocity = vel;
 		this.getLeftWing().setVelocityAirfoil(vel);
 		this.getRightWing().setVelocityAirfoil(vel);
-		this.getHorStabilization().setVelocityAirfoil(vel);
-		this.getVerStabilization().setVelocityAirfoil(vel);
+		this.getHorStabilizator().setVelocityAirfoil(vel);
+		this.getVerStabilizator().setVelocityAirfoil(vel);
 	}
 	
 	public Vector3f getVelocity() {
@@ -174,23 +219,23 @@ private Fysica  fysica;
 	}
 	
 	public void setHorStabInclination(float incl) {
-		this.getHorStabilization().setInclination(incl);
+		this.getHorStabilizator().setInclination(incl);
 	}
 	
 	public float getHorStabInclination() {
-		return this.getHorStabilization().getInclination();
+		return this.getHorStabilizator().getInclination();
 	}
 	
 	public void setVerStabInclination(float incl) {
-		this.getVerStabilization().setInclination(incl);
+		this.getVerStabilizator().setInclination(incl);
 	}
 	
 	public float getVerStabInclination() {
-		return this.getVerStabilization().getInclination();
+		return this.getVerStabilizator().getInclination();
 	}
 	
 	public DroneObject[] getDroneObj() {
-		DroneObject[] droneObj = {getLeftWing(), getRightWing(), getHorStabilization(), getVerStabilization(), getEngine()};
+		DroneObject[] droneObj = {getLeftWing(), getRightWing(), getHorStabilizator(), getVerStabilizator(), getEngine()};
 		return droneObj;
 	}
 	
@@ -238,7 +283,7 @@ private Fysica  fysica;
 	}
 		
 	public float getTailMass() {
-		return this.getHorStabilization().getMass() + this.getVerStabilization().getMass();
+		return this.getHorStabilizator().getMass() + this.getVerStabilizator().getMass();
 	}
 	
 	public float getMaxThrust() {

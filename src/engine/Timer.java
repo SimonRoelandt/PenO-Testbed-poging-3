@@ -3,6 +3,7 @@ package engine;
 public class Timer {
 
     private double lastLoopTime;
+    private float elapTime;
     
     public void init() {
         lastLoopTime = getTime();
@@ -15,8 +16,13 @@ public class Timer {
     public float getElapsedTime() {
         double time = getTime();
         float elapsedTime = (float) (time - lastLoopTime);
+        elapTime = elapTime + elapsedTime;
         lastLoopTime = time;
         return elapsedTime;
+    }
+    
+    public float getTot() {
+    	return elapTime;
     }
 
     public double getLastLoopTime() {
