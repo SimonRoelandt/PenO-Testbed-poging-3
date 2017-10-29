@@ -55,7 +55,7 @@ public class DummyGame implements IGameLogic {
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
         timer = new Timer();
-        drone = new Drone(0, 0, 0, new Vector3f(0,0,0));
+        drone = new Drone(0, 0, 0, new Vector3f(0,0,-8));
     }
 
     @Override
@@ -101,8 +101,8 @@ public class DummyGame implements IGameLogic {
         drone.getEngine().setThrust(outputs.getThrust());
         drone.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
         drone.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
-        drone.getHorStabilization().setInclinationAngle(outputs.getHorStabInclination());        
-        drone.getVerStabilization().setInclinationAngle(outputs.getVerStabInclination());
+        drone.getHorStabilizator().setInclinationAngle(outputs.getHorStabInclination());        
+        drone.getVerStabilizator().setInclinationAngle(outputs.getVerStabInclination());
         
     }
 
@@ -132,7 +132,6 @@ public class DummyGame implements IGameLogic {
         camera.movePosition(cameraInc.x * CAMERA_POS_STEP,
             cameraInc.y * CAMERA_POS_STEP,
             cameraInc.z * CAMERA_POS_STEP);
-
         // Update camera door muis            
         if (mouseInput.isRightButtonPressed()) {
             Vector2f rotVec = mouseInput.getDisplVec();
@@ -140,27 +139,35 @@ public class DummyGame implements IGameLogic {
         }
         
         //Roep een timePassed op in Autopilot
-        Outputs outputs =  (Outputs) CommunicatieTestbed.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime()));
+        float time = timer.getElapsedTime();
+        Outputs outputs =  (Outputs) CommunicatieTestbed.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
         
-        //Update drone
-        drone.update(outputs);
+        //Update de drone
+        drone.update(outputs,time);
         
-        //Vlieg recht door
-        //drone.setPos(drone.getNewPosition().x,drone.getNewPosition().y,drone.getNewPosition().z);
-        //droneItem.setPosition(drone.getNewPosition().x,drone.getNewPosition().y,drone.getNewPosition().z);
-        //droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+    
+        //Vlieg recht door + gravitatie
+        System.out.println("Pos: " + drone.getPos());
+        //System.out.println("Vel: " + drone.getVelocity());
+        //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
+        droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
         
         cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         cameraPlane.setRotation(0f, 0f, 0f);
         
-        System.out.println(drone.getZPos() - gameItems[0].getPosition().z);
+       // System.out.println(drone.getZPos() - gameItems[0].getPosition().z);
         
         
-        //bepaalt wanneerde simulatie stopt
-        if (drone.getZPos() - gameItems[0].getPosition().z < 1f)
+        //bepaalt wanneer de simulatie stopt
+//        if (drone.getZPos() - gameItems[0].getPosition().z < 1f) {
+//        	System.out.println(timer.getTot() + "end");
+//        	window.simulationEnded = true;
+//        }
+        if (timer.getTot() > 2000) {
+        	System.out.println(timer.getTot());
         	window.simulationEnded = true;
-        
+        }
     }
 
     @Override

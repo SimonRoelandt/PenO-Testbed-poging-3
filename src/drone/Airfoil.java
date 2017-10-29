@@ -71,7 +71,7 @@ public class Airfoil implements DroneObject {
 			attackVector.z = (float) -Math.cos(incl);
 		}
 		else {
-			attackVector.x = (float) Math.sin(incl);
+			attackVector.x = (float) -Math.sin(incl);
 			attackVector.y = (float) Math.sin(0);
 			attackVector.z = (float) -Math.cos(incl);
 		}
@@ -98,6 +98,13 @@ public class Airfoil implements DroneObject {
 			return true;
 		}
 		else return false;
+	}
+	
+	public float getLiftSlope() {
+		if (isVertical()) {
+			return (float) 1.0;
+		}
+		return (float) 1.0;
 	}
 	
 	
