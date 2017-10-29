@@ -150,7 +150,7 @@ public class DummyGame implements IGameLogic {
         drone.getVerStabilization().setInclinationAngle(outputs.getVerStabInclination());
         
         //Vlieg recht door
-        drone.setPos(drone.getXPos(),drone.getYPos(),drone.getZPos());
+        drone.setPos(drone.getXPos(),drone.getYPos(),drone.getZPos()-0.1f);
         droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
         

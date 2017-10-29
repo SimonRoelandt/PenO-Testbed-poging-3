@@ -16,7 +16,7 @@ public class OBJLoader {
 	public static Mesh loadOBJModel(String fileName) {
 		FileReader fr = null;
 		try {
-			fr = new FileReader(new File("C:\\Users\\simon\\git\\PenO-Testbed-poging-3\\src\\Eurofighter.obj"));
+			fr = new FileReader(new File("C:\\Users\\simon\\git\\PenO-Testbed-poging-3\\src\\bunny.obj"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.err.print("File not found");
@@ -66,7 +66,7 @@ public class OBJLoader {
 		
 		verticesArray = new float[vertices.size()*3];
 		indicesArray = new int[indices.size()];
-		colourArray = new float[vertices.size()*3];
+		colourArray = new float[indices.size()];
 		
 		int vertexPointer = 0;
 		for (Vector3f vertex : vertices) {
@@ -78,8 +78,8 @@ public class OBJLoader {
 		for (int i = 0; i < indices.size();i++){
 			indicesArray[i] = indices.get(i);
 		}
-		for (int i = 0; i < vertices.size()*3;i++){
-			colourArray[i] = 0.5f;
+		for (int i = 0; i < indices.size();i++){
+			colourArray[i] = (float) Math.random()/3;
 		}
 		
 		
