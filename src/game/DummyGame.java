@@ -75,6 +75,7 @@ public class DummyGame implements IGameLogic {
         GameItem gameItem3 = new GameItem(mesh,true);
         GameItem gameItem4 = new GameItem(mesh,true);
         GameItem droneItem = new GameItem(meshDrone,false);
+        droneItem.setScale(0.3f);
         this.droneItem = droneItem;
         gameItem4.setPosition(-2, -2, -2);
         gameItem4.setRotation(-60f, 20f, 40f);
@@ -145,16 +146,11 @@ public class DummyGame implements IGameLogic {
         //Update de drone
         drone.update(outputs,time);
         
-<<<<<<< HEAD
-        //Vlieg recht door
-        drone.setPos(drone.getXPos(),drone.getYPos(),drone.getZPos()-0.1f);
-=======
-    
+
         //Vlieg recht door + gravitatie
         //System.out.println("Pos: " + drone.getPos());
         //System.out.println("Vel: " + drone.getVelocity());
         //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
->>>>>>> branch 'master' of https://github.com/SimonRoelandt/PenO-Testbed-poging-3.git
         droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
         
