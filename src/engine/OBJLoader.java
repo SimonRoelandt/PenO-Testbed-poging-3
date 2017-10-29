@@ -34,16 +34,16 @@ public class OBJLoader {
 			while(true){
 				line = reader.readLine();
 				String[] currentLine = line.split(" ");
-				if (line.startsWith("v")){
+				if (line.startsWith("v ")){
 					Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
 					vertices.add(vertex);
-				}else if (line.startsWith("f")){
+				}else if (line.startsWith("f ")){
 					break;
 				}
 			}
 			
 			while(line!=null) {
-				if (!line.startsWith("f")){
+				if (!line.startsWith("f ")){
 					line = reader.readLine();
 					continue;
 				}

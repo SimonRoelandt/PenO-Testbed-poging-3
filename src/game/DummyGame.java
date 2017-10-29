@@ -152,6 +152,7 @@ public class DummyGame implements IGameLogic {
         //System.out.println("Vel: " + drone.getVelocity());
         //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
         droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+        droneItem.setPosition(0, 0, 0);
         //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
         
         cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
