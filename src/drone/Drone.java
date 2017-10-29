@@ -2,6 +2,7 @@ package drone;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import api.AutopilotOutputs;
 import fysica.Fysica;
 
 public class Drone {
@@ -24,7 +25,7 @@ private Fysica  fysica;
 	private float yPos;
 	private float zPos;
 	
-	private Vector3f velocity;
+	private Vector3f velocity = new Vector3f(0,0,100);
 	
 	private static float wingX = 4;
 	private static float tailSize = 4;
@@ -59,6 +60,29 @@ private Fysica  fysica;
 		this.yPos = yPos;
 		this.zPos = zPos;
 		this.velocity = velocity;
+		
+	}
+	
+	//Bepaalt de verandering die elke stap gebeurt
+	public void update(AutopilotOutputs outputs){
+		
+		//Schrijf Output
+        this.getEngine().setThrust(outputs.getThrust());
+        this.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
+        this.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
+        this.getHorStabilization().setInclinationAngle(outputs.getHorStabInclination());        
+        this.getVerStabilization().setInclinationAngle(outputs.getVerStabInclination());
+		
+		
+		this.setPos(this.getNewPosition().x,this.getNewPosition().y,this.getNewPosition().z);
+		
+		Vector3f v = this.getNewVelocity();
+		this.setVelocity(v);
+		
+		leftWing.setVelocityAirfoil(v);
+		rightWing.setVelocityAirfoil(v);
+		horStabilization.setVelocityAirfoil(v);
+		verStabilization.setVelocityAirfoil(v);
 		
 	}
 	

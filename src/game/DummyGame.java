@@ -142,16 +142,13 @@ public class DummyGame implements IGameLogic {
         //Roep een timePassed op in Autopilot
         Outputs outputs =  (Outputs) CommunicatieTestbed.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime()));
         
-        //Schrijf Output
-        drone.getEngine().setThrust(outputs.getThrust());
-        drone.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
-        drone.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
-        drone.getHorStabilization().setInclinationAngle(outputs.getHorStabInclination());        
-        drone.getVerStabilization().setInclinationAngle(outputs.getVerStabInclination());
+        //Update drone
+        drone.update(outputs);
         
         //Vlieg recht door
-        drone.setPos(drone.getXPos(),drone.getYPos(),drone.getZPos());
-        droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+        //drone.setPos(drone.getNewPosition().x,drone.getNewPosition().y,drone.getNewPosition().z);
+        //droneItem.setPosition(drone.getNewPosition().x,drone.getNewPosition().y,drone.getNewPosition().z);
+        //droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
         
         cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());

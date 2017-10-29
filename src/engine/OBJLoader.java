@@ -16,7 +16,7 @@ public class OBJLoader {
 	public static Mesh loadOBJModel(String fileName) {
 		FileReader fr = null;
 		try {
-			fr = new FileReader(new File("C:\\Users\\simon\\git\\PenO-Testbed-poging-3\\src\\Eurofighter.obj"));
+			fr = new FileReader(new File("src\\Eurofighter.obj"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.err.print("File not found");

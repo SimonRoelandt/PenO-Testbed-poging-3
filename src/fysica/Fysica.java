@@ -31,32 +31,34 @@ public class Fysica {
 
 	public Vector3f liftForce(Airfoil air) {
 		Vector3f normal = crossProduct(air.getAxisVector(),air.getAttackVector());
-		System.out.print("Normal: ");
+		//System.out.print("Normal: ");
 		//print(normal);
 		Vector3f airspeed = air.getVelocityAirfoil();
 		//print(airspeed);
 		Vector3f projectedAirspeed = product(scalarProduct(airspeed,air.getAxisVector()) / scalarProduct(air.getAxisVector(), air.getAxisVector()), air.getAxisVector());
-		System.out.print("ProjectedAirspeed: ");
+		//System.out.print("ProjectedAirspeed: ");
 		//print(projectedAirspeed);
-		System.out.print("AttackVector: ");
+		//System.out.print("AttackVector: ");
 		//print(air.getAttackVector());
 		float angleOfAttack = (float) -Math.atan2(scalarProduct(projectedAirspeed,normal), scalarProduct(projectedAirspeed,air.getAttackVector()));
 		if (air.isVertical()) {
 			angleOfAttack = 0;
 		}
 		else angleOfAttack = (float) 1.2;
-		System.out.println("ScalarProduct: " + scalarProduct(projectedAirspeed,air.getAttackVector()));
+		//System.out.println("ScalarProduct: " + scalarProduct(projectedAirspeed,air.getAttackVector()));
 		Vector3f liftForce = product(angleOfAttack * scalarProduct(projectedAirspeed, projectedAirspeed), product(liftSlope, normal));
-		System.out.print("liftforce: ");
+		//System.out.print("liftforce: ");
 		//print(liftForce);
 		return liftForce;
 	}
 
 	public Vector3f totalForce(DroneObject obj) {
 		if(obj instanceof Engine) {
-			sum(obj.getGraviation(), ((Engine) obj).getThrust());
+			return sum(obj.getGraviation(), ((Engine) obj).getThrust());
 		}
-		return sum(liftForce((Airfoil) obj), gravitationForce(obj));
+		else{
+			return sum(liftForce((Airfoil) obj), gravitationForce(obj));
+		}
 	}
 	
 	
@@ -122,5 +124,4 @@ public class Fysica {
 		System.out.println(force[0] + " " + force[1] + " " + force[2]);
 	}
 
-	
 }
