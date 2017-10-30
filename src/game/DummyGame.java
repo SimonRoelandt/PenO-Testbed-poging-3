@@ -36,11 +36,13 @@ public class DummyGame implements IGameLogic {
     
     private final Camera cameraPlane;
     
-    private static final float CAMERA_POS_STEP = 0.05f;
+    private static final float CAMERA_POS_STEP = 0.5f;
     
     private GameItem[] gameItems;
     
     private GameItem droneItem;
+    
+    private Vector3f afstand = new Vector3f();
     
     private Drone drone;
     
@@ -51,6 +53,8 @@ public class DummyGame implements IGameLogic {
     public DummyGame() {
         renderer = new Renderer();
         camera = new Camera();
+        camera.setPosition(20, 0, -25);
+        camera.setRotation(0, -90f, 0);
         cameraInc = new Vector3f(0,0,0);
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
@@ -82,7 +86,10 @@ public class DummyGame implements IGameLogic {
         gameItem3.setPosition(-1, -1, -3);
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(1, -2, -5);
-        gameItem.setPosition(0, -5, -50);
+        gameItem.setPosition(0, 20, -200);
+        //gameItem.setPosition(0, -10, -200);
+        //gameItem.setPosition(0, 0, -50);
+        //gameItem.setPosition(0, 38, -200);
         gameItem.setRotation(-60f, 20f, 40f);
         gameItems = new GameItem[] { gameItem, droneItem};
 
@@ -164,7 +171,8 @@ public class DummyGame implements IGameLogic {
         
         
         //bepaalt wanneer de simulatie stopt
-        if ((drone.getZPos() - gameItems[0].getPosition().z < 1f)&&(drone.getYPos() - gameItems[0].getPosition().y < 1f)&&(drone.getXPos() - gameItems[0].getPosition().x < 1f) ) {
+        Vector3f.sub(drone.getPos(), gameItems[0].getPosition(), afstand);
+        if (afstand.length()<4f) {
        	System.out.println(timer.getTot() + "end");
         	window.simulationEnded = true;
         }
