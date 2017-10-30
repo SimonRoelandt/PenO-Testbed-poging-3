@@ -25,14 +25,14 @@ public class Drone {
 	private float yPos;
 	private float zPos;
 	
-	private Vector3f velocity = new Vector3f(0,0,100);
+	private Vector3f velocity = new Vector3f(0,0,9);
 	
 	private static float wingX = 4;
 	private static float tailSize = 4;
 	
-	private static float engineMass = 5;
-	private static float wingMass = 5;
-	private static float tailMass = 5;
+	private static float engineMass = 2;
+	private static float wingMass = 2;
+	private static float tailMass = 2;
 	
 	private static float maxThrust = 1000;
 	private static float maxAOA = (float) (Math.PI /12);
@@ -50,10 +50,10 @@ public class Drone {
 	
 	
 	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {
-		float incl = (float) -2.08343282;
-		this.leftWing         = new Airfoil(incl, wingMass, 0);
-		this.rightWing        = new Airfoil(incl,wingMass, 0);
-		this.horStabilization = new Airfoil(incl, tailMass/2, 0);
+		//float incl = (float) -2.08343282;
+		this.leftWing         = new Airfoil(0, wingMass, 0);
+		this.rightWing        = new Airfoil(0,wingMass, 0);
+		this.horStabilization = new Airfoil(0, tailMass/2, 0);
 		this.verStabilization = new Airfoil(0, tailMass/2, 1);
 		this.engine           = new Engine(0, engineMass);
 		
@@ -77,6 +77,9 @@ public class Drone {
 	//Bepaalt de verandering die elke stap gebeurt
 	public void update(AutopilotOutputs outputs,float time){
 		
+		
+		System.out.println("thrust: " + outputs.getThrust());
+		
 		//Schrijf Output
         this.getEngine().setThrust(outputs.getThrust());
         this.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
@@ -89,11 +92,13 @@ public class Drone {
 		
 		Vector3f v = this.getNewVelocity(time);
 		this.setVelocity(v);
+		setVelAirfoil(v);
 		
-		leftWing.setVelocityAirfoil(v);
-		rightWing.setVelocityAirfoil(v);
-		horStabilization.setVelocityAirfoil(v);
-		verStabilization.setVelocityAirfoil(v);
+		leftWing.setAttackVector(outputs.getLeftWingInclination(), 0);
+		rightWing.setAttackVector(outputs.getRightWingInclination(),0);
+		horStabilization.setAttackVector(outputs.getHorStabInclination(), 0);
+		verStabilization.setAttackVector(outputs.getVerStabInclination(), 1);
+		
 		
 	}
 	
@@ -285,6 +290,8 @@ public class Drone {
 	public float getTailMass() {
 		return this.getHorStabilizator().getMass() + this.getVerStabilizator().getMass();
 	}
+	
+	
 	
 	public float getMaxThrust() {
 		return this.getEngine().getMaxThrust();

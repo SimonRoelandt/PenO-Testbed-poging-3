@@ -146,13 +146,15 @@ public class DummyGame implements IGameLogic {
         //Update de drone
         drone.update(outputs,time);
         
+//        drone.setLeftWingInclination((float) Math.PI/6);
+//        drone.setRightWingInclination((float) Math.PI/6);
+//        drone.setHorStabInclination((float) Math.PI/6);
 
         //Vlieg recht door + gravitatie
         //System.out.println("Pos: " + drone.getPos());
         //System.out.println("Vel: " + drone.getVelocity());
         //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
         droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
-        droneItem.setPosition(0, 0, 0);
         //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
         
         cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
@@ -166,7 +168,7 @@ public class DummyGame implements IGameLogic {
        	System.out.println(timer.getTot() + "end");
         	window.simulationEnded = true;
         }
-        if (timer.getTot() > 2000) {
+        if (timer.getTot() > 2000000) {
         	System.out.println(timer.getTot());
         	window.simulationEnded = true;
         }

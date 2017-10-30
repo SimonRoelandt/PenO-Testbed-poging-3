@@ -4,8 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL3"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCv"/>
-	<classpathentry kind="lib" path="C:/Users/simon/workspace/autopilotLibrary.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL_UTIL"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCV-3.3.0"/>
+	<classpathentry kind="lib" path="C:/Users/gillis/Downloads/AutopilotLibrary.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

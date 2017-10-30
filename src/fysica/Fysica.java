@@ -50,13 +50,14 @@ public class Fysica {
 			//angleOfAttack = 0;
 		//}
 		//else angleOfAttack = (float) -1.2;
-		//System.out.println("AOA: " + angleOfAttack);
+		System.out.println("AOA: " + angleOfAttack);
 		//System.out.println("ScalarProduct: " + scalarProduct(projectedAirspeed,air.getAttackVector()));
-		Vector3f proj = new Vector3f(0,projectedAirspeed.getZ(),0);
+		Vector3f proj = new Vector3f(0,0,projectedAirspeed.getZ());
 		//Vector3f liftForce = product((float) (angleOfAttack * Math.pow(projectedAirspeed.getZ(),2)),product(air.getLiftSlope(),normal));
-		Vector3f liftForce = mul(product(air.getLiftSlope(),normal),product(angleOfAttack,mul(proj,proj)));
-		//System.out.print("liftforce: ");
-		//print(liftForce);
+		Vector3f liftForce = product((float)(angleOfAttack *Math.pow(proj.getZ(),2)),product(air.getLiftSlope(),normal));
+		System.out.print("liftforce: ");
+		System.out.print(normal);
+		print(liftForce);
 		return liftForce;
 	}
 
@@ -79,8 +80,8 @@ public class Fysica {
 			//System.out.print("Force: ");
 			//print(obj.getTotalForce());
 		}
-		//System.out.print("Total Force:" );
-		//print(v);
+		System.out.print("Total Force:" );
+		print(v);
 		return v;
 	}
 	
