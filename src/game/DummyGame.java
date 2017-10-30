@@ -36,7 +36,7 @@ public class DummyGame implements IGameLogic {
     
     private final Camera cameraPlane;
     
-    private static final float CAMERA_POS_STEP = 0.1f;
+    private static final float CAMERA_POS_STEP = 0.05f;
     
     private GameItem[] gameItems;
     
@@ -75,7 +75,7 @@ public class DummyGame implements IGameLogic {
         GameItem gameItem3 = new GameItem(mesh,true);
         GameItem gameItem4 = new GameItem(mesh,true);
         GameItem droneItem = new GameItem(meshDrone,false);
-        droneItem.setScale(0.3f);
+        droneItem.setScale(0.2f);
         this.droneItem = droneItem;
         gameItem4.setPosition(-2, -2, -2);
         gameItem4.setRotation(-60f, 20f, 40f);

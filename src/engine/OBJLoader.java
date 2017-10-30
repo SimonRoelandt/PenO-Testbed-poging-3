@@ -15,8 +15,10 @@ public class OBJLoader {
 
 	public static Mesh loadOBJModel(String fileName) {
 		FileReader fr = null;
+		FileReader fr2 = null;
 		try {
-			fr = new FileReader(new File("C:\\Users\\simon\\git\\PenO-Testbed-poging-3\\src\\bunny.obj"));
+			fr = new FileReader(new File("C:\\Users\\simon\\git\\PenO-Testbed-poging-3\\src\\EuroFighter.obj"));
+			fr2 = new FileReader(new File("C:\\Users\\simon\\git\\PenO-Testbed-poging-3\\src\\EuroFighter.obj"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.err.print("File not found");
@@ -24,7 +26,9 @@ public class OBJLoader {
 		}
 		
 		BufferedReader reader = new BufferedReader(fr);
+	
 		String line;
+		String line2;
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
 		List<Integer> indices = new ArrayList<Integer>();
 		float[] verticesArray = null;
@@ -33,21 +37,26 @@ public class OBJLoader {
 		try{
 			while(true){
 				line = reader.readLine();
+				if (line==null) {
+					break;
+				}
 				String[] currentLine = line.split(" ");
 				if (line.startsWith("v ")){
 					Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]), Float.parseFloat(currentLine[3]));
 					vertices.add(vertex);
-				}else if (line.startsWith("f ")){
-					break;
-				}
+				}	
 			}
 			
-			while(line!=null) {
-				if (!line.startsWith("f ")){
-					line = reader.readLine();
+			BufferedReader reader2 = new BufferedReader(fr2);
+			line2 = reader2.readLine();
+			while(true) {	
+				if (line2==null)
+					break;
+				if (!line2.startsWith("f ")){
+					line2 = reader2.readLine();
 					continue;
 				}
-				String[] currentLine = line.split(" ");
+				String[] currentLine = line2.split(" ");
 				String[] vertex1 = currentLine[1].split("/");
 				String[] vertex2 = currentLine[2].split("/");
 				String[] vertex3 = currentLine[3].split("/");
@@ -55,10 +64,12 @@ public class OBJLoader {
 				processVertex(vertex1, indices);
 				processVertex(vertex2, indices);
 				processVertex(vertex3, indices);
+				line2 = reader2.readLine();
 				
-				line = reader.readLine();
+	
 			}
 			reader.close();
+			reader2.close();
 				
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -78,8 +89,11 @@ public class OBJLoader {
 		for (int i = 0; i < indices.size();i++){
 			indicesArray[i] = indices.get(i);
 		}
-		for (int i = 0; i < indices.size();i++){
-			colourArray[i] = (float) Math.random()/3;
+		for (int i = 0; i < indices.size();i+=3){
+			float grijs = (float) Math.random()/8;
+			colourArray[i] = grijs;
+			colourArray[i+1] = grijs;
+			colourArray[i+2] = grijs;
 		}
 		
 		
