@@ -86,10 +86,13 @@ public class DummyGame implements IGameLogic {
         gameItem3.setPosition(-1, -1, -3);
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(1, -2, -5);
-        gameItem.setPosition(0, 20, -200);
-        //gameItem.setPosition(0, -10, -200);
-        //gameItem.setPosition(0, 0, -50);
-        //gameItem.setPosition(0, 38, -200);
+        
+        //gameItem.setPosition(0, 0, -100);
+        //gameItem.setPosition(0, 20, -200);
+        gameItem.setPosition(0, 20, -200);       
+        //gameItem.setPosition(0, 50, -200);
+        //gameItem.setPosition(30, 30, -100);
+        
         gameItem.setRotation(-60f, 20f, 40f);
         gameItems = new GameItem[] { gameItem, droneItem};
 
@@ -105,7 +108,7 @@ public class DummyGame implements IGameLogic {
         //Start de simulatie in autopilot
         AutopilotOutputs outputs = CommunicatieTestbed.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
         
-        //Schrijf output
+        //Schrijf output 
         drone.getEngine().setThrust(outputs.getThrust());
         drone.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
         drone.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
