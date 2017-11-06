@@ -87,10 +87,11 @@ public class DummyGame implements IGameLogic {
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(1, -2, -5);
         gameItem.setPosition(0, 20, -200);
-        //gameItem.setPosition(0, -10, -200);
+        //gameItem.setPosition(0, -30, -100);
         //gameItem.setPosition(0, 0, -50);
         //gameItem.setPosition(0, 38, -200);
         gameItem.setRotation(-60f, 20f, 40f);
+        droneItem.setRotation(0f, 180f, 0f);
         gameItems = new GameItem[] { gameItem, droneItem};
 
         //Maak config file aan voor de autopilot
@@ -163,6 +164,10 @@ public class DummyGame implements IGameLogic {
         //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
         droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
+        
+        camera.setPosition(drone.getXPos(), drone.getYPos()+1f, drone.getZPos()+0.4f);
+        camera.setRotation(0,0,0);
+        
         
         cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         cameraPlane.setRotation(0f, 0f, 0f);
