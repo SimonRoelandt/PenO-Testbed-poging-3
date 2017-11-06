@@ -6,6 +6,8 @@ public interface DroneObject {
 	
 	public float getMass();
 	
+	public Vector3f getPos();
+	
 	public Vector3f getGraviation();
 	
 	public Vector3f getTotalForce();

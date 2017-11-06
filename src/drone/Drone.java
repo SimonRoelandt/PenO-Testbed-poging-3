@@ -46,22 +46,28 @@ public class Drone {
 	private float pitch;
 	private float roll;
 	
+	private float headingVel;
+	private float pitchVel;
+	private float rollVel;
+	
 	//-1.97864475 voor 1 wing
 	
 	
 	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {
 		//float incl = (float) -2.08343282;
-		this.leftWing         = new Airfoil(0, wingMass, 0);
-		this.rightWing        = new Airfoil(0,wingMass, 0);
-		this.horStabilization = new Airfoil(0, tailMass/2, 0);
-		this.verStabilization = new Airfoil(0, tailMass/2, 1);
-		this.engine           = new Engine(0, engineMass);
 		
 		fysica = new Fysica();
 		
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.zPos = zPos;
+		
+		this.leftWing         = new Airfoil(0, wingMass,   false, new Vector3f(xPos-wingX,yPos,zPos));
+		this.rightWing        = new Airfoil(0, wingMass,   false, new Vector3f(xPos+wingX,yPos,zPos));
+		this.horStabilization = new Airfoil(0, tailMass/2, false, new Vector3f(xPos,yPos,zPos+tailSize));
+		this.verStabilization = new Airfoil(0, tailMass/2, true,  new Vector3f(xPos,yPos,zPos+tailSize));
+		this.engine           = new Engine(0,  engineMass,        new Vector3f(xPos,yPos,zPos-1));
+		
 		this.velocity = velocity;
 		
 		setVelAirfoil(velocity);
@@ -78,7 +84,7 @@ public class Drone {
 	public void update(AutopilotOutputs outputs,float time){
 		
 		
-		System.out.println("thrust: " + outputs.getThrust());
+		//System.out.println("thrust: " + outputs.getThrust());
 		
 		//Schrijf Output
         this.getEngine().setThrust(outputs.getThrust());
@@ -94,10 +100,10 @@ public class Drone {
 		this.setVelocity(v);
 		setVelAirfoil(v);
 		
-		leftWing.setAttackVector(outputs.getLeftWingInclination(), 0);
-		rightWing.setAttackVector(outputs.getRightWingInclination(),0);
-		horStabilization.setAttackVector(outputs.getHorStabInclination(), 0);
-		verStabilization.setAttackVector(outputs.getVerStabInclination(), 1);
+		leftWing.setAttackVector(outputs.getLeftWingInclination(), false);
+		rightWing.setAttackVector(outputs.getRightWingInclination(),false);
+		horStabilization.setAttackVector(outputs.getHorStabInclination(), false);
+		verStabilization.setAttackVector(outputs.getVerStabInclination(), true);
 		
 		
 	}
@@ -267,6 +273,32 @@ public class Drone {
 	public float getRoll() {
 		return this.roll;
 	}
+	
+	public void setHeadingVel(float vel) {
+		this.headingVel = vel;
+	}
+	
+	public float getHeadingVel() {
+		return this.headingVel;
+	}
+	
+	public void setPitchVel(float vel) {
+		this.pitchVel = vel;
+	}
+	
+	public float getPitchingVel() {
+		return this.pitchVel;
+	}
+	
+	public void setRollVel(float vel) {
+		this.rollVel = vel;
+	}
+	
+	public float getRollVel() {
+		return this.rollVel;
+	}
+	
+	
 	
 	//getters van alle finals
 	

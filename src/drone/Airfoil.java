@@ -9,23 +9,34 @@ public class Airfoil implements DroneObject {
 	private float inclination;
 	private float mass;
 	private Vector3f velocity = new Vector3f(0,0,9);
-	private int vertical;
+	private boolean vertical;
+	
+	private Vector3f pos;
 	
 	private Vector3f axisVector = new Vector3f(0,0,0);
 	private Vector3f attackVector = new Vector3f(0,0,0);
 	
 	private Fysica fysica;
 	
-	public Airfoil(double inclination, double mass, int vertical) {
+	public Airfoil(double inclination, double mass, boolean vertical, Vector3f position) {
 		this.inclination = (float) inclination;
 		this.mass = (float) mass;
 		this.fysica = new Fysica();
 		setAxisVector(vertical);
 		setAttackVector(inclination, vertical);
+		this.pos = position;
 	}
 	
 	public Vector3f getTotalForce() {
 		return fysica.totalForce(this);
+	}
+	
+	public Vector3f getPos() {
+		return this.pos;
+	}
+	
+	public void setPos(Vector3f pos) {
+		this.pos = pos;
 	}
 	
 	public float getMass() {
@@ -45,8 +56,8 @@ public class Airfoil implements DroneObject {
 		return fysica.gravitationForce(this);
 	}
 	
-	public void setAxisVector(int vertical) {
-		if (vertical == 0) {
+	public void setAxisVector(boolean vertical) {
+		if (!vertical) {
 			axisVector.x = 1;
 			axisVector.y = 0;
 			axisVector.z = 0;
@@ -64,8 +75,8 @@ public class Airfoil implements DroneObject {
 	
 	
 	
-	public void setAttackVector(double incl, int vertical) {
-		if (vertical == 0) { 
+	public void setAttackVector(double incl, boolean vertical) {
+		if (!vertical) { 
 			attackVector.x = (float) Math.sin(0);
 			attackVector.y = (float) Math.sin(incl);
 			attackVector.z = (float) -Math.cos(incl);
@@ -94,11 +105,9 @@ public class Airfoil implements DroneObject {
 	}
 	
 	public boolean isVertical() {
-		if (this.vertical == 1) {
-			return true;
-		}
-		else return false;
+		return this.vertical; 
 	}
+	
 	
 	public float getLiftSlope() {
 		if (isVertical()) {
