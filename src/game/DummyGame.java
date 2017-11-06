@@ -81,18 +81,18 @@ public class DummyGame implements IGameLogic {
         GameItem droneItem = new GameItem(meshDrone,false);
         droneItem.setScale(0.2f);
         this.droneItem = droneItem;
-        gameItem4.setPosition(-2, -2, -2);
+        gameItem4.setPosition(-2, -2, -30);
         gameItem4.setRotation(-60f, 20f, 40f);
-        gameItem3.setPosition(-1, -1, -3);
+        gameItem3.setPosition(-10, -5, -200);
         gameItem3.setRotation(34f, 53f, 45f);
-        gameItem2.setPosition(1, -2, -5);
-        gameItem.setPosition(0, 20, -200);
+        gameItem2.setPosition(0,0 , -50);
+        gameItem.setPosition(10, -20, -100);
         //gameItem.setPosition(0, -30, -100);
         //gameItem.setPosition(0, 0, -50);
         //gameItem.setPosition(0, 38, -200);
         gameItem.setRotation(-60f, 20f, 40f);
         droneItem.setRotation(0f, 180f, 0f);
-        gameItems = new GameItem[] { gameItem, droneItem};
+        gameItems = new GameItem[] { gameItem,gameItem2,gameItem3,gameItem4, droneItem};
 
         //Maak config file aan voor de autopilot
         Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
@@ -176,15 +176,26 @@ public class DummyGame implements IGameLogic {
         
         
         //bepaalt wanneer de simulatie stopt
-        Vector3f.sub(drone.getPos(), gameItems[0].getPosition(), afstand);
-        if (afstand.length()<4f) {
-       	System.out.println(timer.getTot() + "end");
-        	window.simulationEnded = true;
+        boolean end = true;
+        for(int i = 0 ; i < gameItems.length -1 ; i++){
+        	if(gameItems[i] != null){
+		        Vector3f.sub(drone.getPos(), gameItems[i].getPosition(), afstand);
+		        if (afstand.length()<4f) {
+		       	System.out.println(timer.getTot() + "end");
+		       		Mesh mesh = gameItems[i].getMesh();
+		       		GameItem invisible =  new GameItem(mesh,false);
+		       	    gameItems[i] = invisible;
+		        }
+        	}
+        	if(gameItems[i].getRenderOnPlaneView() == true) end = false;
         }
-        if (timer.getTot() > 2000000) {
-        	System.out.println(timer.getTot());
-        	window.simulationEnded = true;
-        }
+        if (end == true) window.simulationEnded = true;
+        
+        
+//        if (timer.getTot() > 2000000) {
+//        	System.out.println(timer.getTot());
+//        	window.simulationEnded = true;
+//        }
     }
 
     @Override
