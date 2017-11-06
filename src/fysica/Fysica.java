@@ -6,6 +6,7 @@ import drone.Airfoil;
 import drone.Drone;
 import drone.DroneObject;
 import drone.Engine;
+import org.lwjgl.util.vector.Matrix3f;
 
 public class Fysica {
 	
@@ -25,8 +26,67 @@ public class Fysica {
 		return new Vector3f(0,-gravitationForce,0);
 	}
 	
+	public Vector3f Drone_vector_to_world(Vector3f Drone_vector, float pitch, float heading, float roll ){
+		Matrix3f new_matrix = this.Rotation_matrix_Z(roll);
+		Matrix3f Total_matrix=new Matrix3f();
+		Vector3f World_vector=new Vector3f();
+		Matrix3f.mul(new_matrix, this.Rotation_matrix_Y(heading), new_matrix);
+		Matrix3f.mul(new_matrix,this.Rotation_matrix_X(pitch), Total_matrix);
+		Matrix3f.transform(Total_matrix,Drone_vector,World_vector);
+		return World_vector;
+	}
+	
+	public Matrix3f Rotation_matrix_X(float pitch){
+		
+		Matrix3f new_matrix = new Matrix3f();
+		new_matrix.m00=(float) 1;
+		new_matrix.m01=(float) 0;
+		new_matrix.m02=(float) 0;
+		new_matrix.m10=(float) 0;
+		new_matrix.m11=(float) Math.cos(pitch);
+		new_matrix.m12=(float) Math.sin(pitch);
+		new_matrix.m20=(float) 0;
+		new_matrix.m21=(float) -Math.sin(pitch);
+		new_matrix.m22=(float) Math.cos(pitch);
+		
+		return new_matrix;
+	}
+	
+	public Matrix3f Rotation_matrix_Y(float heading){
+		
+		Matrix3f new_matrix = new Matrix3f();
+		new_matrix.m00=(float) Math.cos(heading);
+		new_matrix.m01=(float) 0;
+		new_matrix.m02=(float) -Math.sin(heading);
+		new_matrix.m10=(float) 0;
+		new_matrix.m11=(float) 1;
+		new_matrix.m12=(float) 0;
+		new_matrix.m20=(float) -Math.sin(heading);
+		new_matrix.m21=(float) 0;
+		new_matrix.m22=(float) Math.cos(heading);
+		
+		return new_matrix;
+	}
+	
+	public Matrix3f Rotation_matrix_Z(float roll){
+		
+		Matrix3f new_matrix = new Matrix3f();
+		new_matrix.m00=(float) Math.cos(roll);
+		new_matrix.m01=(float) -Math.sin(roll);
+		new_matrix.m02=(float) 0;
+		new_matrix.m10=(float) Math.sin(roll);
+		new_matrix.m11=(float) Math.cos(roll);
+		new_matrix.m12=(float) 0;
+		new_matrix.m20=(float) 0;
+		new_matrix.m21=(float) 0;
+		new_matrix.m22=(float) 1;
+		
+		return new_matrix;
+	}
+	
+	
+	
 	//liftSlope ?????
-
 	public Vector3f liftForce(Airfoil air) {
 		//System.out.println(air.getClass().getName());
 		Vector3f normal = crossProduct(air.getAxisVector(),air.getAttackVector());
