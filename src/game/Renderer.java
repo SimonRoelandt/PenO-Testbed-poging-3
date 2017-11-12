@@ -3,26 +3,15 @@ package game;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-import java.nio.channels.FileChannel;
-
-
 import org.lwjgl.util.vector.Matrix4f;
 
 import engine.GameItem;
 import engine.Utils;
 import engine.Window;
 import graph.Camera;
-import graph.Mesh;
 import graph.ShaderProgram;
 import graph.Transformation;
-import graph.ProjectionMatrix;
 
 public class Renderer {
 
@@ -172,7 +161,7 @@ public class Renderer {
        
         //TESTEN
 
-        
+        //DRONE BEELD
 //         glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 //         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 //         glBlitFramebuffer(0, 0,imageWidth, imageHeight, 0, 0,window.getWidth(), window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);

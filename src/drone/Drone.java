@@ -1,32 +1,22 @@
 package drone;
 
 import org.lwjgl.util.vector.Vector3f;
-
 import api.AutopilotOutputs;
 import fysica.Fysica;
 
 public class Drone {
 	
-	private Fysica  fysica;
-	
-	private static float gravity = (float) 9.81;
+	//Fysica
+	private Fysica fysica = new Fysica();
 
-	
+	//Onderdelen van de drone
 	private Airfoil leftWing;
 	private Airfoil rightWing;
 	private Airfoil horStabilization;
 	private Airfoil verStabilization;
+	private Engine engine;
 	
-	
-	private Engine  engine;
-	
-	
-	private float xPos;
-	private float yPos;
-	private float zPos;
-	
-	private Vector3f velocity = new Vector3f(0,0,9);
-	
+	//Waarden van de drone
 	private static float wingX = 4;
 	private static float tailSize = 4;
 	
@@ -37,10 +27,15 @@ public class Drone {
 	private static float maxThrust = 1000;
 	private static float maxAOA = (float) (Math.PI /12);
 	
+	private Vector3f velocity = new Vector3f(0,0,9);
+	
 	private static float wingLiftSlope = 1;
 	private static float horStabLiftSlope = 1;
 	private static float verStabLiftSlope = 1;
 	
+	private float xPos;
+	private float yPos;
+	private float zPos;
 	
 	private float heading;
 	private float pitch;
@@ -56,8 +51,6 @@ public class Drone {
 	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {
 		//float incl = (float) -2.08343282;
 		
-		fysica = new Fysica();
-		
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.zPos = zPos;
@@ -68,25 +61,15 @@ public class Drone {
 		this.verStabilization = new Airfoil(0, tailMass/2, true,  new Vector3f(xPos,yPos,zPos+tailSize));
 		this.engine           = new Engine(0,  engineMass,        new Vector3f(xPos,yPos,zPos-1));
 		
-		this.velocity = velocity;
-		
-		setVelAirfoil(velocity);
-	}
-	
-	public void setVelAirfoil(Vector3f vel) {
-		this.getLeftWing().setVelocityAirfoil(vel);
-		this.getRightWing().setVelocityAirfoil(vel);
-		this.getHorStabilizator().setVelocityAirfoil(vel);
-		this.getVerStabilizator().setVelocityAirfoil(vel);
+		setVelocity(velocity);
 	}
 	
 	//Bepaalt de verandering die elke stap gebeurt
 	public void update(AutopilotOutputs outputs,float time){
 		
-		
 		//System.out.println("thrust: " + outputs.getThrust());
 		
-		//Schrijf Output
+		//Schrijf outputs
         this.getEngine().setThrust(outputs.getThrust());
         this.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
         this.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
@@ -98,16 +81,13 @@ public class Drone {
 		
 		Vector3f v = this.getNewVelocity(time);
 		this.setVelocity(v);
-		setVelAirfoil(v);
 		
 		leftWing.setAttackVector(outputs.getLeftWingInclination(), false);
 		rightWing.setAttackVector(outputs.getRightWingInclination(),false);
 		horStabilization.setAttackVector(outputs.getHorStabInclination(), false);
 		verStabilization.setAttackVector(outputs.getVerStabInclination(), true);
 		
-		
 	}
-	
 	
 	//Twee belangrijkste functies
 	public Vector3f getNewPosition(float time) {
@@ -298,9 +278,7 @@ public class Drone {
 		return this.rollVel;
 	}
 	
-	
-	
-	//getters van alle finals
+	//Getters van alle finals
 	
 	public float getWingX() {
 		return this.wingX;
@@ -323,8 +301,6 @@ public class Drone {
 		return this.getHorStabilizator().getMass() + this.getVerStabilizator().getMass();
 	}
 	
-	
-	
 	public float getMaxThrust() {
 		return this.getEngine().getMaxThrust();
 	}
@@ -344,9 +320,5 @@ public class Drone {
 	public float getVerStabLiftSlope() {
 		return this.verStabLiftSlope;
 	}
-	
-	
-	
-	
-	
+
 }

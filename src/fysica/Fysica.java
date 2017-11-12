@@ -20,7 +20,6 @@ public class Fysica {
 		return this.gravity;
 	}
 	
-
 	public Vector3f gravitationForce(DroneObject obj) {
 		float gravitationForce = (float) (obj.getMass() * gravity);
 		return new Vector3f(0,-gravitationForce,0);
@@ -165,8 +164,6 @@ public class Fysica {
 	}
 	
 	//Hulpfuncties
-	
-	//vector1.xcoordinaat*vector2.xcoordinaat+vector1.ycoordinaat*vector2.ycoordinaat+vector1.zcoordinaat*vector2.zcoordinaat;	
 	
 	public Vector3f crossProduct(Vector3f v1, Vector3f v2) {
 		Vector3f v = Vector3f.cross(v1,v2,null);
