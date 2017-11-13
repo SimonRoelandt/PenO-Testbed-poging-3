@@ -27,9 +27,17 @@ public class Airfoil implements DroneObject {
 		this.pos = position;
 	}
 	
+	public Vector3f getLiftForce() {
+		return fysica.liftForce(this);
+	}
+	
 	public Vector3f getTotalForce() {
 		return fysica.totalForce(this);
 	}
+	
+//	public Vector3f getNewVelocity() {
+//		return fysica.velocity(drone, time)
+//	}
 	
 	public Vector3f getPos() {
 		return this.pos;

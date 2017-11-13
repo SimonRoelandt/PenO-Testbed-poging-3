@@ -60,6 +60,8 @@ public class DummyGame implements IGameLogic {
         cameraSide = new Camera();
         cameraSide.setPosition(10, 0, -60);
         cameraSide.setRotation(0, -90f, 0);
+        camera.setPosition(20, 0, -50);
+        camera.setRotation(0, -90f, 0);
         cameraInc = new Vector3f(0,0,0);
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
@@ -111,7 +113,6 @@ public class DummyGame implements IGameLogic {
         
         //Maak eerste input aan voor autopilot
         Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
-        
         //Start de simulatie in autopilot
         AutopilotOutputs outputs = CommunicatieTestbed.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
         
@@ -182,7 +183,7 @@ public class DummyGame implements IGameLogic {
         cameraPlane.setRotation(0f, 0f, 0f);
         
        // System.out.println(drone.getZPos() - gameItems[0].getPosition().z);
-        
+       //System.out.println("Vel: " + drone.getVelocity()); 
         
         //bepaalt wanneer de simulatie stopt
         boolean end = true;
