@@ -172,6 +172,44 @@ public class Fysica {
 		return v;
 	}
 	
+	// Tactiek => headings vector berekenen met gegevens uit de autopilot via momentvergelijkingen
+	// => Hiermee kan volgens de definities gegeven in de opdracht de NIEUWE heding, pitch, roll gehaald worden 
+	
+	public float Getheading (Vector3f HeadingsVector) {
+		HeadingsVector.y=0;
+		Vector3f BasisvectorX= new Vector3f();
+		BasisvectorX.set(-1, 0, 0);
+		Vector3f BasisvectorZ= new Vector3f();
+		 BasisvectorZ.set(0, 0, -1);
+		return (float) Math.atan2( scalarProduct(HeadingsVector,BasisvectorZ),scalarProduct(HeadingsVector,BasisvectorX)); // omgekeerd gedefinieerd (y,x)
+	}
+	
+	public float GetPitch(Vector3f Headingsvector,Vector3f ForwardVector  ) {
+		Vector3f BasisvectorY= new Vector3f();
+		BasisvectorY.set(0, 1, 0);
+		return (float) Math.atan2( scalarProduct( ForwardVector,Headingsvector),scalarProduct(ForwardVector,Headingsvector));
+		
+	}
+	
+	public float GetRoll(Vector3f Headingsvector, Vector3f Rightdirection) {
+		Vector3f BasisvectorY= new Vector3f();
+		BasisvectorY.set(0, 1, 0);
+		Vector3f R0= new Vector3f();
+		R0=crossProduct(Headingsvector,BasisvectorY);
+		return (float) Math.atan2(scalarProduct(Rightdirection,R0), scalarProduct(Rightdirection, BasisvectorY));
+				
+				
+				
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	//Hulpfuncties
