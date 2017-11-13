@@ -37,6 +37,20 @@ public class Transformation {
 		return projectionMatrix;
 	}
 	
+	public final Matrix4f getProjectionMatrixOrthogonal(float width, float height, float zNear, float zFar) {
+		float aspectRatio = width/height;
+        float zp = zFar+zNear;
+		float zm = zFar-zNear;
+		projectionMatrix.setIdentity();
+        projectionMatrix.m00 = 2f/width;
+		projectionMatrix.m11 = 2f/height;
+		projectionMatrix.m22 = 1/zm;
+		projectionMatrix.m32 = -(zNear)/zm;
+		projectionMatrix.m23 = 0;
+		projectionMatrix.m33 = 1f;
+		return projectionMatrix;
+	}
+	
 	
 	public Matrix4f getViewMatrix(Camera camera) {
 		Vector3f cameraPos = camera.getPosition();

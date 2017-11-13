@@ -3,6 +3,9 @@ package game;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -44,8 +47,8 @@ public class DummyGame implements IGameLogic {
     
     private static final float CAMERA_POS_STEP = 0.5f;
     
-    private GameItem[] gameItems;
-    
+    private List<GameItem> gameItems;
+
     private GameItem droneItem;
     
     private Vector3f afstand = new Vector3f();
@@ -62,7 +65,7 @@ public class DummyGame implements IGameLogic {
         renderer = new Renderer();
         camera = new Camera();
         cameraSide = new Camera();
-        cameraSide.setPosition(10, 0, -60);
+        cameraSide.setPosition(-20, 0, -60);
         cameraSide.setRotation(0, -90f, 0);
         camera.setPosition(20, 0, -50);
         camera.setRotation(0, -90f, 0);
@@ -74,7 +77,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setRotation(90f, 0, 0);
         timer = new Timer();
         drone = new Drone(0, 0, 0, new Vector3f(0,0,-8));
-        gui = new GUI();
+        //gui = new GUI();
     }
 
 
@@ -82,8 +85,8 @@ public class DummyGame implements IGameLogic {
     public void init(Window window) throws Exception {
         renderer.init(window);
         timer.init();
-        gui.init();
-        gui.run();
+        //gui.init();
+        //gui.run();
         this.window = window;
         
         // Maak de gameItem meshes aan
@@ -117,10 +120,10 @@ public class DummyGame implements IGameLogic {
         //gameItem.setPosition(0, 38, -200);
         gameItem.setRotation(-60f, 20f, 40f);
           
-        gameItems = new GameItem[] { gameItem,gameItem2,gameItem3,gameItem4, droneItem};
+        gameItems = new ArrayList<GameItem>(Arrays.asList(gameItem,gameItem2,gameItem3,gameItem4, droneItem));
 
 //        gameItems = worldGenerator(5);
-//        gameItems[5] = droneItem;
+//        gameItems.add(drone);
         
         //Maak config file aan voor de autopilot
         Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
@@ -204,18 +207,16 @@ public class DummyGame implements IGameLogic {
         
         //bepaalt wanneer de simulatie stopt
         boolean end = true;
-        for(int i = 0 ; i < gameItems.length -1 ; i++){
-        	if(gameItems[i] != null){
-		        Vector3f.sub(drone.getPos(), gameItems[i].getPosition(), afstand);
+        for(int i = 0 ; i < gameItems.size() -1 ; i++){
+        	if(gameItems.get(i) != null){
+		        Vector3f.sub(drone.getPos(), gameItems.get(i).getPosition(), afstand);
 		        if (afstand.length()<4f) {
 		        	//System.out.println(timer.getTot() + "end");
-		       		Mesh mesh = gameItems[i].getMesh();
-		       		GameItem invisible =  new GameItem(mesh,false);
-		       	    gameItems[i] = invisible;
+		       	    gameItems.remove(i);
 		       	    System.out.println("TARGET HIT");
 		        }
         	}
-        	if(gameItems[i].getRenderOnPlaneView() == true) end = false;
+        	if(gameItems.get(i).getRenderOnPlaneView() == true) end = false;
         }
         if (end == true) window.simulationEnded = true;
         
@@ -227,9 +228,9 @@ public class DummyGame implements IGameLogic {
     }
     
     //Genereert n willekeurige kubussen
-    public GameItem[] worldGenerator(int n){
+    public List<GameItem> worldGenerator(int n){
     	Random rand = new Random();
-    	GameItem[] gameItems = new GameItem[n+1];
+    	List<GameItem> gameItems = new ArrayList<GameItem>();
     	Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{115f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
         Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
         
@@ -246,7 +247,7 @@ public class DummyGame implements IGameLogic {
         	
         	gameItem.setPosition(x, y, z);
             gameItem.setRotation(0, 0, 0);
-            gameItems[i] = gameItem;
+            gameItems.add(gameItem);
         }
         return gameItems;
     }

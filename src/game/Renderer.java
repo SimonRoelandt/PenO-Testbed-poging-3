@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.channels.FileChannel;
-
+import java.util.List;
 
 import org.lwjgl.util.vector.Matrix4f;
 
@@ -164,7 +164,7 @@ public class Renderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    public void render(Window window, Camera camera, Camera cameraPlane, Camera cameraSide, Camera cameraTop, GameItem[] gameItems) throws Exception {
+    public void render(Window window, Camera camera, Camera cameraPlane, Camera cameraSide, Camera cameraTop, List<GameItem> gameItems) throws Exception {
         clear();
 
         if ( window.isResized() ) {
@@ -220,12 +220,13 @@ public class Renderer {
        	//Verander naar orthogonaal
        	
        	
-       	//projectionMatrix = transformation.getProjectionMatrixOrthogonal(window.getWidth(), window.getHeight(), z_near, z_far);
+       	projectionMatrix = transformation.getProjectionMatrixOrthogonal(100,100, z_near, z_far);
+       	shaderProgram.setUniform("projectionMatrix",projectionMatrix);
        	// orthogonale projectiematrix werkt nog niet
        	
        	
        	
-        shaderProgram.setUniform("projectionMatrix",projectionMatrix);
+        
        	System.out.println(projectionMatrix);
        	
         //SIDE
