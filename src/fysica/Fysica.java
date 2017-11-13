@@ -84,20 +84,6 @@ public class Fysica {
 		return new_matrix;
 	}
 	
-	
-	
-	//liftSlope ?????
-//	public Vector3f liftForce(Airfoil air) {
-//		Vector3f normal = crossProduct(air.getAxisVector(),air.getAttackVector());
-//		Vector3f airspeed = air.getVelocityAirfoil();
-//		Vector3f axis = air.getAxisVector();
-//		Vector3f projectedAirspeed = Vector3f.sub(airspeed, mul( mul(airspeed,axis),axis),null);
-//		float angleOfAttack = (float) -Math.atan2(scalarProduct(projectedAirspeed,normal), scalarProduct(projectedAirspeed,air.getAttackVector()));
-//		Vector3f proj = new Vector3f(0,0,projectedAirspeed.getZ());
-//		Vector3f liftForce = product((float)(angleOfAttack *Math.pow(proj.getZ(),2)),product(air.getLiftSlope(),normal));
-//		return liftForce;
-//	}
-	
 	public Vector3f liftForce(Airfoil air) {
 		Vector3f normal = crossProduct(air.getAxisVector(),air.getAttackVector());
 		Vector3f airspeed = air.getVelocityAirfoil();
@@ -106,6 +92,7 @@ public class Fysica {
 		float angleOfAttack = (float) -Math.atan2(scalarProduct(projectedAirspeed,normal), scalarProduct(projectedAirspeed,air.getAttackVector()));
 		Vector3f proj = new Vector3f(0,0,projectedAirspeed.getZ());
 		Vector3f liftForce = product((float)(angleOfAttack *Math.pow(proj.getZ(),2)),product(air.getLiftSlope(),normal));
+		System.out.println("Lift: " + liftForce);
 		return liftForce;
 	}
 	
@@ -149,8 +136,10 @@ public class Fysica {
 		Vector3f vel = product((float) (Math.pow(time,2)/2),acc);
 		Vector3f pos = sum(sum(drone.getPos(),product(time, drone.getVelocity())),
 				          vel);
-		Vector3f posW = Drone_vector_to_world(pos,drone.getPitch(),drone.getHeading(),drone.getRoll());
-		return posW;
+		//System.out.println("Pos: " + pos);
+		Vector3f posInWorld = Drone_vector_to_world(pos,drone.getPitch(),drone.getHeading(),drone.getRoll());
+		//System.out.println("PosW: " + posInWorld);
+		return posInWorld;
 	}
 	
 	
@@ -158,10 +147,32 @@ public class Fysica {
 		Vector3f acc = acceleration(drone);
 		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
 		Vector3f v = sum(drone.getVelocity(), at);
-		//System.out.println("Pro: " + product(time, acc));
-		Vector3f vW = Drone_vector_to_world(v,drone.getPitch(),drone.getHeading(),drone.getRoll());
-		return vW;
+		Vector3f vInWorld = Drone_vector_to_world(v,drone.getPitch(),drone.getHeading(),drone.getRoll());
+		return vInWorld;
 	}
+	
+	public Vector3f accelerationAirfoil(Airfoil air) {
+		Vector3f force = air.getTotalForce();
+		Vector3f acceleration = product((1/air.getMass()),force);
+		return acceleration;
+	}
+	
+	public Vector3f nextPositionAirfoil(Airfoil air, float time) {
+		Vector3f acc = accelerationAirfoil(air);
+		Vector3f vel = product((float) (Math.pow(time, 2)/2),acc);
+		Vector3f pos = sum(sum(air.getPos(),product(time,air.getVelocityAirfoil())),
+						vel);
+		return pos;
+	}
+	
+	public Vector3f velocityAirfoil(Airfoil air, float time) {
+		Vector3f acc = accelerationAirfoil(air);
+		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
+		Vector3f v = sum(air.getVelocityAirfoil(),at);
+		return v;
+	}
+	
+	
 	
 	//Hulpfuncties
 	
