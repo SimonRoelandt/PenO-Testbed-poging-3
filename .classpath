@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCv"/>
-	<classpathentry kind="lib" path="C:/Users/gillis/Downloads/AutopilotLibrary.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
@@ -18,4 +6,3 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCv"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
->>>>>>> branch 'master' of https://github.com/SimonRoelandt/PenO-Testbed-poging-3.git
