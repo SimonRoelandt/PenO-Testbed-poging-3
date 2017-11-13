@@ -1,29 +1,50 @@
 package drone;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import fysica.Fysica;
 
 public class Airfoil implements DroneObject {
 
 	private float inclination;
 	private float mass;
-	private float[] velocity;
-	private int vertical;
+	private Vector3f velocity = new Vector3f(0,0,9);
+	private boolean vertical;
 	
-	private float[] axisVector = {0,0,0};
-	private float[] attackVector = {0,0,0};
+	private Vector3f pos;
+	
+	private Vector3f axisVector = new Vector3f(0,0,0);
+	private Vector3f attackVector = new Vector3f(0,0,0);
 	
 	private Fysica fysica;
 	
-	public Airfoil(double inclination, double mass, int vertical) {
+	public Airfoil(double inclination, double mass, boolean vertical, Vector3f position) {
 		this.inclination = (float) inclination;
 		this.mass = (float) mass;
 		this.fysica = new Fysica();
 		setAxisVector(vertical);
 		setAttackVector(inclination, vertical);
+		this.pos = position;
 	}
 	
-	public float[] getTotalForce() {
+	public Vector3f getLiftForce() {
+		return fysica.liftForce(this);
+	}
+	
+	public Vector3f getTotalForce() {
 		return fysica.totalForce(this);
+	}
+	
+//	public Vector3f getNewVelocity() {
+//		return fysica.velocity(drone, time)
+//	}
+	
+	public Vector3f getPos() {
+		return this.pos;
+	}
+	
+	public void setPos(Vector3f pos) {
+		this.pos = pos;
 	}
 	
 	public float getMass() {
@@ -39,51 +60,51 @@ public class Airfoil implements DroneObject {
 	}
 
 	@Override
-	public float[] getGraviation() {
+	public Vector3f getGraviation() {
 		return fysica.gravitationForce(this);
 	}
 	
-	public void setAxisVector(int vertical) {
-		if (vertical == 0) {
-			axisVector[0] = 1;
-			axisVector[1] = 0;
-			axisVector[2] = 0;
+	public void setAxisVector(boolean vertical) {
+		if (!vertical) {
+			axisVector.x = 1;
+			axisVector.y = 0;
+			axisVector.z = 0;
 		}
 		else {
-			axisVector[0] = 0;
-			axisVector[1] = 1;
-			axisVector[2] = 0;
+			axisVector.x = 0;
+			axisVector.y = 1;
+			axisVector.z = 0;
 		}
 	}
 	
-	public float[] getAxisVector() {
+	public Vector3f getAxisVector() {
 		return this.axisVector;
 	}
 	
 	
 	
-	public void setAttackVector(double incl, int vertical) {
-		if (vertical == 0) { 
-			attackVector[0] = (float) Math.sin(0);
-			attackVector[1] = (float) Math.sin(incl);
-			attackVector[2] = (float) -Math.cos(incl);
+	public void setAttackVector(double incl, boolean vertical) {
+		if (!vertical) { 
+			attackVector.x = (float) Math.sin(0);
+			attackVector.y = (float) Math.sin(incl);
+			attackVector.z = (float) -Math.cos(incl);
 		}
 		else {
-			attackVector[0] = (float) Math.sin(incl);
-			attackVector[1] = (float) Math.sin(0);
-			attackVector[2] = (float) -Math.cos(incl);
+			attackVector.x = (float) -Math.sin(incl);
+			attackVector.y = (float) Math.sin(0);
+			attackVector.z = (float) -Math.cos(incl);
 		}
 	}
 	
-	public float[] getAttackVector() {
+	public Vector3f getAttackVector() {
 		return this.attackVector;
 	}
 	
-	public void setVelocityAirfoil(float[] vel) {
+	public void setVelocityAirfoil(Vector3f vel) {
 		this.velocity = vel;
 	}
 	
-	public float[] getVelocityAirfoil() {
+	public Vector3f getVelocityAirfoil() {
 		return this.velocity;
 	}
 	
@@ -92,10 +113,15 @@ public class Airfoil implements DroneObject {
 	}
 	
 	public boolean isVertical() {
-		if (this.vertical == 1) {
-			return true;
+		return this.vertical; 
+	}
+	
+	
+	public float getLiftSlope() {
+		if (isVertical()) {
+			return (float) 1.0;
 		}
-		else return false;
+		return (float) 1.0;
 	}
 	
 	

@@ -3,6 +3,7 @@ package graph;
 import org.lwjgl.util.vector.Matrix4f;
 
 public class ProjectionMatrix extends Matrix4f {
+	
 	public ProjectionMatrix(float AspectRatio, float fov, float Z_near, float Z_far) {
 		this.AspectRatio = AspectRatio;
 		this.fov = fov;
@@ -44,7 +45,6 @@ public class ProjectionMatrix extends Matrix4f {
 		projectionmatrix.m13 = 0f;
 		projectionmatrix.m23 = 0f;
 		projectionmatrix.m33 = 0.5f;
-		//System.out.println(projectionmatrix);
 		
 	}
 	
