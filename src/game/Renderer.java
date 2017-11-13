@@ -3,15 +3,26 @@ package game;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+import java.nio.channels.FileChannel;
+
+
 import org.lwjgl.util.vector.Matrix4f;
 
 import engine.GameItem;
 import engine.Utils;
 import engine.Window;
 import graph.Camera;
+import graph.Mesh;
 import graph.ShaderProgram;
 import graph.Transformation;
+import graph.ProjectionMatrix;
 
 public class Renderer {
 
@@ -45,8 +56,8 @@ public class Renderer {
     	this.imageWidth = window.getWidth();
     	this.imageWidthAutopilot = 200;
     	this.imageHeightAutopilot = 200;
-    	this.imageHeight = 450;
-    	this.imageWidth = 450;
+    	this.imageHeight = 500;
+    	this.imageWidth = 500;
         this.pixels = ByteBuffer.allocateDirect(imageWidthAutopilot*imageHeightAutopilot*3);  
     	this.pixelsarray = new byte[imageWidthAutopilot*imageHeightAutopilot*3];
 
@@ -167,7 +178,7 @@ public class Renderer {
         Matrix4f projectionMatrix = transformation.getProjectionMatrix(fov, window.getWidth(), window.getHeight(), z_near, z_far);
         //projectionMatrix = transformation.getProjectionMatrixOrthogonal(window.getWidth(), window.getHeight(), z_near, z_far);
         shaderProgram.setUniform("projectionMatrix",projectionMatrix);
-        //System.out.println(projectionMatrix);
+        System.out.println(projectionMatrix);
         
         // Update view Matrix
         Matrix4f viewMatrix = transformation.getViewMatrix(camera);
@@ -215,7 +226,7 @@ public class Renderer {
        	
        	
         shaderProgram.setUniform("projectionMatrix",projectionMatrix);
-       	//System.out.println(projectionMatrix);
+       	System.out.println(projectionMatrix);
        	
         //SIDE
         viewMatrix = transformation.getViewMatrix(cameraSide);
@@ -256,19 +267,17 @@ public class Renderer {
        
         //TESTEN
 
-
-        //DRONE BEELD
-//         glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-//         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-//         glBlitFramebuffer(0, 0,imageWidth, imageHeight, 0, 0,window.getWidth(), window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-
+        
+      glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+      glBlitFramebuffer(0, 0,imageWidthAutopilot, imageHeightAutopilot, 0, 0 ,imageWidthAutopilot, imageHeightAutopilot, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         
       //Maak byte[] aan van het zicht van de drone
       glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
       glReadPixels(0, 0, imageWidthAutopilot, imageHeightAutopilot, GL_RGB, GL_BYTE, pixels);   
       for (int i = 0; i < imageWidthAutopilot*imageHeightAutopilot*3; i++)
       	pixelsarray[i] = pixels.get(i);
-      //System.out.println(pixelsarray.length);
+      System.out.println(pixelsarray.length);
       glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
       glBlitFramebuffer(0, 0,imageWidthAutopilot, imageHeightAutopilot, 0, 0 ,imageWidth, imageHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);

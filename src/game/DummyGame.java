@@ -82,8 +82,8 @@ public class DummyGame implements IGameLogic {
     public void init(Window window) throws Exception {
         renderer.init(window);
         timer.init();
-        //gui.init();
-        //gui.run();
+        gui.init();
+        gui.run();
         this.window = window;
         
         // Maak de gameItem meshes aan
@@ -97,30 +97,30 @@ public class DummyGame implements IGameLogic {
         droneItem.setRotation(0f, 180f, 0f);
         this.droneItem = droneItem;
         
-//        //Kubussen
-//        Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{115f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
-//        Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
-//
-//        GameItem gameItem = new GameItem(mesh,true);
-//        GameItem gameItem2 = new GameItem(mesh,true);
-//        GameItem gameItem3 = new GameItem(mesh,true);
-//        GameItem gameItem4 = new GameItem(mesh,true);
-//        
-//        gameItem4.setPosition(-2, -2, -30);
-//        gameItem4.setRotation(-60f, 20f, 40f);
-//        gameItem3.setPosition(-10, -5, -200);
-//        gameItem3.setRotation(34f, 53f, 45f);
-//        gameItem2.setPosition(0,0 , -50);
-//        gameItem.setPosition(10, -20, -100);
-//        //gameItem.setPosition(0, -30, -100);
-//        //gameItem.setPosition(0, 0, -50);
-//        //gameItem.setPosition(0, 38, -200);
-//        gameItem.setRotation(-60f, 20f, 40f);
-          
-//        gameItems = new GameItem[] { gameItem,gameItem2,gameItem3,gameItem4, droneItem};
+        //Kubussen
+        Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{115f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
+        Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
 
-        gameItems = worldGenerator(5);
-        gameItems[5] = droneItem;
+        GameItem gameItem = new GameItem(mesh,true);
+        GameItem gameItem2 = new GameItem(mesh,true);
+        GameItem gameItem3 = new GameItem(mesh,true);
+        GameItem gameItem4 = new GameItem(mesh,true);
+        
+        gameItem4.setPosition(-2, -2, -30);
+        gameItem4.setRotation(-60f, 20f, 40f);
+        gameItem3.setPosition(-10, -5, -200);
+        gameItem3.setRotation(34f, 53f, 45f);
+        gameItem2.setPosition(0,0 , -50);
+        gameItem.setPosition(10, -20, -100);
+        //gameItem.setPosition(0, -30, -100);
+        //gameItem.setPosition(0, 0, -50);
+        //gameItem.setPosition(0, 38, -200);
+        gameItem.setRotation(-60f, 20f, 40f);
+          
+        gameItems = new GameItem[] { gameItem,gameItem2,gameItem3,gameItem4, droneItem};
+
+//        gameItems = worldGenerator(5);
+//        gameItems[5] = droneItem;
         
         //Maak config file aan voor de autopilot
         Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
@@ -190,7 +190,7 @@ public class DummyGame implements IGameLogic {
         //System.out.println("Vel: " + drone.getVelocity());
         //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
         droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
-        //droneItem.setRotation(drone.getXRot(), drone.getYRot, drone.getZRot);
+        droneItem.setRotation(drone.getPitch(), 180 + drone.getHeading(), drone.getRoll());
         
         camera.setPosition(drone.getXPos(), drone.getYPos()+1f, drone.getZPos()+0.4f);
         camera.setRotation(0,0,0);
