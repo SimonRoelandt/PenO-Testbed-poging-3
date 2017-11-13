@@ -17,6 +17,19 @@ public class Fysica {
 
 	private float liftSlope = (float) 1.5;
 	
+	
+	
+	public Vector3f convertToWorld(Vector3f Drone_vector, float pitch, float heading, float roll ){
+		Matrix3f new_matrix = this.Rotation_matrix_Roll(roll);
+		Matrix3f Total_matrix=new Matrix3f();
+		Vector3f World_vector=new Vector3f();
+		Matrix3f.mul(new_matrix, this.Rotation_matrix_Heading(heading), new_matrix);
+		Matrix3f.mul(new_matrix,this.Rotation_matrix_Pitch(pitch), Total_matrix);
+		Matrix3f.transform(Total_matrix,Drone_vector,World_vector);
+		return World_vector;
+	}
+	
+	
 	public float getGravity() {
 		return this.gravity;
 	}
@@ -26,15 +39,6 @@ public class Fysica {
 		return new Vector3f(0,-gravitationForce,0);
 	}
 	
-	public Vector3f Drone_vector_to_world(Vector3f Drone_vector, float pitch, float heading, float roll ){
-		Matrix3f new_matrix = this.Rotation_matrix_Roll(roll);
-		Matrix3f Total_matrix=new Matrix3f();
-		Vector3f World_vector=new Vector3f();
-		Matrix3f.mul(new_matrix, this.Rotation_matrix_Heading(heading), new_matrix);
-		Matrix3f.mul(new_matrix,this.Rotation_matrix_Pitch(pitch), Total_matrix);
-		Matrix3f.transform(Total_matrix,Drone_vector,World_vector);
-		return World_vector;
-	}
 	
 	
 public Matrix3f Rotation_matrix_Pitch(float pitch){
