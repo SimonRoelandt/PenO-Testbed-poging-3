@@ -215,7 +215,7 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 	
 	
 	
-	//Hulpfuncties
+	//Hulpfunctiess
 	
 	public Vector3f crossProduct(Vector3f v1, Vector3f v2) {
 		Vector3f v = Vector3f.cross(v1,v2,null);
