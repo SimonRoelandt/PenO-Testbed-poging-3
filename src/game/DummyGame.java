@@ -54,6 +54,8 @@ public class DummyGame implements IGameLogic {
     
     private Timer timer;
     
+    private GUI gui;
+    
 
 
     public DummyGame() {
@@ -72,6 +74,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setRotation(90f, 0, 0);
         timer = new Timer();
         drone = new Drone(0, 0, 0, new Vector3f(0,0,-8));
+        gui = new GUI();
     }
 
 
@@ -79,6 +82,8 @@ public class DummyGame implements IGameLogic {
     public void init(Window window) throws Exception {
         renderer.init(window);
         timer.init();
+        gui.init();
+        gui.run();
         this.window = window;
         
         // Maak de gameItem meshes aan
