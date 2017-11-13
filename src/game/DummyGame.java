@@ -3,6 +3,8 @@ package game;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import java.util.Random;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -80,31 +82,40 @@ public class DummyGame implements IGameLogic {
         this.window = window;
         
         // Maak de gameItem meshes aan
+        
+        //Drone Item
         Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, 1f, 1f, 1f, new float[]{0f,0f,0f}, new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f});
-        Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{115f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
-        Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
         //Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
         Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
-        GameItem gameItem = new GameItem(mesh,true);
-        GameItem gameItem2 = new GameItem(mesh,true);
-        GameItem gameItem3 = new GameItem(mesh,true);
-        GameItem gameItem4 = new GameItem(mesh,true);
         GameItem droneItem = new GameItem(meshDrone,false);
         droneItem.setScale(0.2f);
         this.droneItem = droneItem;
-        gameItem4.setPosition(-2, -2, -30);
-        gameItem4.setRotation(-60f, 20f, 40f);
-        gameItem3.setPosition(-10, -5, -200);
-        gameItem3.setRotation(34f, 53f, 45f);
-        gameItem2.setPosition(0,0 , -50);
-        gameItem.setPosition(10, -20, -100);
-        //gameItem.setPosition(0, -30, -100);
-        //gameItem.setPosition(0, 0, -50);
-        //gameItem.setPosition(0, 38, -200);
-        gameItem.setRotation(-60f, 20f, 40f);
-        droneItem.setRotation(0f, 180f, 0f);
-        gameItems = new GameItem[] { gameItem,gameItem2,gameItem3,gameItem4, droneItem};
+        
+//        //Kubussen
+//        Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{115f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
+//        Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
+//
+//        GameItem gameItem = new GameItem(mesh,true);
+//        GameItem gameItem2 = new GameItem(mesh,true);
+//        GameItem gameItem3 = new GameItem(mesh,true);
+//        GameItem gameItem4 = new GameItem(mesh,true);
+//        
+//        gameItem4.setPosition(-2, -2, -30);
+//        gameItem4.setRotation(-60f, 20f, 40f);
+//        gameItem3.setPosition(-10, -5, -200);
+//        gameItem3.setRotation(34f, 53f, 45f);
+//        gameItem2.setPosition(0,0 , -50);
+//        gameItem.setPosition(10, -20, -100);
+//        //gameItem.setPosition(0, -30, -100);
+//        //gameItem.setPosition(0, 0, -50);
+//        //gameItem.setPosition(0, 38, -200);
+//        gameItem.setRotation(-60f, 20f, 40f);
+//        droneItem.setRotation(0f, 180f, 0f);
+//        gameItems = new GameItem[] { gameItem,gameItem2,gameItem3,gameItem4, droneItem};
 
+        gameItems = worldGenerator(5);
+        gameItems[5] = droneItem;
+        
         //Maak config file aan voor de autopilot
         Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
         							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
@@ -191,10 +202,11 @@ public class DummyGame implements IGameLogic {
         	if(gameItems[i] != null){
 		        Vector3f.sub(drone.getPos(), gameItems[i].getPosition(), afstand);
 		        if (afstand.length()<4f) {
-		       	System.out.println(timer.getTot() + "end");
+		        	//System.out.println(timer.getTot() + "end");
 		       		Mesh mesh = gameItems[i].getMesh();
 		       		GameItem invisible =  new GameItem(mesh,false);
 		       	    gameItems[i] = invisible;
+		       	    System.out.println("TARGET HIT");
 		        }
         	}
         	if(gameItems[i].getRenderOnPlaneView() == true) end = false;
@@ -207,7 +219,33 @@ public class DummyGame implements IGameLogic {
 //        	window.simulationEnded = true;
 //        }
     }
-
+    
+    //Genereert n willekeurige kubussen
+    public GameItem[] worldGenerator(int n){
+    	Random rand = new Random();
+    	GameItem[] gameItems = new GameItem[n+1];
+    	Balk balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{115f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
+        Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
+        
+        for(int i=0;i<n;i++){
+        	GameItem gameItem = new GameItem(mesh,true);
+        	
+        	float z = i * -40f;
+        	float x = rand.nextInt(20) -10;
+            float y = rand.nextInt(20) -10;
+            while(Math.sqrt(Math.pow(x,2) + Math.pow(y,2)) > 10){
+            	x = rand.nextInt(20) -10;
+                y = rand.nextInt(20) -10;
+            }
+        	
+        	gameItem.setPosition(x, y, z);
+            gameItem.setRotation(0, 0, 0);
+            gameItems[i] = gameItem;
+        }
+        return gameItems;
+    }
+    
+    
     @Override
     public void render(Window window) throws Exception {
         renderer.render(window, camera, cameraPlane, cameraSide, cameraTop, gameItems);

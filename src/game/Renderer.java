@@ -167,7 +167,7 @@ public class Renderer {
         Matrix4f projectionMatrix = transformation.getProjectionMatrix(fov, window.getWidth(), window.getHeight(), z_near, z_far);
         //projectionMatrix = transformation.getProjectionMatrixOrthogonal(window.getWidth(), window.getHeight(), z_near, z_far);
         shaderProgram.setUniform("projectionMatrix",projectionMatrix);
-        System.out.println(projectionMatrix);
+        //System.out.println(projectionMatrix);
         
         // Update view Matrix
         Matrix4f viewMatrix = transformation.getViewMatrix(camera);
@@ -215,7 +215,7 @@ public class Renderer {
        	
        	
         shaderProgram.setUniform("projectionMatrix",projectionMatrix);
-       	System.out.println(projectionMatrix);
+       	//System.out.println(projectionMatrix);
        	
         //SIDE
         viewMatrix = transformation.getViewMatrix(cameraSide);
@@ -268,7 +268,7 @@ public class Renderer {
       glReadPixels(0, 0, imageWidthAutopilot, imageHeightAutopilot, GL_RGB, GL_BYTE, pixels);   
       for (int i = 0; i < imageWidthAutopilot*imageHeightAutopilot*3; i++)
       	pixelsarray[i] = pixels.get(i);
-      System.out.println(pixelsarray.length);
+      //System.out.println(pixelsarray.length);
       glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
       glBlitFramebuffer(0, 0,imageWidthAutopilot, imageHeightAutopilot, 0, 0 ,imageWidth, imageHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);

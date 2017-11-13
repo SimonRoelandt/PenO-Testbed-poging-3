@@ -27,11 +27,11 @@ public class Fysica {
 	}
 	
 	public Vector3f Drone_vector_to_world(Vector3f Drone_vector, float pitch, float heading, float roll ){
-		Matrix3f new_matrix = this.Rotation_matrix_Z(roll);
+		Matrix3f new_matrix = this.Rotation_matrix_Roll(roll);
 		Matrix3f Total_matrix=new Matrix3f();
 		Vector3f World_vector=new Vector3f();
-		Matrix3f.mul(new_matrix, this.Rotation_matrix_Y(heading), new_matrix);
-		Matrix3f.mul(new_matrix,this.Rotation_matrix_X(pitch), Total_matrix);
+		Matrix3f.mul(new_matrix, this.Rotation_matrix_Heading(heading), new_matrix);
+		Matrix3f.mul(new_matrix,this.Rotation_matrix_Pitch(pitch), Total_matrix);
 		Matrix3f.transform(Total_matrix,Drone_vector,World_vector);
 		return World_vector;
 	}
@@ -95,7 +95,7 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		float angleOfAttack = (float) -Math.atan2(scalarProduct(projectedAirspeed,normal), scalarProduct(projectedAirspeed,air.getAttackVector()));
 		Vector3f proj = new Vector3f(0,0,projectedAirspeed.getZ());
 		Vector3f liftForce = product((float)(angleOfAttack *Math.pow(proj.getZ(),2)),product(air.getLiftSlope(),normal));
-		System.out.println("Lift: " + liftForce);
+		//System.out.println("Lift: " + liftForce);
 		return liftForce;
 	}
 	

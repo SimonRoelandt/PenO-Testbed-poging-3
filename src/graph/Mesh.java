@@ -96,8 +96,8 @@ public class Mesh {
     	
     	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     	glViewport(0,0,imageWidth,imageHeight);
-    	System.out.println(imageWidth);
-    	System.out.println(imageHeight);
+    	//System.out.println(imageWidth);
+    	//System.out.println(imageHeight);
         glBindVertexArray(getVaoId());
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
