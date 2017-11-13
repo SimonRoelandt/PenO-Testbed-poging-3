@@ -36,6 +36,10 @@ public class DummyGame implements IGameLogic {
     
     private final Camera cameraPlane;
     
+    private final Camera cameraSide;
+    
+    private final Camera cameraTop;
+    
     private static final float CAMERA_POS_STEP = 0.5f;
     
     private GameItem[] gameItems;
@@ -53,14 +57,19 @@ public class DummyGame implements IGameLogic {
     public DummyGame() {
         renderer = new Renderer();
         camera = new Camera();
-        camera.setPosition(20, 0, -25);
-        camera.setRotation(0, -90f, 0);
+        cameraSide = new Camera();
+        cameraSide.setPosition(10, 0, -60);
+        cameraSide.setRotation(0, -90f, 0);
         cameraInc = new Vector3f(0,0,0);
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
+        cameraTop = new Camera();
+        cameraTop.setPosition(0, 10, -60);
+        cameraTop.setRotation(90f, 0, 0);
         timer = new Timer();
         drone = new Drone(0, 0, 0, new Vector3f(0,0,-8));
     }
+
 
     @Override
     public void init(Window window) throws Exception {
@@ -98,7 +107,7 @@ public class DummyGame implements IGameLogic {
         Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
         							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
         							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
-        							renderer.fov, renderer.fov, renderer.imageWidth, renderer.imageHeight);
+        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeightAutopilot);
         
         //Maak eerste input aan voor autopilot
         Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
@@ -200,7 +209,7 @@ public class DummyGame implements IGameLogic {
 
     @Override
     public void render(Window window) throws Exception {
-        renderer.render(window, camera, cameraPlane, gameItems);
+        renderer.render(window, camera, cameraPlane, cameraSide, cameraTop, gameItems);
     }
 
     @Override

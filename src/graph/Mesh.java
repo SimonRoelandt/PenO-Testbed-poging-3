@@ -76,9 +76,11 @@ public class Mesh {
         }
     }
    
-    public void render() {
+    public void render(int imageWidth, int imageHeight, int windowWidth, int windowHeight) {
     	// Draw the mesh ON SCREEN (FRAMEBUFFER 0)
     	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    	glViewport(0,windowHeight-imageHeight,imageWidth,imageHeight);
+    	//glViewport(0,0,windowWidth, windowHeight);
         glBindVertexArray(getVaoId());
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
@@ -89,7 +91,26 @@ public class Mesh {
         glBindVertexArray(0);
     }
     
-    public void renderCameraPlane(int framebuffer, int imageWidth, int imageHeight) {
+    public void renderCameraPlane(int framebuffer, int imageWidth, int imageHeight, int windowWidth, int windowHeight) {
+    	// Draw the mesh OFF SCREEN (FRAMEBUFFER framebuffer)
+    	
+    	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    	glViewport(0,0,imageWidth,imageHeight);
+    	System.out.println(imageWidth);
+    	System.out.println(imageHeight);
+        glBindVertexArray(getVaoId());
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glDrawElements(GL_TRIANGLES, getVertexCount(), GL_UNSIGNED_INT, 0);
+        // Restore state
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glBindVertexArray(0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    	
+    }
+    
+    public void renderCameraSide(int framebuffer, int imageWidth, int imageHeight, int windowWidth, int windowHeight) {
     	// Draw the mesh OFF SCREEN (FRAMEBUFFER framebuffer)
     	
     	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
@@ -105,6 +126,24 @@ public class Mesh {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     	
     }
+    
+    public void renderCameraTop(int framebuffer, int imageWidth, int imageHeight, int windowWidth, int windowHeight) {
+    	// Draw the mesh OFF SCREEN (FRAMEBUFFER framebuffer)
+    	
+    	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    	glViewport(0,0,imageWidth,imageHeight);
+        glBindVertexArray(getVaoId());
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glDrawElements(GL_TRIANGLES, getVertexCount(), GL_UNSIGNED_INT, 0);
+        // Restore state
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glBindVertexArray(0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    	
+    }
+
     
     
     public int getVaoId() {
