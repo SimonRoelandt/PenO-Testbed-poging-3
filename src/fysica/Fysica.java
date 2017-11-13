@@ -1,3 +1,4 @@
+
 package fysica;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -36,7 +37,7 @@ public class Fysica {
 	}
 	
 	
-	public Matrix3f Rotation_matrix_X(float pitch){
+public Matrix3f Rotation_matrix_Pitch(float pitch){
 		
 		Matrix3f new_matrix = new Matrix3f();
 		new_matrix.m00=(float) 1;
@@ -52,7 +53,7 @@ public class Fysica {
 		return new_matrix;
 	}
 	
-	public Matrix3f Rotation_matrix_Y(float heading){
+	public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		Matrix3f new_matrix = new Matrix3f();
 		new_matrix.m00=(float) Math.cos(heading);
@@ -68,7 +69,7 @@ public class Fysica {
 		return new_matrix;
 	}
 	
-	public Matrix3f Rotation_matrix_Z(float roll){
+	public Matrix3f Rotation_matrix_Roll(float roll){
 		
 		Matrix3f new_matrix = new Matrix3f();
 		new_matrix.m00=(float) Math.cos(roll);
@@ -83,6 +84,8 @@ public class Fysica {
 		
 		return new_matrix;
 	}
+	
+	
 	
 	public Vector3f liftForce(Airfoil air) {
 		Vector3f normal = crossProduct(air.getAxisVector(),air.getAttackVector());
