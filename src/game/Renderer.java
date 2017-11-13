@@ -45,8 +45,8 @@ public class Renderer {
     	this.imageWidth = window.getWidth();
     	this.imageWidthAutopilot = 200;
     	this.imageHeightAutopilot = 200;
-    	this.imageHeight = 500;
-    	this.imageWidth = 500;
+    	this.imageHeight = 450;
+    	this.imageWidth = 450;
         this.pixels = ByteBuffer.allocateDirect(imageWidthAutopilot*imageHeightAutopilot*3);  
     	this.pixelsarray = new byte[imageWidthAutopilot*imageHeightAutopilot*3];
 

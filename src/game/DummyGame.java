@@ -82,8 +82,8 @@ public class DummyGame implements IGameLogic {
     public void init(Window window) throws Exception {
         renderer.init(window);
         timer.init();
-        gui.init();
-        gui.run();
+        //gui.init();
+        //gui.run();
         this.window = window;
         
         // Maak de gameItem meshes aan
@@ -94,6 +94,7 @@ public class DummyGame implements IGameLogic {
         Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
         GameItem droneItem = new GameItem(meshDrone,false);
         droneItem.setScale(0.2f);
+        droneItem.setRotation(0f, 180f, 0f);
         this.droneItem = droneItem;
         
 //        //Kubussen
@@ -115,7 +116,7 @@ public class DummyGame implements IGameLogic {
 //        //gameItem.setPosition(0, 0, -50);
 //        //gameItem.setPosition(0, 38, -200);
 //        gameItem.setRotation(-60f, 20f, 40f);
-//        droneItem.setRotation(0f, 180f, 0f);
+          
 //        gameItems = new GameItem[] { gameItem,gameItem2,gameItem3,gameItem4, droneItem};
 
         gameItems = worldGenerator(5);
