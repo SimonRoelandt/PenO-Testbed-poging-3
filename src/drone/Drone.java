@@ -291,6 +291,12 @@ public class Drone {
 	public float getEngineMass() {
 		return this.getEngine().getMass();
 	}
+
+	public float getEngineSize() {
+		return (-2*this.tailSize*this.tailMass/this.engineMass);
+	}
+	
+
 	
 	//Alle vleugels hebben dezelfde massa
 	public float getWingMass() {
