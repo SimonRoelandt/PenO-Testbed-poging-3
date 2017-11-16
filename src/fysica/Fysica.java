@@ -48,11 +48,6 @@ public class Fysica {
 		return worldVector;
 	}
 	
-	
-
-	
-	
-	
 public Matrix3f Rotation_matrix_Pitch(float pitch){
 		
 		Matrix3f new_matrix = new Matrix3f();
@@ -101,26 +96,14 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		return new_matrix;
 	}
 	
+	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
 	
-	
-	//DRONE PARTS FUNCTIONALITY
-	public Vector3f getGravitationForceOnDronePartInWorld(DronePart part) {
-		float gravitationForce = (float) (part.getMass() * this.getGravity());
-		return new Vector3f(0,-gravitationForce,0);
-	}
-
-	public Vector3f getTotalForceOnDronePartInWorld(DronePart part) {
-		return sum(this.getGravitationForceOnDronePartInWorld(part), this.convertToWorld(part.getDronePartForce()));
-	}
-
-	
-	//TOTAL DRONE FORCES
 	public Vector3f getTotalForceOnDroneInWorld(Drone drone) {
 		DronePart[] partArray = drone.getDroneParts();
 		Vector3f v = new Vector3f(0,0,0);
 		for (DronePart part: partArray) {
-			v = sum(this.getTotalForceOnDronePartInWorld(part), v);
+			v = sum(part.getTotalForceInWorld(), v);
 		}
 		return v;
 	}
@@ -150,36 +133,39 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 	}
 	
 	
+	
+	// DRONE MOMENT -----------------------------------------------------------------------------------
+	
 	public Vector3f getMoment(Vector3f posVector, Vector3f forceVector){
 		Vector3f momentVector = new Vector3f();
 		Vector3f.cross(posVector, forceVector, momentVector);
 		
-		return  momentVector;
-		
+		return momentVector;	
 	}
 	
 	
-	public Vector3f getDroneResultingMoment(Drone drone){
+	public Vector3f getDroneResultingMomentInWorld(Drone drone){
 		
 		Vector3f momentVector = new Vector3f(0, 0, 0);
 		DronePart[] partArray = drone.getDroneParts();
 		
 		for (DronePart part: partArray) {
 			Vector3f posVector = part.getRelativePosition();
+			Vector3f posVectorInWorld = this.convertToWorld(posVector);
 			Vector3f forceVector = this.getTotalForceOnDronePartInWorld(part);
 			
-			momentVector = sum(momentVector, this.getMoment(posVector, forceVector));
+			momentVector = sum(momentVector, this.getMoment(posVectorInWorld, forceVector));
 		}
 		
 		return momentVector;
 	}
 	
 	
-	public Vector3f getDroneAngularAcceleration(Drone drone){
+	public Vector3f getDroneAngularAccelerationInWorld(Drone drone){
 		
 		Vector3f angularAcceleration = new Vector3f();
 		
-		Vector3f droneResultingMoment = this.getDroneResultingMoment(drone);
+		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone);
 		Matrix3f momentOfInertia = new Matrix3f();
 		Matrix3f inverseMomentOfInertia = (Matrix3f) momentOfInertia.invert();
 		

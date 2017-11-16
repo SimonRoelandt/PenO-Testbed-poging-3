@@ -55,11 +55,23 @@ public class Drone {
 		this.yPos = yPos;
 		this.zPos = zPos;
 		
-		this.leftWing         = new Airfoil(0, wingMass,   false, new Vector3f(xPos-wingX,yPos,zPos));
-		this.rightWing        = new Airfoil(0, wingMass,   false, new Vector3f(xPos+wingX,yPos,zPos));
-		this.horStabilization = new Airfoil(0, tailMass/2, false, new Vector3f(xPos,yPos,zPos+tailSize));
-		this.verStabilization = new Airfoil(0, tailMass/2, true,  new Vector3f(xPos,yPos,zPos+tailSize));
-		this.engine           = new Engine(0,  engineMass,        new Vector3f(xPos,yPos,zPos-1));
+		this.leftWing         = new Airfoil(0, wingMass,   false, new Vector3f(-wingX,0,0));
+		this.leftWing.setDrone(this);
+
+		this.rightWing        = new Airfoil(0, wingMass,   false, new Vector3f(wingX,0,0));
+		this.rightWing.setDrone(this);
+
+		
+		this.horStabilization = new Airfoil(0, tailMass/2, false, new Vector3f(0,0,tailSize));
+		this.horStabilization.setDrone(this);
+		
+		this.verStabilization = new Airfoil(0, tailMass/2, true,  new Vector3f(0,0,tailSize));
+		this.verStabilization.setDrone(this);
+		
+		this.engine           = new Engine(0,  engineMass,        new Vector3f(0,0,-1));
+		this.engine.setDrone(this);
+		
+		
 		
 		setVelocity(velocity);
 	}
@@ -229,7 +241,6 @@ public class Drone {
 		DronePart[] droneParts = {getLeftWing(), getRightWing(), getHorStabilizator(), getVerStabilizator(), getEngine()};
 		return droneParts;
 	}
-
 		
 	public void setHeading(float heading) {
 		this.heading = heading;
@@ -289,6 +300,13 @@ public class Drone {
 		return tailSize;
 	}
 	
+	
+	//MASS FUNCTIONS
+	
+	public float getTotalMass(){
+		return this.getEngineMass() + 2*this.getWingMass()+this.getTailMass();
+	}
+	
 	public float getEngineMass() {
 		return this.getEngine().getMass();
 	}
@@ -303,7 +321,7 @@ public class Drone {
 	}
 	
 	public float getMaxThrust() {
-		return this.getEngine().getMaxThrust();
+		return this.getEngine().getMaxthrust();
 	}
 	
 	public float getMaxAOA() {
