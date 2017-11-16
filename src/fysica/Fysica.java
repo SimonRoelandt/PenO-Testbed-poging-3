@@ -6,38 +6,50 @@ import org.lwjgl.util.vector.Vector3f;
 import drone.Airfoil;
 import drone.Drone;
 import drone.DroneObject;
+import drone.DronePart;
 import drone.Engine;
 import org.lwjgl.util.vector.Matrix3f;
 
 public class Fysica {
 	
-	final static float gravity = (float) 9.81;
 	
-	//private float[] velocity= {0,25,0};
-
 	private float liftSlope = (float) 1.5;
-	
-	
-	
-	public Vector3f convertToWorld(Vector3f Drone_vector, float pitch, float heading, float roll ){
-		Matrix3f new_matrix = this.Rotation_matrix_Roll(roll);
-		Matrix3f Total_matrix=new Matrix3f();
-		Vector3f World_vector=new Vector3f();
-		Matrix3f.mul(new_matrix, this.Rotation_matrix_Heading(heading), new_matrix);
-		Matrix3f.mul(new_matrix,this.Rotation_matrix_Pitch(pitch), Total_matrix);
-		Matrix3f.transform(Total_matrix,Drone_vector,World_vector);
-		return World_vector;
-	}
-	
+
+	final static float gravity = (float) 9.81;
 	
 	public float getGravity() {
 		return this.gravity;
 	}
 	
-	public Vector3f gravitationForce(DroneObject obj) {
-		float gravitationForce = (float) (obj.getMass() * gravity);
-		return new Vector3f(0,-gravitationForce,0);
+	//private float[] velocity= {0,25,0};
+
+	
+	
+	//HEAD PITCH ROLL
+	
+	private float heading;
+	private float pitch;
+	private float roll;
+	
+	
+	public Vector3f convertToWorld(Vector3f Drone_vector){
+		
+		float heading = this.getHeading();
+		float pitch = this.getPitch();
+		float roll = this.getRoll();
+		
+	
+		Matrix3f conversionMatrix = this.Rotation_matrix_Roll(roll);
+		Vector3f worldVector=new Vector3f();
+		Matrix3f.mul(this.Rotation_matrix_Pitch(pitch), this.Rotation_matrix_Roll(roll), conversionMatrix);
+		Matrix3f.mul(this.Rotation_matrix_Heading(heading), conversionMatrix, conversionMatrix);
+		Matrix3f.transform(conversionMatrix,Drone_vector,worldVector);
+		
+		return worldVector;
 	}
+	
+	
+
 	
 	
 	
@@ -91,74 +103,97 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 	
 	
 	
-	public Vector3f liftForce(Airfoil air) {
-		Vector3f normal = crossProduct(air.getAxisVector(),air.getAttackVector());
-		Vector3f airspeed = air.getVelocityAirfoil();
-		Vector3f axis = air.getAxisVector();
-		Vector3f projectedAirspeed = Vector3f.sub(airspeed, mul( mul(airspeed,axis),axis),null);
-		float angleOfAttack = (float) -Math.atan2(scalarProduct(projectedAirspeed,normal), scalarProduct(projectedAirspeed,air.getAttackVector()));
-		Vector3f proj = new Vector3f(0,0,projectedAirspeed.getZ());
-		Vector3f liftForce = product((float)(angleOfAttack *Math.pow(proj.getZ(),2)),product(air.getLiftSlope(),normal));
-		//System.out.println("Lift: " + liftForce);
-		return liftForce;
+	
+	//DRONE PARTS FUNCTIONALITY
+	public Vector3f getGravitationForceOnDronePartInWorld(DronePart part) {
+		float gravitationForce = (float) (part.getMass() * this.getGravity());
+		return new Vector3f(0,-gravitationForce,0);
 	}
-	
-	
 
-	public Vector3f totalForce(DroneObject obj) {
-		if(obj instanceof Engine) {
-			
-			return sum(obj.getGraviation(), ((Engine) obj).getThrust());
-		}
-		return sum(liftForce((Airfoil) obj), gravitationForce(obj));
-		//return gravitationForce(obj);
+	public Vector3f getTotalForceOnDronePartInWorld(DronePart part) {
+		return sum(this.getGravitationForceOnDronePartInWorld(part), this.convertToWorld(part.getDronePartForce()));
 	}
-	
-	
 
-	public Vector3f totalForceDrone(Drone drone) {
-		DroneObject[] objArray = drone.getDroneObj();
+	
+	//TOTAL DRONE FORCES
+	public Vector3f getTotalForceOnDroneInWorld(Drone drone) {
+		DronePart[] partArray = drone.getDroneParts();
 		Vector3f v = new Vector3f(0,0,0);
-		for (DroneObject obj: objArray) {
-			v = sum(obj.getTotalForce(), v);
+		for (DronePart part: partArray) {
+			v = sum(this.getTotalForceOnDronePartInWorld(part), v);
 		}
-//		System.out.print("Total Force:" );
-//		print(v);
 		return v;
 	}
 	
-	public Vector3f acceleration(Drone drone) {
-		Vector3f force = drone.getTotalForceDrone();
-		DroneObject[] objArray = drone.getDroneObj();
-		float mass = 0;
-		for (DroneObject obj : objArray) {
-			mass += obj.getMass();
-		}
+	public Vector3f getAccelerationInWorld(Drone drone) {
+		Vector3f force = this.getTotalForceOnDroneInWorld(drone);
+		float mass = drone.getTotalMass();
 		Vector3f acceleration = product((1/mass), force);
 		return acceleration;
 	}
 	
-	public Vector3f nextPosition(Drone drone, float time) {
-		Vector3f acc = acceleration(drone);
-		Vector3f vel = product((float) (Math.pow(time,2)/2),acc);
-		Vector3f pos = sum(sum(drone.getPos(),product(time, drone.getVelocity())),
-				          vel);
-		//System.out.println("Pos: " + pos);
-		Vector3f posInWorld = Drone_vector_to_world(pos,drone.getPitch(),drone.getHeading(),drone.getRoll());
-		//System.out.println("PosW: " + posInWorld);
-		return posInWorld;
-	}
-	
-	
-	public Vector3f velocity(Drone drone, float time) {
-		Vector3f acc = acceleration(drone);
+	public Vector3f getVelocityInWorld(Drone drone, float time) {
+		Vector3f acc = getAccelerationInWorld(drone);
 		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
-		Vector3f v = sum(drone.getVelocity(), at);
-		Vector3f vInWorld = Drone_vector_to_world(v,drone.getPitch(),drone.getHeading(),drone.getRoll());
-		return vInWorld;
+		Vector3f droneVelocityInWorld = this.convertToWorld(drone.getVelocity());
+		Vector3f v = sum(droneVelocityInWorld, at);
+		return v;
 	}
 	
-	public Vector3f accelerationAirfoil(Airfoil air) {
+	public Vector3f getNextPositionInWorld(Drone drone, float time) {
+		
+		Vector3f droneVelocityInWorld = this.convertToWorld(drone.getVelocity());
+		Vector3f dronePositionInWorld= drone.getPos();
+		Vector3f newPositionInWorld = sum(product(time, droneVelocityInWorld), dronePositionInWorld);
+		
+		return newPositionInWorld;
+	}
+	
+	
+	public Vector3f getMoment(Vector3f posVector, Vector3f forceVector){
+		Vector3f momentVector = new Vector3f();
+		Vector3f.cross(posVector, forceVector, momentVector);
+		
+		return  momentVector;
+		
+	}
+	
+	
+	public Vector3f getDroneResultingMoment(Drone drone){
+		
+		Vector3f momentVector = new Vector3f(0, 0, 0);
+		DronePart[] partArray = drone.getDroneParts();
+		
+		for (DronePart part: partArray) {
+			Vector3f posVector = part.getRelativePosition();
+			Vector3f forceVector = this.getTotalForceOnDronePartInWorld(part);
+			
+			momentVector = sum(momentVector, this.getMoment(posVector, forceVector));
+		}
+		
+		return momentVector;
+	}
+	
+	
+	public Vector3f getDroneAngularAcceleration(Drone drone){
+		
+		Vector3f angularAcceleration = new Vector3f();
+		
+		Vector3f droneResultingMoment = this.getDroneResultingMoment(drone);
+		Matrix3f momentOfInertia = new Matrix3f();
+		Matrix3f inverseMomentOfInertia = (Matrix3f) momentOfInertia.invert();
+		
+		Matrix3f.transform(inverseMomentOfInertia,droneResultingMoment,angularAcceleration);
+		
+		return angularAcceleration; 
+		
+	}
+	
+	
+	
+	
+	//AIRFOIL ACCELERATION
+	/*public Vector3f accelerationAirfoil(Airfoil air) {
 		Vector3f force = air.getTotalForce();
 		Vector3f acceleration = product((1/air.getMass()),force);
 		return acceleration;
@@ -204,18 +239,9 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		Vector3f R0= new Vector3f();
 		R0=crossProduct(Headingsvector,BasisvectorY);
 		return (float) Math.atan2(scalarProduct(Rightdirection,R0), scalarProduct(Rightdirection, BasisvectorY));
-				
-				
-				
+							
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+	*/
 	
 	
 	
@@ -254,6 +280,36 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 	
 	public void print(Vector3f force) {
 		System.out.println(force.getX() + " " + force.getY()+ " " + force.getZ());
+	}
+
+
+	public float getHeading() {
+		return heading;
+	}
+
+
+	public void setHeading(float heading) {
+		this.heading = heading;
+	}
+
+
+	public float getPitch() {
+		return pitch;
+	}
+
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+
+	public float getRoll() {
+		return roll;
+	}
+
+
+	public void setRoll(float roll) {
+		this.roll = roll;
 	}
 
 	
