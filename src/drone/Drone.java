@@ -321,4 +321,24 @@ public class Drone {
 		return this.verStabLiftSlope;
 	}
 
+	public Matrix3f getInertiaMatrix() {
+		Matrix3f inertiaMatrix = new Matrix3f();
+		
+		inertiaMatrix.m00= (float) (this.tailMass*Math.pow(this.tailSize,2)+this.engineMass*Math.pow(this.getEngineSize(),2));//nieuwe functie aangemaakt met engineplace op basis van zwaarte punt
+		inertiaMatrix.m01=0f;
+		inertiaMatrix.m02=0f;
+		
+		inertiaMatrix.m10=0f;
+		inertiaMatrix.m11=0f; // geen massa op de y-as
+		inertiaMatrix.m12=0f;
+		
+		inertiaMatrix.m20=0f;
+		inertiaMatrix.m21=0f;
+		inertiaMatrix.m22=(float)(2*this.wingMass*Math.pow(this.wingX,2));
+		
+		return inertiaMatrix;
+		
+		
+	}
+
 }
