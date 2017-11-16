@@ -1,5 +1,6 @@
 package drone;
 
+import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Vector3f;
 import api.AutopilotOutputs;
 import fysica.Fysica;
@@ -336,7 +337,7 @@ public class Drone {
 		inertiaMatrix.m02=0f;
 		
 		inertiaMatrix.m10=0f;
-		inertiaMatrix.m11=(float)(2*this.wingMass*Math.pow(this.wingX,2))+ (this.tailMass*Math.pow(this.tailSize,2)+this.engineMass*Math.pow(this.getEngineLocation().getZ(),2));
+		inertiaMatrix.m11=(float) ((2*this.wingMass*Math.pow(this.wingX,2))+ (this.tailMass*Math.pow(this.tailSize,2)+this.engineMass*Math.pow(this.getEngineLocation().getZ(),2)));
 		inertiaMatrix.m12=0f;
 		
 		inertiaMatrix.m20=0f;
