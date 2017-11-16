@@ -225,11 +225,12 @@ public class Drone {
 		return this.getVerStabilizator().getInclination();
 	}
 	
-	public DroneObject[] getDroneObj() {
-		DroneObject[] droneObj = {getLeftWing(), getRightWing(), getHorStabilizator(), getVerStabilizator(), getEngine()};
-		return droneObj;
+	public DronePart[] getDroneParts() {
+		DronePart[] droneParts = {getLeftWing(), getRightWing(), getHorStabilizator(), getVerStabilizator(), getEngine()};
+		return droneParts;
 	}
-	
+
+		
 	public void setHeading(float heading) {
 		this.heading = heading;
 	}
