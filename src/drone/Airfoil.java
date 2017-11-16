@@ -2,8 +2,6 @@ package drone;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import fysica.Fysica;
-
 public class Airfoil extends DronePart {
 
 	private float inclination;

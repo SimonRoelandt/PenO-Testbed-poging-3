@@ -41,7 +41,11 @@ public abstract class DronePart {
 	
 	//ABSOLUTE POSITION
 	public Vector3f getAbsolutePositionInWorld(){
-		return null;
+		
+		Vector3f droneCenterPositionInWorld = this.getDrone().getPos();
+		Vector3f relativePositionInWorld = fysica.convertToWorld(this.getRelativePosition());
+		
+		return fysica.sum(droneCenterPositionInWorld, relativePositionInWorld);
 	}
 	
 	//SPEED
