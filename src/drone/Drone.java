@@ -3,6 +3,7 @@ package drone;
 import org.lwjgl.util.vector.Vector3f;
 import api.AutopilotOutputs;
 import fysica.Fysica;
+import quicktime.qd3d.math.Vector3D;
 
 public class Drone {
 	
@@ -44,6 +45,8 @@ public class Drone {
 	private float headingVel;
 	private float pitchVel;
 	private float rollVel;
+
+	private Matrix3f inertiaMatrix;
 	
 	//-1.97864475 voor 1 wing
 	
@@ -292,11 +295,9 @@ public class Drone {
 		return this.getEngine().getMass();
 	}
 
-	public float getEngineSize() {
-		return (-2*this.tailSize*this.tailMass/this.engineMass);
+	public Vector3f getEngineLocation() {
+		Vector3f EngineLocation= new Vector3f(0,0,-2*this.tailSize*this.tailMass/this.engineMass);
 	}
-	
-
 	
 	//Alle vleugels hebben dezelfde massa
 	public float getWingMass() {
@@ -327,24 +328,25 @@ public class Drone {
 		return this.verStabLiftSlope;
 	}
 
-	public Matrix3f getInertiaMatrix() {
+	public void setInertiaMatrix() { // bij berekeningen transformeren naar wereldassenstelsel
 		Matrix3f inertiaMatrix = new Matrix3f();
 		
-		inertiaMatrix.m00= (float) (this.tailMass*Math.pow(this.tailSize,2)+this.engineMass*Math.pow(this.getEngineSize(),2));//nieuwe functie aangemaakt met engineplace op basis van zwaarte punt
+		inertiaMatrix.m00= (float) (this.tailMass*Math.pow(this.tailSize,2)+this.engineMass*Math.pow(this.getEngineLocation().getZ(),2));//nieuwe functie aangemaakt met engineplace op basis van zwaartepunt
 		inertiaMatrix.m01=0f;
 		inertiaMatrix.m02=0f;
 		
 		inertiaMatrix.m10=0f;
-		inertiaMatrix.m11=0f; // geen massa op de y-as
+		inertiaMatrix.m11=(float)(2*this.wingMass*Math.pow(this.wingX,2))+ (this.tailMass*Math.pow(this.tailSize,2)+this.engineMass*Math.pow(this.getEngineLocation().getZ(),2));
 		inertiaMatrix.m12=0f;
 		
 		inertiaMatrix.m20=0f;
 		inertiaMatrix.m21=0f;
 		inertiaMatrix.m22=(float)(2*this.wingMass*Math.pow(this.wingX,2));
 		
-		return inertiaMatrix;
-		
+		this.inertiaMatrix=inertiaMatrix;
 		
 	}
+	
+	
 
 }
