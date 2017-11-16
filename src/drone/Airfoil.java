@@ -4,52 +4,54 @@ import org.lwjgl.util.vector.Vector3f;
 
 import fysica.Fysica;
 
-public class Airfoil implements DroneObject {
+public class Airfoil extends DronePart {
 
 	private float inclination;
-	private float mass;
-	private Vector3f velocity = new Vector3f(0,0,9);
-	private boolean vertical;
-	
-	private Vector3f pos;
-	
+	private boolean vertical;	
 	private Vector3f axisVector = new Vector3f(0,0,0);
 	private Vector3f attackVector = new Vector3f(0,0,0);
 	
-	private Fysica fysica;
 	
-	public Airfoil(double inclination, double mass, boolean vertical, Vector3f position) {
+	public Airfoil(
+			double inclination, 
+			double mass, 
+			boolean vertical, 
+			Vector3f relativePosition) {		
+		
 		this.inclination = (float) inclination;
 		this.mass = (float) mass;
-		this.fysica = new Fysica();
-		setAxisVector(vertical);
-		setAttackVector(inclination, vertical);
-		this.pos = position;
+		this.setAxisVector(vertical);
+		this.setAttackVector(inclination, vertical);
+		
+		this.setRelativePosition(relativePosition);
+
+		
 	}
 	
-	public Vector3f getLiftForce() {
-		return fysica.liftForce(this);
+	private Vector3f getLiftForce() {
+		
+		Vector3f normal = this.fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
+		Vector3f airspeed = this.getVelocityAirfoil();
+		Vector3f axis = this.getAxisVector();
+		
+		Vector3f projectedAirspeed = Vector3f.sub(airspeed, fysica.mul( fysica.mul(airspeed,axis),axis),null);
+		
+		float angleOfAttack = (float) -Math.atan2(fysica.scalarProduct(projectedAirspeed,normal), fysica.scalarProduct(projectedAirspeed,this.getAttackVector()));
+		Vector3f proj = new Vector3f(0,0,projectedAirspeed.getZ());
+		Vector3f liftForce = fysica.product((float)(angleOfAttack * Math.pow(proj.getZ(),2)), fysica.product(this.getLiftSlope(),normal));
+		//System.out.println("Lift: " + liftForce);
+		return liftForce;
 	}
 	
-	public Vector3f getTotalForce() {
-		return fysica.totalForce(this);
+	private Vector3f getVelocityAirfoil() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Vector3f getDronePartForce(){
+		return this.getLiftForce();		
 	}
 	
-//	public Vector3f getNewVelocity() {
-//		return fysica.velocity(drone, time)
-//	}
-	
-	public Vector3f getPos() {
-		return this.pos;
-	}
-	
-	public void setPos(Vector3f pos) {
-		this.pos = pos;
-	}
-	
-	public float getMass() {
-		return this.mass;
-	}
 	
 	public void setInclination(float incl) {
 		this.inclination = incl;
@@ -59,10 +61,6 @@ public class Airfoil implements DroneObject {
 		return this.inclination;
 	}
 
-	@Override
-	public Vector3f getGraviation() {
-		return fysica.gravitationForce(this);
-	}
 	
 	public void setAxisVector(boolean vertical) {
 		if (!vertical) {
@@ -100,14 +98,6 @@ public class Airfoil implements DroneObject {
 		return this.attackVector;
 	}
 	
-	public void setVelocityAirfoil(Vector3f vel) {
-		this.velocity = vel;
-	}
-	
-	public Vector3f getVelocityAirfoil() {
-		return this.velocity;
-	}
-	
 	public void setInclinationAngle(float angle) {
 		this.inclination = angle;
 	}
@@ -123,6 +113,7 @@ public class Airfoil implements DroneObject {
 		}
 		return (float) 1.0;
 	}
+
 	
 	
 
