@@ -2,7 +2,7 @@ package drone;
 
 import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Vector3f;
-import api.AutopilotOutputs;
+import interfaces.AutopilotOutputs;
 import fysica.Fysica;
 
 
@@ -230,7 +230,7 @@ public class Drone {
 	}
 	
 	public DroneObject[] getDroneObj() {
-		DroneObject[] droneObj = {getLeftWing(), getRightWing(), getHorStabilizator(), getVerStabilizator(), getEngine()};
+		DroneObject[] droneObj = {(DroneObject) getLeftWing(), (DroneObject) getRightWing(), (DroneObject) getHorStabilizator(), (DroneObject) getVerStabilizator(), (DroneObject) getEngine()};
 		return droneObj;
 	}
 	
@@ -298,6 +298,7 @@ public class Drone {
 
 	public Vector3f getEngineLocation() {
 		Vector3f EngineLocation= new Vector3f(0,0,-2*this.tailSize*this.tailMass/this.engineMass);
+		return EngineLocation;
 	}
 	
 	//Alle vleugels hebben dezelfde massa
@@ -310,7 +311,7 @@ public class Drone {
 	}
 	
 	public float getMaxThrust() {
-		return this.getEngine().getMaxThrust();
+		return this.getEngine().getMaxthrust();
 	}
 	
 	public float getMaxAOA() {
