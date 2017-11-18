@@ -174,7 +174,7 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		return momentVector;
 	}
 	
-	
+	  
 	public Vector3f getDroneAngularAcceleration(Drone drone){
 		
 		Vector3f angularAcceleration = new Vector3f();
