@@ -12,7 +12,6 @@ public class Test {
 		Timer f = new Timer();
 		f.init();
 		
-		System.out.println("TotalForce: " + drone.getTotalForceDrone());
 		//System.out.println("Left  : " + drone.getLeftWing().getTotalForce());
 		//System.out.println("Right : " + drone.getRightWing().getTotalForce());
 		//System.out.println("Hor   : " + drone.getHorStabilizator().getTotalForce());

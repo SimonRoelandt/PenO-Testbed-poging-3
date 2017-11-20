@@ -22,8 +22,7 @@ import engine.Timer;
 import engine.Window;
 import graph.Camera;
 import graph.Mesh;
-
-import api.*;
+import interfaces.*;
 import autopilotLibrary.CommunicatieTestbed;
 
 
@@ -59,6 +58,8 @@ public class DummyGame implements IGameLogic {
     
     private GUI gui;
     
+    private CommunicatieTestbed comm;
+    
 
 
     public DummyGame() {
@@ -88,6 +89,7 @@ public class DummyGame implements IGameLogic {
         //gui.init();
         //gui.run();
         this.window = window;
+        comm = new CommunicatieTestbed();
         
         // Maak de gameItem meshes aan
         
@@ -134,7 +136,7 @@ public class DummyGame implements IGameLogic {
         //Maak eerste input aan voor autopilot
         Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
         //Start de simulatie in autopilot
-        AutopilotOutputs outputs = CommunicatieTestbed.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
+        AutopilotOutputs outputs = comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
         
         //Schrijf output
         drone.getEngine().setThrust(outputs.getThrust());
@@ -179,7 +181,7 @@ public class DummyGame implements IGameLogic {
         
         //Roep een timePassed op in Autopilot
         float time = timer.getElapsedTime();
-        Outputs outputs =  (Outputs) CommunicatieTestbed.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
+        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
         
         //Update de drone
         drone.update(outputs,time);
@@ -198,6 +200,8 @@ public class DummyGame implements IGameLogic {
         camera.setPosition(drone.getXPos(), drone.getYPos()+1f, drone.getZPos()+0.4f);
         camera.setRotation(0,0,0);
         
+        cameraSide.setPosition(cameraSide.getPosition().x, cameraSide.getPosition().y, drone.getZPos());
+        cameraTop.setPosition(cameraTop.getPosition().x, cameraTop.getPosition().y, drone.getZPos());
         
         cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
         cameraPlane.setRotation(0f, 0f, 0f);
@@ -264,7 +268,7 @@ public class DummyGame implements IGameLogic {
         for (GameItem gameItem : gameItems) {
             gameItem.getMesh().cleanUp();
         }
-        CommunicatieTestbed.simulationEnded();
+        comm.simulationEnded();
     }
 
 }

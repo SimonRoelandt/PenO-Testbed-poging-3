@@ -152,17 +152,16 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		for (DronePart part: partArray) {
 			Vector3f posVector = part.getRelativePosition();
 			Vector3f posVectorInWorld = this.convertToWorld(posVector);
-			Vector3f forceVector = this.getTotalForceOnDronePartInWorld(part);
+			Vector3f forceVector = part.getTotalForceInWorld();
 			
 			momentVector = sum(momentVector, this.getMoment(posVectorInWorld, forceVector));
 		}
 		
 		return momentVector;
 	}
-	
-	
-	public Vector3f getDroneAngularAccelerationInWorld(Drone drone){
 		
+	public Vector3f getDroneAngularAccelerationInWorld(Drone drone){
+	  		
 		Vector3f angularAcceleration = new Vector3f();
 		
 		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone);
