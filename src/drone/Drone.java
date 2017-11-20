@@ -49,6 +49,9 @@ public class Drone {
 
 	private Matrix3f inertiaMatrix;
 	
+	private Matrix3f inertiaMatrixInWorld;
+
+	
 	//-1.97864475 voor 1 wing
 	
 	
@@ -75,6 +78,10 @@ public class Drone {
 		this.engine           = new Engine(0,  engineMass,        new Vector3f(0,0,-1));
 		this.engine.setDrone(this);
 		
+		
+		//setting inertia matrix
+		
+		this.setInertiaMatrix();
 		
 		
 		setVelocity(velocity);
@@ -351,11 +358,17 @@ public class Drone {
 	public float getVerStabLiftSlope() {
 		return this.verStabLiftSlope;
 	}
+	
+	
+	
+	//INERTIA MATRICES
 
-	public void setInertiaMatrix() { // bij berekeningen transformeren naar wereldassenstelsel
+	private void setInertiaMatrix() { // bij berekeningen transformeren naar wereldassenstelsel
 		Matrix3f inertiaMatrix = new Matrix3f();
 		
-		inertiaMatrix.m00= (float) (this.tailMass*Math.pow(this.tailSize,2)+this.engineMass*Math.pow(this.getEngineLocation().getZ(),2));//nieuwe functie aangemaakt met engineplace op basis van zwaartepunt
+		inertiaMatrix.m00= 
+				(float) (this.tailMass*Math.pow(this.tailSize,2) + 
+						this.engineMass*Math.pow(this.getEngineLocation().getZ(),2));//nieuwe functie aangemaakt met engineplace op basis van zwaartepunt
 		inertiaMatrix.m01=0f;
 		inertiaMatrix.m02=0f;
 		
@@ -368,6 +381,26 @@ public class Drone {
 		inertiaMatrix.m22=(float)(2*this.wingMass*Math.pow(this.wingX,2));
 		
 		this.inertiaMatrix=inertiaMatrix;
+		
+	}
+	
+	private Matrix3f getInertiaMatrix(){
+		return this.inertiaMatrix;
+	}
+	
+	public Matrix3f getIneriaMatrixInWorld(){
+		
+		Matrix3f inertiaMatrix = this.getInertiaMatrix();
+		
+		Matrix3f conversionMatrix = this.fysica.getRotationMatrix();
+		Matrix3f conversionMatrixInverted = new Matrix3f();
+		Matrix3f.transpose(conversionMatrix, conversionMatrixInverted);
+		
+		Matrix3f inertiaMatrixInWorld = new Matrix3f();
+		Matrix3f.mul(conversionMatrix, inertiaMatrix, inertiaMatrixInWorld);
+		Matrix3f.mul(inertiaMatrixInWorld, conversionMatrixInverted, inertiaMatrixInWorld);
+		
+		return inertiaMatrixInWorld;
 		
 	}
 	

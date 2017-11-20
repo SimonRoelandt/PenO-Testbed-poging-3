@@ -32,6 +32,16 @@ public class Fysica {
 	private float roll;
 	
 	
+	public Matrix3f getRotationMatrix(){
+		
+		Matrix3f conversionMatrix = this.Rotation_matrix_Roll(roll);
+		Matrix3f.mul(this.Rotation_matrix_Pitch(pitch), this.Rotation_matrix_Roll(roll), conversionMatrix);
+		Matrix3f.mul(this.Rotation_matrix_Heading(heading), conversionMatrix, conversionMatrix);
+		
+		return conversionMatrix;
+		
+	}
+	
 	public Vector3f convertToWorld(Vector3f Drone_vector){
 		
 		float heading = this.getHeading();
