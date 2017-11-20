@@ -43,7 +43,7 @@ public class Airfoil extends DronePart {
 	
 	private Vector3f getVelocityAirfoil() {
 		// TODO Auto-generated method stub
-		return null;
+		return new Vector3f(0,0,9);
 	}
 
 	public Vector3f getDronePartForce(){
