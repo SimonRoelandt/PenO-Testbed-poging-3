@@ -29,8 +29,15 @@ public class Drone {
 	private static float maxThrust = 1000;
 	private static float maxAOA = (float) (Math.PI /12);
 	
-	private Vector3f velocity = new Vector3f(0,0,9);
 	
+	private Vector3f positionInWorld = new Vector3f(0,0,0);
+	private Vector3f velocityInWorld = new Vector3f(0,0,9);
+
+
+	private Vector3f angularPositionInWorld = new Vector3f(0,0,9);
+	private Vector3f angularRotationInWorld = new Vector3f(0,0,9);
+	
+
 	private static float wingLiftSlope = 1;
 	private static float horStabLiftSlope = 1;
 	private static float verStabLiftSlope = 1;
@@ -58,9 +65,10 @@ public class Drone {
 	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {
 		//float incl = (float) -2.08343282;
 		
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.zPos = zPos;
+		//SETTING POSITION AND VELOCITY IN WORLD
+		this.setPositionInWorld(xPos, yPos, zPos);
+		this.setVelocityInWorld(velocity);
+
 		
 		this.leftWing         = new Airfoil(0, wingMass,   false, new Vector3f(-wingX,0,0));
 		this.leftWing.setDrone(this);
@@ -80,50 +88,46 @@ public class Drone {
 		
 		
 		//setting inertia matrix
-		
 		this.setInertiaMatrix();
 		
 		
-		setVelocity(velocity);
 	}
 	
 	//Bepaalt de verandering die elke stap gebeurt
 	public void update(AutopilotOutputs outputs,float time){
 		
-		//System.out.println("thrust: " + outputs.getThrust());
 		
-		//Schrijf outputs
         this.getEngine().setThrust(outputs.getThrust());
         this.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
         this.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().setInclinationAngle(outputs.getHorStabInclination());        
         this.getVerStabilizator().setInclinationAngle(outputs.getVerStabInclination());
+//        
+//        leftWing.setAttackVector(outputs.getLeftWingInclination(), false);
+//		rightWing.setAttackVector(outputs.getRightWingInclination(),false);
+//		horStabilization.setAttackVector(outputs.getHorStabInclination(), false);
+//		verStabilization.setAttackVector(outputs.getVerStabInclination(), true);
+//		
+//        
+        
+        //UPDATE POSITION AND VELOCITY IN WORLD
+		Vector3f p = fysica.getNewPositionInWorld(this, time);
+		this.setPositionInWorld(p);
 		
-		Vector3f p = this.getNewPosition(time);
-		this.setPosition(p);
+		Vector3f v = fysica.getNewVelocityInWorld(this, time);
+		this.setPositionInWorld(v);
 		
-		Vector3f v = this.getNewVelocity(time);
-		this.setVelocity(v);
+		 
+        //UPDATE POSITION AND VELOCITY IN WORLD
+		Vector3f a = fysica.getNewAngularPositionInWorld(this, time);
+		this.setAngularPositionInWorld(a);
 		
-		leftWing.setAttackVector(outputs.getLeftWingInclination(), false);
-		rightWing.setAttackVector(outputs.getRightWingInclination(),false);
-		horStabilization.setAttackVector(outputs.getHorStabInclination(), false);
-		verStabilization.setAttackVector(outputs.getVerStabInclination(), true);
+		Vector3f r = fysica.getNewAngularRotationInWorld(this, time);
+		this.setAngularRotationInWorld(r);
 		
-	}
-	
-	//Twee belangrijkste functies
-	public Vector3f getNewPosition(float time) {
-		Vector3f vel = getNewVelocity(time);
-		this.setVelocity(vel);
-		//return fysica.nextPosition(this, time);
-		return fysica.getNextPositionInWorld(this, time);
-	}
-	
-	public Vector3f getNewVelocity(float time) {
-		//System.out.println("New vel drone: " + fysica.velocity(this, 1));
-		Vector3f v = fysica.getVelocityInWorld(this, time);
-		return v;
+		
+		
+		
 	}
 	
 	
@@ -157,10 +161,26 @@ public class Drone {
 		return fysica.getGravity();
 	}
 	
-	public void setPosition(Vector3f pos) {
+	
+	
+	
+	//POSITION IN WORLD ---------------------------
+	
+	public Vector3f getPositionInWorld() {
+		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
+		return v;
+	}
+	
+	public void setPositionInWorld(Vector3f pos) {
 		this.xPos = pos.getX();
 		this.yPos = pos.getY();
 		this.zPos = pos.getZ();
+	}
+	
+	public void setPositionInWorld(float x, float y, float z){
+		this.xPos = x;
+		this.yPos = y;
+		this.zPos = z;
 	}
 	
 	public void setXPos(float x) {
@@ -187,18 +207,11 @@ public class Drone {
 		return this.zPos;
 	}
 	
-	public Vector3f getPos() {
-		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
-		return v;
-	}
 	
-	public void setPos(float x, float y, float z){
-		this.xPos = x;
-		this.yPos = y;
-		this.zPos = z;
-	}
-	
-	public void setVelocity(Vector3f vel) {
+	//VELOCITY IN WORLD ---------------------------------------------------
+	public void setVelocityInWorld(Vector3f vel) {
+		this.velocityInWorld = vel;
+		
 	/*	Niet overtuigd van deze manier van werken
 	 * this.velocity = vel;
 		this.getLeftWing().setVelocityAirfoil(vel);
@@ -209,9 +222,39 @@ public class Drone {
 		*/
 	}
 	
-	public Vector3f getVelocity() {
-		return this.velocity;
+	public Vector3f getVelocityInWorld() {
+		return this.velocityInWorld;
 	}
+	
+	
+	//ANGULAR POSITION IN WORLD
+
+	public Vector3f getAngularPositionInWorld() {
+		// TODO Auto-generated method stub
+		return this.angularPositionInWorld;
+	}
+	
+	public void setAngularPositionInWorld(Vector3f angularPosition) {
+		this.angularPositionInWorld = angularPosition;
+	}
+	
+	
+	
+	//ANGULAR ROTATION IN WORLD
+	
+	public Vector3f getAngularRotationInWorld() {
+		// TODO Auto-generated method stub
+		return this.angularRotationInWorld;
+	}
+	
+	public void setAngularRotationInWorld(Vector3f angularRotation) {
+		this.angularRotationInWorld = angularRotation;
+	}
+	
+	
+	
+	
+	//
 	
 	public void setThrust(float thrust) {
 		this.getEngine().setThrust(thrust);
@@ -261,7 +304,7 @@ public class Drone {
 	}
 
 	public float getHeading() {
-		return this.heading;
+		return this.getAngularPositionInWorld().getY();
 	}
 	
 	public void setPitch(float pitch) {
@@ -269,7 +312,7 @@ public class Drone {
 	}
 
 	public float getPitch() {
-		return this.pitch;
+		return this.getAngularPositionInWorld().getX();
 	}
 	
 	public void setRoll(float roll) {
@@ -277,7 +320,7 @@ public class Drone {
 	}
 
 	public float getRoll() {
-		return this.roll;
+		return this.getAngularPositionInWorld().getZ();
 	}
 	
 	public void setHeadingVel(float vel) {
@@ -384,6 +427,10 @@ public class Drone {
 		
 	}
 	
+	
+	
+	//INERTIA MATRIX
+	
 	private Matrix3f getInertiaMatrix(){
 		return this.inertiaMatrix;
 	}
@@ -403,7 +450,7 @@ public class Drone {
 		return inertiaMatrixInWorld;
 		
 	}
-	
+
 	
 
 }

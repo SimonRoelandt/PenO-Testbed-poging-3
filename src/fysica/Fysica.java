@@ -125,18 +125,18 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		return acceleration;
 	}
 	
-	public Vector3f getVelocityInWorld(Drone drone, float time) {
+	public Vector3f getNewVelocityInWorld(Drone drone, float time) {
 		Vector3f acc = getAccelerationInWorld(drone);
 		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
-		Vector3f droneVelocityInWorld = this.convertToWorld(drone.getVelocity());
+		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
 		Vector3f v = sum(droneVelocityInWorld, at);
 		return v;
 	}
 	
-	public Vector3f getNextPositionInWorld(Drone drone, float time) {
+	public Vector3f getNewPositionInWorld(Drone drone, float time) {
 		
-		Vector3f droneVelocityInWorld = this.convertToWorld(drone.getVelocity());
-		Vector3f dronePositionInWorld= drone.getPos();
+		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
+		Vector3f dronePositionInWorld= drone.getPositionInWorld();
 		Vector3f newPositionInWorld = sum(product(time, droneVelocityInWorld), dronePositionInWorld);
 		
 		return newPositionInWorld;
@@ -170,17 +170,36 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		return momentVector;
 	}
 		
-	public Vector3f getDroneAngularAccelerationInWorld(Drone drone){
+	public Vector3f getAngularAccelerationInWorld(Drone drone){
 	  		
 		Vector3f angularAcceleration = new Vector3f();
 		
 		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone);
-		Matrix3f momentOfInertia = new Matrix3f();
+		Matrix3f momentOfInertia = drone.getIneriaMatrixInWorld();
 		Matrix3f inverseMomentOfInertia = (Matrix3f) momentOfInertia.invert();
 		
 		Matrix3f.transform(inverseMomentOfInertia,droneResultingMoment,angularAcceleration);
 		
 		return angularAcceleration; 
+		
+	}
+	
+	public Vector3f getNewAngularRotationInWorld(Drone drone, float time){
+		
+		Vector3f angularAccelerationInWorld = this.getAngularAccelerationInWorld(drone);
+		Vector3f at = new Vector3f(angularAccelerationInWorld.getX()*time,angularAccelerationInWorld.getY()*time,angularAccelerationInWorld.getZ()*time);
+		Vector3f droneAngularRoatationInWorld = drone.getAngularRotationInWorld();
+		Vector3f v = sum(droneAngularRoatationInWorld, at);
+		return v;
+	}
+	
+	public Vector3f getNewAngularPositionInWorld(Drone drone, float time){
+		
+		Vector3f droneAngularRotationInWorld = drone.getAngularRotationInWorld();
+		Vector3f droneAngularPositionInWorld = drone.getAngularPositionInWorld();
+		Vector3f newAngularPositionInWorld = sum(product(time, droneAngularRotationInWorld), droneAngularPositionInWorld);
+		
+		return newAngularPositionInWorld;
 		
 	}
 	
@@ -240,7 +259,7 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 	
 	
 	
-	//Hulpfunctiess
+	//Hulpfuncties
 	
 	public Vector3f crossProduct(Vector3f v1, Vector3f v2) {
 		Vector3f v = Vector3f.cross(v1,v2,null);
