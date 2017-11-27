@@ -68,9 +68,9 @@ public class Renderer {
     	this.imageWidth = 1200;
         this.pixels = ByteBuffer.allocateDirect(imageWidthAutopilot*imageHeightAutopilot*3);  
     	this.pixelsarray = new byte[imageWidthAutopilot*imageHeightAutopilot*3];
+
     	//this.screen = ByteBuffer.allocateDirect(window.getWidth()*window.getHeight()*3);
 
-    	
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Utils.loadResource("/vertex.vs"));
         shaderProgram.createFragmentShader(Utils.loadResource("/fragment.fs"));

@@ -58,28 +58,33 @@ public class Fysica {
 		return worldVector;
 	}
 	
-public Matrix3f Rotation_matrix_Pitch(float pitch){
+	
+	public Vector3f convertToDroneCords(Vector3f worldVector){
+		float heading = this.getHeading();
+		float pitch = this.getPitch();
+		float roll = this.getRoll();
 		
-		Matrix3f new_matrix = new Matrix3f();
-		new_matrix.m00=(float) 1;
-		new_matrix.m01=(float) 0;
-		new_matrix.m02=(float) 0;
-		new_matrix.m10=(float) 0;
-		new_matrix.m11=(float) Math.cos(pitch);
-		new_matrix.m12=(float) Math.sin(pitch);
-		new_matrix.m20=(float) 0;
-		new_matrix.m21=(float) -Math.sin(pitch);
-		new_matrix.m22=(float) Math.cos(pitch);
+	
+		Matrix3f conversionMatrix = this.Rotation_matrix_Roll(roll);
+		Matrix3f conversionMatrixInverse = new Matrix3f();
+
+		Vector3f droneVector=new Vector3f();
+		Matrix3f.mul(this.Rotation_matrix_Pitch(pitch), this.Rotation_matrix_Roll(roll), conversionMatrix);
+		Matrix3f.mul(this.Rotation_matrix_Heading(heading), conversionMatrix, conversionMatrix);
 		
-		return new_matrix;
+		conversionMatrixInverse = (Matrix3f) conversionMatrix.invert();
+		Matrix3f.transform(conversionMatrixInverse,worldVector,droneVector);
+		
+		return droneVector;
+		
 	}
 	
-	public Matrix3f Rotation_matrix_Heading(float heading){
+public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		Matrix3f new_matrix = new Matrix3f();
 		new_matrix.m00=(float) Math.cos(heading);
 		new_matrix.m01=(float) 0;
-		new_matrix.m02=(float) -Math.sin(heading);
+		new_matrix.m02=(float) Math.sin(heading);
 		new_matrix.m10=(float) 0;
 		new_matrix.m11=(float) 1;
 		new_matrix.m12=(float) 0;
@@ -89,6 +94,24 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		
 		return new_matrix;
 	}
+	
+	
+	public Matrix3f Rotation_matrix_Pitch(float pitch){
+			
+			Matrix3f new_matrix = new Matrix3f();
+			new_matrix.m00=(float) 1;
+			new_matrix.m01=(float) 0;
+			new_matrix.m02=(float) 0;
+			new_matrix.m10=(float) 0;
+			new_matrix.m11=(float) Math.cos(pitch);
+			new_matrix.m12=(float) -Math.sin(pitch);
+			new_matrix.m20=(float) 0;
+			new_matrix.m21=(float) Math.sin(pitch);
+			new_matrix.m22=(float) Math.cos(pitch);
+			
+			return new_matrix;
+		}
+	
 	
 	public Matrix3f Rotation_matrix_Roll(float roll){
 		
@@ -106,8 +129,8 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		return new_matrix;
 	}
 	
-	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
+	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
 	public Vector3f getTotalForceOnDroneInWorld(Drone drone) {
 		DronePart[] partArray = drone.getDroneParts();
@@ -125,25 +148,24 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		return acceleration;
 	}
 	
-	public Vector3f getVelocityInWorld(Drone drone, float time) {
+	public Vector3f getNewVelocityInWorld(Drone drone, float time) {
 		Vector3f acc = getAccelerationInWorld(drone);
 		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
-		Vector3f droneVelocityInWorld = this.convertToWorld(drone.getVelocity());
+		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
 		Vector3f v = sum(droneVelocityInWorld, at);
 		return v;
 	}
 	
-	public Vector3f getNextPositionInWorld(Drone drone, float time) {
+	public Vector3f getNewPositionInWorld(Drone drone, float time) {
 		
-		Vector3f droneVelocityInWorld = this.convertToWorld(drone.getVelocity());
-		Vector3f dronePositionInWorld= drone.getPos();
+		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
+		Vector3f dronePositionInWorld= drone.getPositionInWorld();
 		Vector3f newPositionInWorld = sum(product(time, droneVelocityInWorld), dronePositionInWorld);
 		
 		return newPositionInWorld;
 	}
 	
-	
-	
+
 	// DRONE MOMENT -----------------------------------------------------------------------------------
 	
 	public Vector3f getMoment(Vector3f posVector, Vector3f forceVector){
@@ -169,13 +191,15 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		
 		return momentVector;
 	}
+	
+	
 		
-	public Vector3f getDroneAngularAccelerationInWorld(Drone drone){
+	public Vector3f getAngularAccelerationInWorld(Drone drone){
 	  		
 		Vector3f angularAcceleration = new Vector3f();
 		
 		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone);
-		Matrix3f momentOfInertia = new Matrix3f();
+		Matrix3f momentOfInertia = drone.getIneriaMatrixInWorld();
 		Matrix3f inverseMomentOfInertia = (Matrix3f) momentOfInertia.invert();
 		
 		Matrix3f.transform(inverseMomentOfInertia,droneResultingMoment,angularAcceleration);
@@ -183,64 +207,80 @@ public Matrix3f Rotation_matrix_Pitch(float pitch){
 		return angularAcceleration; 
 		
 	}
+
 	
-	
-	
-	
-	//AIRFOIL ACCELERATION
-	/*public Vector3f accelerationAirfoil(Airfoil air) {
-		Vector3f force = air.getTotalForce();
-		Vector3f acceleration = product((1/air.getMass()),force);
-		return acceleration;
-	}
-	
-	public Vector3f nextPositionAirfoil(Airfoil air, float time) {
-		Vector3f acc = accelerationAirfoil(air);
-		Vector3f vel = product((float) (Math.pow(time, 2)/2),acc);
-		Vector3f pos = sum(sum(air.getPos(),product(time,air.getVelocityAirfoil())),
-						vel);
-		return pos;
-	}
-	
-	public Vector3f velocityAirfoil(Airfoil air, float time) {
-		Vector3f acc = accelerationAirfoil(air);
-		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
-		Vector3f v = sum(air.getVelocityAirfoil(),at);
+	private Vector3f getNewAngularVelocityInWorld(Drone drone, float time){
+		
+		Vector3f angularAccelerationInWorld = this.getAngularAccelerationInWorld(drone);
+		Vector3f at = new Vector3f(angularAccelerationInWorld.getX()*time,angularAccelerationInWorld.getY()*time,angularAccelerationInWorld.getZ()*time);
+		Vector3f droneAngularRoatationInWorld = drone.getAngularRotationInWorld();
+		Vector3f v = sum(droneAngularRoatationInWorld, at);
+		
 		return v;
 	}
 	
-	// Tactiek => headings vector berekenen met gegevens uit de autopilot via momentvergelijkingen
-	// => Hiermee kan volgens de definities gegeven in de opdracht de NIEUWE heding, pitch, roll gehaald worden 
 	
-	public float Getheading (Vector3f HeadingsVector) {
-		HeadingsVector.y=0;
-		Vector3f BasisvectorX= new Vector3f();
-		BasisvectorX.set(-1, 0, 0);
-		Vector3f BasisvectorZ= new Vector3f();
-		 BasisvectorZ.set(0, 0, -1);
-		return (float) Math.atan2( scalarProduct(HeadingsVector,BasisvectorZ),scalarProduct(HeadingsVector,BasisvectorX)); // omgekeerd gedefinieerd (y,x)
-	}
-	
-	public float GetPitch(Vector3f Headingsvector,Vector3f ForwardVector  ) {
-		Vector3f BasisvectorY= new Vector3f();
-		BasisvectorY.set(0, 1, 0);
-		return (float) Math.atan2( scalarProduct( ForwardVector,Headingsvector),scalarProduct(ForwardVector,Headingsvector));
+	private float[] getHPRVelocity(Drone drone, float time){
 		
+		Vector3f angularVelocityInWorld = this.getNewAngularVelocityInWorld(drone, time);
+		
+		Vector3f HPRVector = new Vector3f();
+	
+		Matrix3f system_matrix = new Matrix3f();
+		
+		
+		float heading = this.getHeading();
+		float pitch = this.getPitch();
+
+		float sinH = (float) Math.sin(heading);
+		float cosH = (float) Math.cos(heading);
+		
+		float sinP = (float) Math.sin(pitch);
+		float cosP = (float) Math.cos(pitch);
+		
+		
+		system_matrix.m00=(float) 1;
+		system_matrix.m01=(float) 0;
+		system_matrix.m02=(float) -(sinH)/(cosH);
+		system_matrix.m10=(float) 0;
+		system_matrix.m11=(float) 1;
+		system_matrix.m12=(float) (sinP)/(cosH*cosP);
+		system_matrix.m20=(float) 0;
+		system_matrix.m21=(float) 0;
+		system_matrix.m22=(float) 1/(cosH*cosP);
+		
+		
+		
+		
+		Matrix3f.transform(system_matrix,angularVelocityInWorld,HPRVector);
+		
+		float headingVelocity = HPRVector.getY();
+		float pitchVelocity = HPRVector.getX(); 
+		float rollVelocity = HPRVector.getZ(); 
+
+		return new float[] {headingVelocity, pitchVelocity, rollVelocity};
 	}
 	
-	public float GetRoll(Vector3f Headingsvector, Vector3f Rightdirection) {
-		Vector3f BasisvectorY= new Vector3f();
-		BasisvectorY.set(0, 1, 0);
-		Vector3f R0= new Vector3f();
-		R0=crossProduct(Headingsvector,BasisvectorY);
-		return (float) Math.atan2(scalarProduct(Rightdirection,R0), scalarProduct(Rightdirection, BasisvectorY));
-							
+	public float getNewHeadingRate(Drone drone, float time){
+		return this.getHPRVelocity(drone, time)[0];
 	}
-	*/
+	
+	public float getNewPitchRate(Drone drone, float time){
+		return this.getHPRVelocity(drone, time)[1];
+	}
+	
+	
+	public float getNewRollRate(Drone drone, float time){
+		return this.getHPRVelocity(drone, time)[2];
+
+	}
 	
 	
 	
-	//Hulpfunctiess
+	
+	
+	
+	//HULPFUNCTIES
 	
 	public Vector3f crossProduct(Vector3f v1, Vector3f v2) {
 		Vector3f v = Vector3f.cross(v1,v2,null);

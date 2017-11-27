@@ -227,7 +227,7 @@ public class DummyGame implements IGameLogic {
 	        boolean end = true;
 	        for(int i = 0 ; i < gameItems.size() -1 ; i++){
 	        	if(gameItems.get(i) != null){
-			        Vector3f.sub(drone.getPos(), gameItems.get(i).getPosition(), afstand);
+			        Vector3f.sub(drone.getPositionInWorld(), gameItems.get(i).getPosition(), afstand);
 			        if (afstand.length()<4f) {
 			        	//System.out.println(timer.getTot() + "end");
 			       	    gameItems.remove(i);
@@ -247,6 +247,7 @@ public class DummyGame implements IGameLogic {
     	else {
     		float f = timer.getElapsedTime();
     	}
+
     }
     
     //Genereert n willekeurige kubussen
