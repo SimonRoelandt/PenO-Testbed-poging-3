@@ -98,35 +98,49 @@ public class Drone {
 		
 		
         this.getEngine().setThrust(outputs.getThrust());
-        this.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
-        this.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
-        this.getHorStabilizator().setInclinationAngle(outputs.getHorStabInclination());        
-        this.getVerStabilizator().setInclinationAngle(outputs.getVerStabInclination());
-//        
-//        leftWing.setAttackVector(outputs.getLeftWingInclination(), false);
-//		rightWing.setAttackVector(outputs.getRightWingInclination(),false);
-//		horStabilization.setAttackVector(outputs.getHorStabInclination(), false);
-//		verStabilization.setAttackVector(outputs.getVerStabInclination(), true);
-//		
-//        
+        
+        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
+        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
+        this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());        
+        this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
+
         
         //UPDATE POSITION AND VELOCITY IN WORLD
 		Vector3f p = fysica.getNewPositionInWorld(this, time);
 		this.setPositionInWorld(p);
 		
 		Vector3f v = fysica.getNewVelocityInWorld(this, time);
-		this.setPositionInWorld(v);
+		this.setVelocityInWorld(v);
 		
 		 
-        //UPDATE POSITION AND VELOCITY IN WORLD
-		Vector3f a = fysica.getNewAngularPositionInWorld(this, time);
-		this.setAngularPositionInWorld(a);
-		
-		Vector3f r = fysica.getNewAngularRotationInWorld(this, time);
-		this.setAngularRotationInWorld(r);
+        //UPDATE HEAD PITCH ROLL POSITION AND RATE
 		
 		
+		//HEADING
 		
+		float newHeading = this.getHeading() + this.getHeadingVel() * time;
+		this.setHeading(newHeading);
+		
+		float newHeadingRate = fysica.getNewHeadingRate(this, time);
+		this.setHeadingVel(newHeadingRate);
+		
+		
+		//HEADING
+		
+		float newPitch = this.getPitch() + this.getPitchVel() * time;
+		this.setPitch(newPitch);
+		
+		float newPitchRate = fysica.getNewPitchRate(this, time);
+		this.setHeadingVel(newPitchRate);
+		
+		
+		//ROLL
+		
+		float newRoll = this.getRoll() + this.getRollVel() * time;
+		this.setRoll(newRoll);
+		
+		float newRollRate = fysica.getNewRollRate(this, time);
+		this.setRollVel(newRollRate);
 		
 	}
 	
@@ -335,7 +349,7 @@ public class Drone {
 		this.pitchVel = vel;
 	}
 	
-	public float getPitchingVel() {
+	public float getPitchVel() {
 		return this.pitchVel;
 	}
 	
@@ -426,9 +440,8 @@ public class Drone {
 		this.inertiaMatrix=inertiaMatrix;
 		
 	}
-	
-	
-	
+
+
 	//INERTIA MATRIX
 	
 	private Matrix3f getInertiaMatrix(){
@@ -450,7 +463,6 @@ public class Drone {
 		return inertiaMatrixInWorld;
 		
 	}
-
 	
 
 }

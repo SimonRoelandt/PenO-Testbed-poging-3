@@ -181,7 +181,16 @@ public class DummyGame implements IGameLogic {
         
         //Roep een timePassed op in Autopilot
         float time = timer.getElapsedTime();
-        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
+        AutopilotOutputs outputs =  (Outputs) 
+        		comm.timePassed((AutopilotInputs) new Inputs(
+        				renderer.getPixelsarray(), 
+        				drone.getXPos(), 
+        				drone.getYPos(), 
+        				drone.getZPos(), 
+        				drone.getHeading(), 
+        				drone.getPitch(), 
+        				drone.getRoll(), 
+        				time));
         
         //Update de drone
         drone.update(outputs,time);
@@ -213,7 +222,7 @@ public class DummyGame implements IGameLogic {
         boolean end = true;
         for(int i = 0 ; i < gameItems.size() -1 ; i++){
         	if(gameItems.get(i) != null){
-		        Vector3f.sub(drone.getPos(), gameItems.get(i).getPosition(), afstand);
+		        Vector3f.sub(drone.getPositionInWorld(), gameItems.get(i).getPosition(), afstand);
 		        if (afstand.length()<4f) {
 		        	//System.out.println(timer.getTot() + "end");
 		       	    gameItems.remove(i);

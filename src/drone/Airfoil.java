@@ -96,6 +96,12 @@ public class Airfoil extends DronePart {
 		return this.attackVector;
 	}
 	
+	public void updateInclinationAngle(float angle){
+		this.inclination = angle;
+		this.setAttackVector(this.inclination, vertical);
+		
+	}
+	
 	public void setInclinationAngle(float angle) {
 		this.inclination = angle;
 	}
