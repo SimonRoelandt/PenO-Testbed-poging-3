@@ -9,18 +9,15 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class LabelTextPanel {
+public class LabelPanel {
 	JPanel panel;
 	JLabel label;
-	JTextField tf;
 	JFrame frame;
 
-	public LabelTextPanel(String text, float value, JFrame frame) {
+	public LabelPanel(String text, JFrame frame) {
 		panel = new JPanel();
-		label = new JLabel(text);
-		tf = new JTextField(Float.toString(value), 15);
+		label = new JLabel("positie: ");
 		panel.add(label);
-		panel.add(tf);
 		frame.add(panel);
 	}
 	

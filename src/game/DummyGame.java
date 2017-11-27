@@ -52,7 +52,7 @@ public class DummyGame implements IGameLogic {
     
     private Vector3f afstand = new Vector3f();
     
-    private Drone drone;
+    public Drone drone;
     
     private Timer timer;
     
@@ -172,9 +172,7 @@ public class DummyGame implements IGameLogic {
     @Override
     public void update(float interval, MouseInput mouseInput) {
     	 System.out.println("-----------------------------------");
-	     System.out.println("DRONE X  " + drone.getXPos());
-	     System.out.println("DRONE y  " + drone.getYPos());
-	     System.out.println("DRONE z  " + drone.getZPos());
+    	 System.out.println(drone.getEngineMass());
 	     System.out.println("-----------------------------------");
 	        gui.update();
     	if (startSimulation) {

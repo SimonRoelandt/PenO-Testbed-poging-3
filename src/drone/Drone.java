@@ -9,7 +9,7 @@ import fysica.Fysica;
 public class Drone {
 	
 	//Fysica
-	private Fysica fysica = new Fysica();
+	public Fysica fysica = new Fysica();
 
 	//Onderdelen van de drone
 	private Airfoil leftWing;
@@ -19,15 +19,15 @@ public class Drone {
 	private Engine engine;
 	
 	//Waarden van de drone
-	private static float wingX = 4;
-	private static float tailSize = 4;
+	public static float wingX = 4;
+	public static float tailSize = 4;
 	
-	private static float engineMass = 2;
-	private static float wingMass = 2;
-	private static float tailMass = 2;
+	public static float engineMass = 2;
+	public static float wingMass = 2;
+	public static float tailMass = 2;
 	
-	private static float maxThrust = 1000;
-	private static float maxAOA = (float) (Math.PI /12);
+	public static float maxThrust = 1000;
+	public static float maxAOA = (float) (Math.PI /12);
 	
 	
 	private Vector3f positionInWorld = new Vector3f(0,0,0);
