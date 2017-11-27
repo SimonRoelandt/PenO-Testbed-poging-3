@@ -11,7 +11,7 @@ import java.util.Random;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-
+import GUI.GUI;
 import drone.Drone;
 import engine.Balk;
 import engine.GameItem;
@@ -30,9 +30,9 @@ public class DummyGame implements IGameLogic {
 
 	private static final float MOUSE_SENSITIVITY = 0.4f;
 	
-    private final Renderer renderer;
+    public final Renderer renderer;
     
-    private Window window;
+    public Window window;
     
     private final Vector3f cameraInc;
 
@@ -42,7 +42,7 @@ public class DummyGame implements IGameLogic {
     
     private final Camera cameraSide;
     
-    private final Camera cameraTop;
+    public final Camera cameraTop;
     
     private static final float CAMERA_POS_STEP = 0.5f;
     
@@ -60,25 +60,27 @@ public class DummyGame implements IGameLogic {
     
     private CommunicatieTestbed comm;
     
+    public boolean startSimulation = false;
+    
 
 
     public DummyGame() {
         renderer = new Renderer();
         camera = new Camera();
+        camera.setPosition(0, 0, 2);
+        camera.setRotation(0,0,0);
         cameraSide = new Camera();
-        cameraSide.setPosition(-20, 0, -60);
+        cameraSide.setPosition(30, 30, -50);
         cameraSide.setRotation(0, -90f, 0);
-        camera.setPosition(20, 0, -50);
-        camera.setRotation(0, -90f, 0);
         cameraInc = new Vector3f(0,0,0);
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
         cameraTop = new Camera();
-        cameraTop.setPosition(0, 10, -60);
-        cameraTop.setRotation(90f, 0, 0);
+        cameraTop.setPosition(-20, 300, -50);
+        cameraTop.setRotation(90f, -90f, 0);
         timer = new Timer();
         drone = new Drone(0, 0, 0, new Vector3f(0,0,-8));
-        //gui = new GUI();
+        gui = new GUI(this);
     }
 
 
@@ -86,8 +88,8 @@ public class DummyGame implements IGameLogic {
     public void init(Window window) throws Exception {
         renderer.init(window);
         timer.init();
-        //gui.init();
-        //gui.run();
+        gui.init();
+        gui.run();
         this.window = window;
         comm = new CommunicatieTestbed();
         
@@ -111,12 +113,12 @@ public class DummyGame implements IGameLogic {
         GameItem gameItem3 = new GameItem(mesh,true);
         GameItem gameItem4 = new GameItem(mesh,true);
         
-        gameItem4.setPosition(-2, -2, -30);
+        gameItem4.setPosition(-10, 0, 0);
         gameItem4.setRotation(-60f, 20f, 40f);
-        gameItem3.setPosition(-10, -5, -200);
+        gameItem3.setPosition(10, 10, 0);
         gameItem3.setRotation(34f, 53f, 45f);
-        gameItem2.setPosition(0,0 , -50);
-        gameItem.setPosition(10, -20, -100);
+        gameItem2.setPosition(0, 10 , -100);
+        gameItem.setPosition(0, 5, -50);
         //gameItem.setPosition(0, -30, -100);
         //gameItem.setPosition(0, 0, -50);
         //gameItem.setPosition(0, 38, -200);
@@ -124,8 +126,8 @@ public class DummyGame implements IGameLogic {
           
         gameItems = new ArrayList<GameItem>(Arrays.asList(gameItem,gameItem2,gameItem3,gameItem4, droneItem));
 
-//        gameItems = worldGenerator(5);
-//        gameItems.add(drone);
+       gameItems = worldGenerator(5);
+       gameItems.add(droneItem);
         
         //Maak config file aan voor de autopilot
         Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
@@ -169,66 +171,82 @@ public class DummyGame implements IGameLogic {
 
     @Override
     public void update(float interval, MouseInput mouseInput) {
-        // Update camera positie
-        camera.movePosition(cameraInc.x * CAMERA_POS_STEP,
-            cameraInc.y * CAMERA_POS_STEP,
-            cameraInc.z * CAMERA_POS_STEP);
-        // Update camera door muis            
-        if (mouseInput.isRightButtonPressed()) {
-            Vector2f rotVec = mouseInput.getDisplVec();
-            camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
-        }
-        
-        //Roep een timePassed op in Autopilot
-        float time = timer.getElapsedTime();
-        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
-        
-        //Update de drone
-        drone.update(outputs,time);
-        
-//        drone.setLeftWingInclination((float) Math.PI/6);
-//        drone.setRightWingInclination((float) Math.PI/6);
-//        drone.setHorStabInclination((float) Math.PI/6);
-
-        //Vlieg recht door + gravitatie
-        //System.out.println("Pos: " + drone.getPos());
-        //System.out.println("Vel: " + drone.getVelocity());
-        //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
-        droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
-        droneItem.setRotation(drone.getPitch(), 180 + drone.getHeading(), drone.getRoll());
-        
-        camera.setPosition(drone.getXPos(), drone.getYPos()+1f, drone.getZPos()+0.4f);
-        camera.setRotation(0,0,0);
-        
-        cameraSide.setPosition(cameraSide.getPosition().x, cameraSide.getPosition().y, drone.getZPos());
-        cameraTop.setPosition(cameraTop.getPosition().x, cameraTop.getPosition().y, drone.getZPos());
-        
-        cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
-        cameraPlane.setRotation(0f, 0f, 0f);
-        
-       // System.out.println(drone.getZPos() - gameItems[0].getPosition().z);
-       //System.out.println("Vel: " + drone.getVelocity()); 
-        
-        //bepaalt wanneer de simulatie stopt
-        boolean end = true;
-        for(int i = 0 ; i < gameItems.size() -1 ; i++){
-        	if(gameItems.get(i) != null){
-		        Vector3f.sub(drone.getPos(), gameItems.get(i).getPosition(), afstand);
-		        if (afstand.length()<4f) {
-		        	//System.out.println(timer.getTot() + "end");
-		       	    gameItems.remove(i);
-		       	    System.out.println("TARGET HIT");
-		        }
-        	}
-        	if(gameItems.get(i).getRenderOnPlaneView() == true) end = false;
-        }
-        if (end == true) window.simulationEnded = true;
-        
-        
-//        if (timer.getTot() > 2000000) {
-//        	System.out.println(timer.getTot());
-//        	window.simulationEnded = true;
-//        }
+    	 System.out.println("-----------------------------------");
+	     System.out.println("DRONE X  " + drone.getXPos());
+	     System.out.println("DRONE y  " + drone.getYPos());
+	     System.out.println("DRONE z  " + drone.getZPos());
+	     System.out.println("-----------------------------------");
+	        gui.update();
+    	if (startSimulation) {
+	    	// Update camera positie
+	        camera.movePosition(cameraInc.x * CAMERA_POS_STEP,
+	            cameraInc.y * CAMERA_POS_STEP,
+	            cameraInc.z * CAMERA_POS_STEP);
+	        // Update camera door muis            
+	        if (mouseInput.isRightButtonPressed()) {
+	            Vector2f rotVec = mouseInput.getDisplVec();
+	            camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+	        }
+	        
+	        //Roep een timePassed op in Autopilot
+	        float time = timer.getElapsedTime();
+	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
+	        
+	        //Update de drone
+	        drone.update(outputs,time);
+	        
+	//        drone.setLeftWingInclination((float) Math.PI/6);
+	//        drone.setRightWingInclination((float) Math.PI/6);
+	//        drone.setHorStabInclination((float) Math.PI/6);
+	
+	        //Vlieg recht door + gravitatie
+	        //System.out.println("Pos: " + drone.getPos());
+	        //System.out.println("Vel: " + drone.getVelocity());
+	        //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
+	        droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+	        droneItem.setRotation(drone.getPitch(), 180 + drone.getHeading(), drone.getRoll());
+	        
+	        //meer impressionant:
+	        //camera.setPosition(drone.getXPos(), drone.getYPos()+1f, drone.getZPos()+0.4f);
+	        
+	        //volgens opgave:
+	        camera.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos()+2);
+	        camera.setRotation(0,0,0);
+	        
+	        //cameraSide.setPosition(cameraSide.getPosition().x, cameraSide.getPosition().y, drone.getZPos());
+	        //cameraTop.setPosition(cameraTop.getPosition().x, cameraTop.getPosition().y, drone.getZPos());
+	        
+	        cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+	        cameraPlane.setRotation(0f, 0f, 0f);
+	        
+	       // System.out.println(drone.getZPos() - gameItems[0].getPosition().z);
+	       //System.out.println("Vel: " + drone.getVelocity()); 
+	     
+	        
+	        //bepaalt wanneer de simulatie stopt
+	        boolean end = true;
+	        for(int i = 0 ; i < gameItems.size() -1 ; i++){
+	        	if(gameItems.get(i) != null){
+			        Vector3f.sub(drone.getPos(), gameItems.get(i).getPosition(), afstand);
+			        if (afstand.length()<4f) {
+			        	//System.out.println(timer.getTot() + "end");
+			       	    gameItems.remove(i);
+			       	    System.out.println("TARGET HIT");
+			        }
+	        	}
+	        	if(gameItems.get(i).getRenderOnPlaneView() == true) end = false;
+	        }
+	        if (end == true) window.simulationEnded = true;
+	        
+	        
+	//        if (timer.getTot() > 2000000) {
+	//        	System.out.println(timer.getTot());
+	//        	window.simulationEnded = true;
+	//        }
+	    	}
+    	else {
+    		float f = timer.getElapsedTime();
+    	}
     }
     
     //Genereert n willekeurige kubussen
@@ -241,9 +259,9 @@ public class DummyGame implements IGameLogic {
         for(int i=0;i<n;i++){
         	GameItem gameItem = new GameItem(mesh,true);
         	
-        	float z = i * -40f;
+        	float z = i * -18f -10;
         	float x = rand.nextInt(20) -10;
-            float y = rand.nextInt(20) -10;
+            float y = rand.nextInt(10);
             while(Math.sqrt(Math.pow(x,2) + Math.pow(y,2)) > 10){
             	x = rand.nextInt(20) -10;
                 y = rand.nextInt(20) -10;

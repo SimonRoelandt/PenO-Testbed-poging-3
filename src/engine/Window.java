@@ -80,8 +80,8 @@ public class Window {
         // Center our window
         glfwSetWindowPos(
                 windowHandle,
-                (vidmode.width() - width) / 2,
-                (vidmode.height() - height) / 2
+                100,
+                50
         );
 
         // Make the OpenGL context current

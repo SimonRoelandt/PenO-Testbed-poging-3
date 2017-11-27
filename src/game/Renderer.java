@@ -4,15 +4,20 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 
 import engine.GameItem;
@@ -45,7 +50,10 @@ public class Renderer {
     int imageWidthAutopilot;
     int imageHeightAutopilot;
     private ByteBuffer pixels;
+    private ByteBuffer screen;
     private byte[] pixelsarray;
+    public BufferedImage screenshot;
+    public String view = "chase";
 
     public Renderer() {
     	transformation = new Transformation();
@@ -56,10 +64,11 @@ public class Renderer {
     	this.imageWidth = window.getWidth();
     	this.imageWidthAutopilot = 200;
     	this.imageHeightAutopilot = 200;
-    	this.imageHeight = 500;
-    	this.imageWidth = 500;
+    	this.imageHeight = 960;
+    	this.imageWidth = 1200;
         this.pixels = ByteBuffer.allocateDirect(imageWidthAutopilot*imageHeightAutopilot*3);  
     	this.pixelsarray = new byte[imageWidthAutopilot*imageHeightAutopilot*3];
+    	//this.screen = ByteBuffer.allocateDirect(window.getWidth()*window.getHeight()*3);
 
     	
         shaderProgram = new ShaderProgram();
@@ -220,7 +229,7 @@ public class Renderer {
        	//Verander naar orthogonaal
        	
        	
-       	projectionMatrix = transformation.getProjectionMatrixOrthogonal(100,100, z_near, z_far);
+       	projectionMatrix = transformation.getProjectionMatrixOrthogonal(120,120, z_near, z_far);
        	shaderProgram.setUniform("projectionMatrix",projectionMatrix);
        	// orthogonale projectiematrix werkt nog niet
        	
@@ -268,29 +277,40 @@ public class Renderer {
        
         //TESTEN
 
-        
-      glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-      glBlitFramebuffer(0, 0,imageWidthAutopilot, imageHeightAutopilot, 0, 0 ,imageWidthAutopilot, imageHeightAutopilot, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-        
+      if (view == "plane") {  
+    	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    	  glBlitFramebuffer(0, 0,imageWidthAutopilot, imageHeightAutopilot, 0, 0 ,imageWidthAutopilot, imageHeightAutopilot, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+      }
+      
       //Maak byte[] aan van het zicht van de drone
       glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
       glReadPixels(0, 0, imageWidthAutopilot, imageHeightAutopilot, GL_RGB, GL_BYTE, pixels);   
       for (int i = 0; i < imageWidthAutopilot*imageHeightAutopilot*3; i++)
       	pixelsarray[i] = pixels.get(i);
       System.out.println(pixelsarray.length);
-      glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-      glBlitFramebuffer(0, 0,imageWidthAutopilot, imageHeightAutopilot, 0, 0 ,imageWidth, imageHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
       
-      glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferSide);
-      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-      glBlitFramebuffer(0,0,imageWidth,imageHeight, window.getWidth()-imageWidth,0,window.getWidth(),imageHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+      if (view == "plane") {
+    	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    	  glBlitFramebuffer(0, 0,imageWidthAutopilot, imageHeightAutopilot, 0, 0 ,imageWidth, imageHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+      }
       
-      glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferTop);
-      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-      glBlitFramebuffer(0,0,imageWidth,imageHeight, window.getWidth()-imageWidth,window.getHeight()-imageHeight,window.getWidth(),window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-
+      if (view == "side") {
+    	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferSide);
+    	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    	  glBlitFramebuffer(0,0,imageWidth,imageHeight/2, 0,0,imageWidth,imageHeight/2, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+     
+    	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferTop);
+    	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    	  glBlitFramebuffer(0,0,imageWidth,imageHeight/2, 0,window.getHeight()-imageHeight/2,imageWidth,window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+      }
+      
+      System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++");
+      System.out.println("WINDOW HEIGHT: " + window.getHeight());
+      System.out.println("WINDOW WIDTH: " + window.getWidth());
+      System.out.println("IMAGEWIDTH " +  imageWidth);
+      
 //    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 //    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 //    glBlitFramebuffer(0, 0,imageWidth, imageHeight, 0, 0,window.getWidth(), window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
@@ -307,6 +327,61 @@ public class Renderer {
         
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
        
+        
+        // afbeelding maken van scherm om door te voegen naar gui
+        
+     // read current buffer
+        FloatBuffer imageData = BufferUtils.createFloatBuffer(window.getWidth() * window.getHeight() * 3); 
+        glReadPixels(0, 0, window.getWidth(), window.getHeight(), GL_RGB, GL_FLOAT, imageData);
+        imageData.rewind();
+
+        // fill rgbArray for BufferedImage
+        int[] rgbArray = new int[window.getWidth() * window.getHeight()];
+        for(int y = 0; y < window.getHeight(); ++y) {
+            for(int x = 0; x < window.getWidth(); ++x) {
+                int r = (int)(imageData.get() * 255) << 16;
+                int g = (int)(imageData.get() * 255) << 8;
+                int b = (int)(imageData.get() * 255);
+                int i = ((window.getHeight() - 1) - y) * window.getWidth()+ x;
+                rgbArray[i] = r + g + b;
+            }
+        }
+        
+     // create and save image
+        BufferedImage image = new BufferedImage(
+             window.getWidth(), window.getHeight(), BufferedImage.TYPE_INT_RGB);
+        image.setRGB(0, 0, window.getWidth(), window.getHeight(), rgbArray, 0, window.getWidth());
+        this.screenshot = image;
+        
+        
+        
+        
+        
+        
+        /*
+        screenshot = new BufferedImage(window.getWidth(), window.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics graphics = screenshot.getGraphics();
+
+        glReadBuffer(GL_BACK);
+        glReadPixels(0, 0, window.getWidth(), window.getHeight(), GL_RGB, GL_BYTE, screen);
+
+        for (int h = 0; h < window.getHeight(); h++) {
+            for (int w = 0; w < window.getWidth(); w++) {
+                // The color are the three consecutive bytes, it's like referencing
+                // to the next consecutive array elements, so we got red, green, blue..
+                // red, green, blue, and so on..
+//                System.out.println("(" + ((buffer.get() & 0xff) / 255) + ", "
+//                        + ((buffer.get() & 0xff) / 255) + ", " + ((buffer.get() & 0xff) / 255)
+//                        + ", " + ((buffer.get() & 0xff) / 255) + ")");
+                graphics.setColor(new Color((screen.get() & 0xff), (screen.get() & 0xff),
+                        (screen.get() & 0xff)));
+                //screen.get();   // alpha
+                graphics.drawRect(w, window.getHeight() - h, 1, 1); // height - h is for flipping the image
+//                graphics.drawRect(w, h, 1, 1); // height - h is for flipping the image
+            }
+        }
+        
+        */
         shaderProgram.unbind();
 
     }
