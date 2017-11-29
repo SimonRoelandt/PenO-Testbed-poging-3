@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.TextField;
@@ -13,15 +14,16 @@ public class LabelTextPanel {
 	JPanel panel;
 	JLabel label;
 	JTextField tf;
-	JFrame frame;
+	JPanel panelGoal;
 
-	public LabelTextPanel(String text, float value, JFrame frame) {
+	public LabelTextPanel(String text, float value, JPanel panelGoal) {
 		panel = new JPanel();
-		label = new JLabel(text);
+		panel.setLayout(new GridLayout(1,2));
+		label = new JLabel(text, SwingConstants.LEFT);
 		tf = new JTextField(Float.toString(value), 15);
 		panel.add(label);
 		panel.add(tf);
-		frame.add(panel);
+		panelGoal.add(panel);
 	}
 	
 	

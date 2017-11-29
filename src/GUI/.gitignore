@@ -22,3 +22,5 @@
 /GUI$ListenForWingMass.class
 /GUI$ListenForWingX.class
 /LabelPanel.class
+/GUI$ListenForGenerate.class
+/GUI$ListenForFile.class

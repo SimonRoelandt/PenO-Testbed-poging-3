@@ -12,22 +12,22 @@ public class Drone {
 	public Fysica fysica = new Fysica();
 
 	//Onderdelen van de drone
-	private Airfoil leftWing;
-	private Airfoil rightWing;
-	private Airfoil horStabilization;
-	private Airfoil verStabilization;
-	private Engine engine;
+	public Airfoil leftWing;
+	public Airfoil rightWing;
+	public Airfoil horStabilization;
+	public Airfoil verStabilization;
+	public Engine engine;
 	
 	//Waarden van de drone
-	public static float wingX = 4;
-	public static float tailSize = 4;
+	public float wingX = 4;
+	public float tailSize = 4;
 	
-	public static float engineMass = 2;
-	public static float wingMass = 2;
-	public static float tailMass = 2;
+	public float engineMass = 2;
+	public float wingMass = 2;
+	public float tailMass = 2;
 	
-	public static float maxThrust = 1000;
-	public static float maxAOA = (float) (Math.PI /12);
+	public float maxThrust = 1000;
+	public float maxAOA = (float) (Math.PI /12);
 	
 	
 	private Vector3f positionInWorld = new Vector3f(0,0,0);
@@ -86,7 +86,7 @@ public class Drone {
 		this.engine           = new Engine(0,  engineMass,        new Vector3f(0,0,-1));
 		this.engine.setDrone(this);
 		
-		
+		this.engine.setMaxThrust(maxThrust);
 		//setting inertia matrix
 		this.setInertiaMatrix();
 		
@@ -420,7 +420,7 @@ public class Drone {
 	
 	//INERTIA MATRICES
 
-	private void setInertiaMatrix() { // bij berekeningen transformeren naar wereldassenstelsel
+	public void setInertiaMatrix() { // bij berekeningen transformeren naar wereldassenstelsel
 		Matrix3f inertiaMatrix = new Matrix3f();
 		
 		inertiaMatrix.m00= 

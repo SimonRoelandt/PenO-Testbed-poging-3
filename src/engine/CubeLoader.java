@@ -11,14 +11,17 @@ import java.util.List;
 
 public class CubeLoader {
 	
-	private List<Float> xpos = new ArrayList<Float>();
-	private List<Float> ypos = new ArrayList<Float>();
-	private List<Float> zpos = new ArrayList<Float>();
+	public List<Float> xpos = new ArrayList<Float>();
+	public List<Float> ypos = new ArrayList<Float>();
+	public List<Float> zpos = new ArrayList<Float>();
 	
-	public void generatePositions(String filename) {
+	public CubeLoader() {
+		
+	}
+	public void generatePositions(File file) {
 		FileReader fr = null;
 		try {
-			fr = new FileReader(new File("src\\" + filename));
+			fr = new FileReader(file);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -34,9 +37,9 @@ public class CubeLoader {
 					break;
 				String[] currentLine = line.split(" ");
 	
-				xpos.add(Float.parseFloat(currentLine[1]));
-				ypos.add(Float.parseFloat(currentLine[2]));
-				zpos.add(Float.parseFloat(currentLine[3]));			
+				xpos.add(Float.parseFloat(currentLine[0]));
+				ypos.add(Float.parseFloat(currentLine[1]));
+				zpos.add(Float.parseFloat(currentLine[2]));	
 			}
 			
 			
