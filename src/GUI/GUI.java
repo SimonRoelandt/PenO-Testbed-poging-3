@@ -32,14 +32,17 @@ public class GUI {
 	private JFrame frame;
 	JButton buttonPlane, buttonChase, buttonSide;
 	int buttonClicked;				
-	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate;
+	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube;
 	JLabel label1, label2;
 	JTextField textfield1, textfield2;
-	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa;
+	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos;
 	GLPanel glpanel;
-	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile;
+	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube;
 	LabelPanel positie, hpr, snelheid, versnelling;
 	JFileChooser fc;
+	JTabbedPane tabbedPaneGenerate;
+	
+	float xPos, yPos, zPos;
 	
 	public GUI(DummyGame dummyGame) {
 		this.dummyGame = dummyGame;
@@ -70,6 +73,7 @@ public class GUI {
 		c.gridy = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
+		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelValues, c);
 		
 		
@@ -100,6 +104,7 @@ public class GUI {
 		c.gridy = 1;
 		c.gridwidth = 1;
 		c.gridheight = 1;
+		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelConfig, c);
 		
 		
@@ -123,24 +128,40 @@ public class GUI {
 		c.gridy = 2;
 		c.gridwidth = 1;
 		c.gridheight = 1;
+		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelViews, c);
 		// tot hier
 		
 		//random cubes
+		tabbedPaneGenerate = new JTabbedPane();
 		panelGenerate = new JPanel();
-		Border generateBorder = BorderFactory.createTitledBorder("Generating Cubes");
-		panelGenerate.setBorder(generateBorder);
 		buttonGenerate = addButtonPanelGenerate("Generate random cubes");
 		buttonGenerate.button.addActionListener(new ListenForGenerate());
 		buttonChooseFile = addButtonPanelGenerate("Select a predefined path");
 		buttonChooseFile.button.addActionListener(new ListenForFile());
 		fc = new JFileChooser();
-		fc.setCurrentDirectory(new File("src\\Dragon.obj"));
-
+		fc.setCurrentDirectory(new File("src\\Dragon.obj"));	
+		
+		
+		panelCustomCube = new JPanel();
+		panelCustomCube.setLayout(new GridLayout(4,1));
+		panelXPos = addLabelTextPanelCustom("X-Pos: " , 0f);
+		panelXPos.tf.addActionListener(new ListenForX());
+		panelYPos = addLabelTextPanelCustom("Y-Pos: " , 0f);
+		panelYPos.tf.addActionListener(new ListenForY());
+		panelZPos = addLabelTextPanelCustom("Z-Pos: " , 0f);
+		panelZPos.tf.addActionListener(new ListenForZ());
+		buttonCustomCube = addButtonPanelCustomCube("Generate");
+		buttonCustomCube.button.addActionListener(new ListenForCustomGenerate());
+		tabbedPaneGenerate.addTab("Generate Cubes", panelGenerate);
+		tabbedPaneGenerate.addTab("Custom Cube", panelCustomCube);
+		
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 3;
-		frame.add(panelGenerate, c);
+		c.insets = new Insets(20,0,0,0); 
+		frame.add(tabbedPaneGenerate, c);
 		
 		
 		
@@ -186,11 +207,17 @@ public class GUI {
 	public LabelTextPanel addLabelTextPanelConfig(String text, Float value) {
 		return new LabelTextPanel(text, value, panelConfig);
 	}
+	public LabelTextPanel addLabelTextPanelCustom(String text, Float value) {
+		return new LabelTextPanel(text, value, panelCustomCube);
+	}
 	public ButtonPanel addButtonPanelStart(String text) {
 		return new ButtonPanel(text, panelStart);
 	}
 	public ButtonPanel addButtonPanelGenerate(String text) {
 		return new ButtonPanel(text, panelGenerate);
+	}
+	public ButtonPanel addButtonPanelCustomCube(String text) {
+		return new ButtonPanel(text, panelCustomCube);
 	}
 	
 	public void update() {
@@ -221,11 +248,33 @@ public class GUI {
 	
 	
 	// LISTENERS
-	
 	private class ListenForGenerate implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dummyGame.addGameItems(dummyGame.worldGenerator(5));
-
+		}
+	}
+	
+	private class ListenForX implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			xPos = Float.parseFloat(panelXPos.tf.getText());
+		}
+	}
+	
+	private class ListenForY implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			yPos = Float.parseFloat(panelYPos.tf.getText());
+		}
+	}
+	
+	private class ListenForZ implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			zPos = Float.parseFloat(panelZPos.tf.getText());
+		}
+	}
+	
+	private class ListenForCustomGenerate implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			dummyGame.addGameItemAtPos(xPos, yPos, zPos);
 		}
 	}
 	
@@ -238,16 +287,7 @@ public class GUI {
 		    if (returnVal == JFileChooser.APPROVE_OPTION) {
 		        File file = fc.getSelectedFile();
 		        dummyGame.readCubesFromFile(file);
-
-		        
-		        
 		        }
-		}
-	}
-	
-	private class ListenForMassa implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			dummyGame.cameraTop.setRotation(90f, 90f, 90f);	
 		}
 	}
 	

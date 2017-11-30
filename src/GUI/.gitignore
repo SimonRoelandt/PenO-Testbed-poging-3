@@ -24,3 +24,7 @@
 /LabelPanel.class
 /GUI$ListenForGenerate.class
 /GUI$ListenForFile.class
+/GUI$ListenForCustomGenerate.class
+/GUI$ListenForX.class
+/GUI$ListenForY.class
+/GUI$ListenForZ.class

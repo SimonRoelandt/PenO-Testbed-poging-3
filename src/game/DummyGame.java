@@ -288,6 +288,12 @@ public class DummyGame implements IGameLogic {
     	this.gameItems.add(gameItem);
     }
     
+    public void addGameItemAtPos(float xPos, float yPos, float zPos) {
+    	GameItem gameItem = new GameItem(mesh, true);
+    	gameItem.setPosition(xPos, yPos, zPos);
+    	this.gameItems.add(gameItem);
+    }
+    
     public void readCubesFromFile(File file) {
     	gameItems.clear();
     	gameItems.add(droneItem);
