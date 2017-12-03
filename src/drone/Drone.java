@@ -237,7 +237,9 @@ public class Drone {
 	}
 	
 	public Vector3f getVelocityInWorld() {
-		return this.velocityInWorld;
+		Vector3f v = new Vector3f(0,1,-1);
+		return v;
+		//return this.velocityInWorld;
 	}
 	
 	
