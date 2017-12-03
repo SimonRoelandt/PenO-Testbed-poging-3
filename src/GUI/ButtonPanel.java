@@ -14,10 +14,10 @@ public class ButtonPanel {
 	JButton button;
 	JFrame frame;
 
-	public ButtonPanel(String text, JFrame frame) {
+	public ButtonPanel(String text, JPanel panelStart) {
 		panel = new JPanel();
 		button = new JButton(text);
 		panel.add(button);
-		frame.add(panel);
+		panelStart.add(panel);
 	}	
 }

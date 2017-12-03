@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 public class Engine extends DronePart{
 
 	private float thrust;
-	private static final float maxThrust= 5000;
+	private float maxThrust= 5000;
 	
 	public Engine(
 			double thrust, 
@@ -36,8 +36,12 @@ public class Engine extends DronePart{
 		this.thrust = thrust;
 	}
 
-	public static float getMaxthrust() {
+	public float getMaxthrust() {
 		return maxThrust;
+	}
+	
+	public void setMaxThrust(float maxthrust) {
+		this.maxThrust = maxthrust;
 	}
 	
 

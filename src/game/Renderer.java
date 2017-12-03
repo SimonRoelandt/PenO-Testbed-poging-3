@@ -187,7 +187,7 @@ public class Renderer {
         Matrix4f projectionMatrix = transformation.getProjectionMatrix(fov, window.getWidth(), window.getHeight(), z_near, z_far);
         //projectionMatrix = transformation.getProjectionMatrixOrthogonal(window.getWidth(), window.getHeight(), z_near, z_far);
         shaderProgram.setUniform("projectionMatrix",projectionMatrix);
-        System.out.println(projectionMatrix);
+
         
         // Update view Matrix
         Matrix4f viewMatrix = transformation.getViewMatrix(camera);
@@ -236,7 +236,7 @@ public class Renderer {
        	
        	
         
-       	System.out.println(projectionMatrix);
+
        	
         //SIDE
         viewMatrix = transformation.getViewMatrix(cameraSide);
@@ -288,7 +288,7 @@ public class Renderer {
       glReadPixels(0, 0, imageWidthAutopilot, imageHeightAutopilot, GL_RGB, GL_BYTE, pixels);   
       for (int i = 0; i < imageWidthAutopilot*imageHeightAutopilot*3; i++)
       	pixelsarray[i] = pixels.get(i);
-      System.out.println(pixelsarray.length);
+
       
       if (view == "plane") {
     	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
@@ -306,10 +306,7 @@ public class Renderer {
     	  glBlitFramebuffer(0,0,imageWidth,imageHeight/2, 0,window.getHeight()-imageHeight/2,imageWidth,window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
       }
       
-      System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++");
-      System.out.println("WINDOW HEIGHT: " + window.getHeight());
-      System.out.println("WINDOW WIDTH: " + window.getWidth());
-      System.out.println("IMAGEWIDTH " +  imageWidth);
+
       
 //    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 //    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
