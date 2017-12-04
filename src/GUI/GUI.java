@@ -22,6 +22,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import drone.Airfoil;
 import drone.Engine;
+import engine.GameItem;
 
 import javax.swing.*;
 
@@ -32,7 +33,7 @@ public class GUI {
 	private JFrame frame;
 	JButton buttonPlane, buttonChase, buttonSide;
 	int buttonClicked;				
-	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube;
+	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove;
 	JLabel label1, label2;
 	JTextField textfield1, textfield2;
 	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos;
@@ -41,6 +42,8 @@ public class GUI {
 	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa;
 	JFileChooser fc;
 	JTabbedPane tabbedPaneGenerate;
+	JList<GameItem> list;
+	DefaultListModel<GameItem> listModel;
 	
 	float xPos, yPos, zPos;
 	
@@ -155,9 +158,23 @@ public class GUI {
 		panelZPos.tf.addActionListener(new ListenForZ());
 		buttonCustomCube = addButtonPanelCustomCube("Generate");
 		buttonCustomCube.button.addActionListener(new ListenForCustomGenerate());
+		
+		panelRemove = new JPanel();
+		panelRemove.setLayout(new GridLayout(3,1));
+		listModel = new DefaultListModel<GameItem>();
+		
+		list = new JList<GameItem>(listModel);
+		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		list.setLayoutOrientation(JList.VERTICAL);
+		list.setVisibleRowCount(-1);
+		//JScrollPane listScroller = new JScrollPane(list);
+		//listScroller.setPreferredSize(new Dimension(250, 80));
+		
+		panelRemove.add(list);
+		
 		tabbedPaneGenerate.addTab("Generate Cubes", panelGenerate);
 		tabbedPaneGenerate.addTab("Custom Cube", panelCustomCube);
-		
+		//tabbedPaneGenerate.addTab("Remove Cubes", panelRemove);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -246,6 +263,16 @@ public class GUI {
 				")");
 		//aoa.labelValue.setText("(" + round(dummyGame.drone.getAOA(),2) + ")");
 		
+		/*
+		listModel.clear();
+		if (dummyGame.getGameItems() != null) {
+			for (GameItem gameItem: dummyGame.getGameItems()) {
+				listModel.clear();
+				if (gameItem.getRenderOnPlaneView() == true)
+					listModel.addElement(gameItem);
+			}
+		}
+		*/
 	}
 	
 	

@@ -17,8 +17,8 @@ public class OBJLoader {
 		FileReader fr = null;
 		FileReader fr2 = null;
 		try {
-			fr = new FileReader(new File("src\\Dragon.obj"));
-			fr2 = new FileReader(new File("src\\Dragon.obj"));
+			fr = new FileReader(new File("src\\p39.obj"));
+			fr2 = new FileReader(new File("src\\p39.obj"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.err.print("File not found");

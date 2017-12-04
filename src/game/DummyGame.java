@@ -73,7 +73,7 @@ public class DummyGame implements IGameLogic {
     public DummyGame() {
         renderer = new Renderer();
         camera = new Camera();
-        camera.setPosition(0, 0, 2);
+        camera.setPosition(0, 1, 2);
         camera.setRotation(0,0,0);
         cameraSide = new Camera();
         cameraSide.setPosition(30, 30, -50);
@@ -107,7 +107,7 @@ public class DummyGame implements IGameLogic {
         Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
         GameItem droneItem = new GameItem(meshDrone,false);
         droneItem.setScale(0.2f);
-        droneItem.setRotation(0f, 180f, 0f);
+        droneItem.setRotation(0f, 0f, 0f);
         this.droneItem = droneItem;
         
        
@@ -213,13 +213,13 @@ public class DummyGame implements IGameLogic {
 	        //System.out.println("Vel: " + drone.getVelocity());
 	        //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
 	        droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
-	        droneItem.setRotation(drone.getPitch(), 180 + drone.getHeading(), drone.getRoll());
+	        droneItem.setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
 	        
 	        //meer impressionant:
 	        //camera.setPosition(drone.getXPos(), drone.getYPos()+1f, drone.getZPos()+0.4f);
 	        
 	        //volgens opgave:
-	        camera.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos()+2);
+	        camera.setPosition(drone.getXPos(), drone.getYPos()+1, drone.getZPos()+2);
 	        camera.setRotation(0,0,0);
 	        
 	        //cameraSide.setPosition(cameraSide.getPosition().x, cameraSide.getPosition().y, drone.getZPos());
@@ -312,6 +312,9 @@ public class DummyGame implements IGameLogic {
     	}
     }
     
+    public List<GameItem> getGameItems() {
+    	return gameItems;
+    }
     @Override
     public void render(Window window) throws Exception {
         renderer.render(window, camera, cameraPlane, cameraSide, cameraTop, gameItems);
