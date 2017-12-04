@@ -41,6 +41,9 @@ public class Renderer {
     private int renderbufferTop;
     private int framebufferTop;
     private int depthbufferTop;
+    private int renderbufferFree;
+    private int framebufferFree;
+    private int depthbufferFree;
     float fov = (float) Math.toRadians(120.0f);
     private static float z_near = 0.01f;
     private static float z_far = 1000.f;
@@ -53,7 +56,7 @@ public class Renderer {
     private ByteBuffer screen;
     private byte[] pixelsarray;
     public BufferedImage screenshot;
-    public String view = "chase";
+    public String view = "free";
 
     public Renderer() {
     	transformation = new Transformation();
@@ -163,6 +166,29 @@ public class Renderer {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthbufferTop);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
         
+        //create the framebuffer
+        this.framebufferFree = glGenFramebuffers();
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferFree);
+        glDrawBuffer(GL_COLOR_ATTACHMENT0);
+        glDrawBuffer(GL_DEPTH_ATTACHMENT);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        
+        //create the renderbuffer
+        this.renderbufferFree = glGenRenderbuffers();
+        glBindFramebuffer(GL_FRAMEBUFFER,framebufferFree);
+        glBindRenderbuffer(GL_RENDERBUFFER, renderbufferFree);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, imageWidth, imageHeight);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbufferFree);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        
+       //create the depthbuffer
+        this.depthbufferFree = glGenRenderbuffers();  
+        glBindFramebuffer(GL_FRAMEBUFFER,framebufferFree);
+        glBindRenderbuffer(GL_RENDERBUFFER, depthbufferFree);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, imageWidth, imageHeight);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthbufferFree);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        
         //create the pixel buffer
         
 
@@ -173,7 +199,7 @@ public class Renderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    public void render(Window window, Camera camera, Camera cameraPlane, Camera cameraSide, Camera cameraTop, List<GameItem> gameItems) throws Exception {
+    public void render(Window window, Camera camera, Camera cameraFree, Camera cameraPlane, Camera cameraSide, Camera cameraTop, List<GameItem> gameItems) throws Exception {
         clear();
 
         if ( window.isResized() ) {
@@ -204,7 +230,16 @@ public class Renderer {
         	gameItem.getMesh().render(imageWidth, imageHeight, window.getWidth(), window.getHeight());
         }
         
-        
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferFree);
+       	clear();
+       	
+        //FREE
+        viewMatrix = transformation.getViewMatrix(cameraFree);
+        for(GameItem gameItem : gameItems) {
+        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+        	gameItem.getMesh().renderFree(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight());
+        }
         
         
        	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
@@ -304,6 +339,13 @@ public class Renderer {
     	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferTop);
     	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     	  glBlitFramebuffer(0,0,imageWidth,imageHeight/2, 0,window.getHeight()-imageHeight/2,imageWidth,window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+      }
+      
+      if (view == "free") {
+    	  
+    	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferFree);
+    	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    	  glBlitFramebuffer(0,0,imageWidth, imageHeight, 0, 0, imageWidth, imageHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
       }
       
 

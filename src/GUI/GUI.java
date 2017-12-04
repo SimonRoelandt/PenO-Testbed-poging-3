@@ -31,7 +31,7 @@ import game.DummyGame;
 public class GUI {
 	DummyGame dummyGame;
 	private JFrame frame;
-	JButton buttonPlane, buttonChase, buttonSide;
+	JButton buttonPlane, buttonChase, buttonSide, buttonFree;
 	int buttonClicked;				
 	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove;
 	JLabel label1, label2;
@@ -115,17 +115,22 @@ public class GUI {
 		
 		
 		//panel met view-buttons
-		buttonPlane = new JButton("Plane view");
+		buttonPlane = new JButton("Plane");
 		buttonPlane.addActionListener(new ListenForPlaneButton());
-		buttonChase = new JButton("Chase view");
+		buttonChase = new JButton("Chase");
 		buttonChase.addActionListener(new ListenForChaseButton());
-		buttonSide = new JButton("Top and Side view");
+		buttonSide = new JButton("Ortho");
 		buttonSide.addActionListener(new ListenForSideButton());
+		buttonFree = new JButton("Custom");
+		buttonFree.addActionListener(new ListenForFreeButton());
 		
 		panelViews = new JPanel();
-		panelViews.add(buttonPlane);
+		panelViews.setLayout(new GridLayout(1,4));
+		panelViews.add(buttonFree);
 		panelViews.add(buttonChase);
+		panelViews.add(buttonPlane);
 		panelViews.add(buttonSide);
+		
 		Border viewBorder = BorderFactory.createTitledBorder("Views");
 		panelViews.setBorder(viewBorder);
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -345,6 +350,12 @@ public class GUI {
 	private class ListenForSideButton implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dummyGame.renderer.view =  "side";
+		}
+	}
+	
+	private class ListenForFreeButton implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			dummyGame.renderer.view =  "free";
 		}
 	}
 	

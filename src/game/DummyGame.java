@@ -3,6 +3,7 @@ package game;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ import autopilotLibrary.CommunicatieTestbed;
 
 public class DummyGame implements IGameLogic {
 
-	private static final float MOUSE_SENSITIVITY = 0.4f;
+	private static final float MOUSE_SENSITIVITY = 0.05f;
 	
     public final Renderer renderer;
     
@@ -40,13 +41,15 @@ public class DummyGame implements IGameLogic {
 
     private final Camera camera;
     
+    private final Camera cameraFree;
+    
     private final Camera cameraPlane;
     
     private final Camera cameraSide;
     
     public final Camera cameraTop;
     
-    private static final float CAMERA_POS_STEP = 0.5f;
+    private static final float CAMERA_POS_STEP = 0.05f;
     
     private List<GameItem> gameItems;
 
@@ -66,7 +69,11 @@ public class DummyGame implements IGameLogic {
     
     private CommunicatieTestbed comm;
     
+    private List<Mesh> meshList = new ArrayList<Mesh>();;
+    
     public boolean startSimulation = false;
+    
+    public boolean simulationEnded = false;
     
 
 
@@ -75,6 +82,8 @@ public class DummyGame implements IGameLogic {
         camera = new Camera();
         camera.setPosition(0, 1, 2);
         camera.setRotation(0,0,0);
+        cameraFree = new Camera();
+        cameraFree.setPosition(0, 1, 2);
         cameraSide = new Camera();
         cameraSide.setPosition(30, 30, -50);
         cameraSide.setRotation(0, -90f, 0);
@@ -102,7 +111,8 @@ public class DummyGame implements IGameLogic {
         // Maak de gameItem meshes aan
         
         //Drone Item
-        Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, 1f, 1f, 1f, new float[]{0f,0f,0f}, new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f},  new float[]{0f,0f,0f});
+        
+        Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, 1f, 1f, 1f, Color.black);
         //Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
         Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
         GameItem droneItem = new GameItem(meshDrone,false);
@@ -113,8 +123,14 @@ public class DummyGame implements IGameLogic {
        
         
         //Kubussen
-        balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, new float[]{(179f/255),0f,0f}, new float[]{115f/255,0f,0f},  new float[]{77f/255,0f,0f},  new float[]{217f/255,0f,0f},  new float[]{255f/255,0f,0f},  new float[]{38f/255,0f,0f});
+        balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, Color.red);
         mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
+        createMesh(Color.red);
+        createMesh(Color.green);
+        createMesh(Color.blue);
+        createMesh(Color.yellow);
+        createMesh(Color.cyan);
+        createMesh(Color.magenta);
 
         //--------------------------overbodig vanaf hier
         
@@ -185,18 +201,19 @@ public class DummyGame implements IGameLogic {
 
     @Override
     public void update(float interval, MouseInput mouseInput) {
-	        gui.update();
-    	if (startSimulation) {
-	    	// Update camera positie
-	        camera.movePosition(cameraInc.x * CAMERA_POS_STEP,
-	            cameraInc.y * CAMERA_POS_STEP,
-	            cameraInc.z * CAMERA_POS_STEP);
-	        // Update camera door muis            
-	        if (mouseInput.isRightButtonPressed()) {
-	            Vector2f rotVec = mouseInput.getDisplVec();
-	            camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
-	        }
+	    gui.update();
+	    // Update camera positie
+	    cameraFree.movePosition(cameraInc.x * CAMERA_POS_STEP,
+	        cameraInc.y * CAMERA_POS_STEP,
+	        cameraInc.z * CAMERA_POS_STEP);
+	    // Update camera door muis            
+	    if (mouseInput.isRightButtonPressed()) {
+	        Vector2f rotVec = mouseInput.getDisplVec();
+	        cameraFree.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+	    }
 	        
+    	if (startSimulation && simulationEnded == false) {
+	    	
 	        //Roep een timePassed op in Autopilot
 	        float time = timer.getElapsedTime();
 	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
@@ -245,7 +262,8 @@ public class DummyGame implements IGameLogic {
 	        	}
 	        	if(gameItems.get(i).getRenderOnPlaneView() == true) end = false;
 	        }
-	        if (end == true) window.simulationEnded = true;
+	        //if (end == true) window.simulationEnded = true;
+	        if (end == true) simulationEnded = true;
 	        
 	        
 	//        if (timer.getTot() > 2000000) {
@@ -267,7 +285,7 @@ public class DummyGame implements IGameLogic {
     	//Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
         
         for(int i=0;i<n;i++){
-        	GameItem gameItem = new GameItem(mesh,true);
+        	GameItem gameItem = new GameItem(randomMesh(),true);
         	
         	float z = i * -90f/n -10;
         	float x = rand.nextInt(20) -10;
@@ -289,7 +307,7 @@ public class DummyGame implements IGameLogic {
     }
     
     public void addGameItemAtPos(float xPos, float yPos, float zPos) {
-    	GameItem gameItem = new GameItem(mesh, true);
+    	GameItem gameItem = new GameItem(randomMesh(), true);
     	gameItem.setPosition(xPos, yPos, zPos);
     	this.gameItems.add(gameItem);
     }
@@ -300,7 +318,7 @@ public class DummyGame implements IGameLogic {
     	CubeLoader cl = new CubeLoader();
     	cl.generatePositions(file);
     	for (int i = 0; i < cl.xpos.size(); i++) {
-    		GameItem gameItem = new GameItem(mesh, true);
+    		GameItem gameItem = new GameItem(randomMesh(), true);
     		gameItem.setPosition(cl.xpos.get(i), cl.ypos.get(i), cl.zpos.get(i));
     		addGameItem(gameItem);
     	}
@@ -312,12 +330,24 @@ public class DummyGame implements IGameLogic {
     	}
     }
     
+    public Mesh randomMesh() {
+    	int rnd = new Random().nextInt(meshList.size());
+        return meshList.get(rnd);
+     
+    }
+    
+    public void createMesh(Color color) {
+    	Balk createbalk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, color);
+    	System.out.println("HALLO");
+    	meshList.add(new Mesh(createbalk.positions(), createbalk.colours(), createbalk.indices()));	
+    }
+    
     public List<GameItem> getGameItems() {
     	return gameItems;
     }
     @Override
     public void render(Window window) throws Exception {
-        renderer.render(window, camera, cameraPlane, cameraSide, cameraTop, gameItems);
+        renderer.render(window, camera, cameraFree, cameraPlane, cameraSide, cameraTop, gameItems);
     }
 
 
