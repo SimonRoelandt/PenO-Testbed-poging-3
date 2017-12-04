@@ -76,7 +76,6 @@ public class Drone {
 		this.rightWing        = new Airfoil(0, wingMass,   false, new Vector3f(wingX,0,0));
 		this.rightWing.setDrone(this);
 
-		
 		this.horStabilization = new Airfoil(0, tailMass/2, false, new Vector3f(0,0,tailSize));
 		this.horStabilization.setDrone(this);
 		
@@ -95,12 +94,14 @@ public class Drone {
 	
 	//Bepaalt de verandering die elke stap gebeurt
 	public void update(AutopilotOutputs outputs,float time){
-		
-		
-        this.getEngine().setThrust(outputs.getThrust());
+		System.out.println("-RUNNING UPDATE WITH INPUTS: " + outputs);
+		System.out.println("---------------------------------------------------");
+
+        this.getEngine().setThrust(20);
         
-        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
-        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
+        float incl = 0.10f;
+        this.getLeftWing().updateInclinationAngle(incl);
+        this.getRightWing().updateInclinationAngle(incl);
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
 
@@ -182,7 +183,8 @@ public class Drone {
 	
 	public Vector3f getPositionInWorld() {
 		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
-		return v;
+		Vector3f n = new Vector3f(0,0,0);
+		return n;
 	}
 	
 	public void setPositionInWorld(Vector3f pos) {
@@ -237,7 +239,7 @@ public class Drone {
 	}
 	
 	public Vector3f getVelocityInWorld() {
-		Vector3f v = new Vector3f(0,1,-1);
+		Vector3f v = new Vector3f(0,0,-50);
 		return v;
 		//return this.velocityInWorld;
 	}
@@ -255,7 +257,6 @@ public class Drone {
 	}
 	
 	
-	
 	//ANGULAR ROTATION IN WORLD
 	
 	public Vector3f getAngularRotationInWorld() {
@@ -267,9 +268,7 @@ public class Drone {
 		this.angularRotationInWorld = angularRotation;
 	}
 	
-	
-	
-	
+
 	//
 	
 	public void setThrust(float thrust) {
@@ -320,7 +319,7 @@ public class Drone {
 	}
 
 	public float getHeading() {
-		return this.getAngularPositionInWorld().getY();
+		return this.heading;
 	}
 	
 	public void setPitch(float pitch) {
@@ -328,7 +327,7 @@ public class Drone {
 	}
 
 	public float getPitch() {
-		return this.getAngularPositionInWorld().getX();
+		return this.pitch;
 	}
 	
 	public void setRoll(float roll) {
@@ -336,7 +335,7 @@ public class Drone {
 	}
 
 	public float getRoll() {
-		return this.getAngularPositionInWorld().getZ();
+		return this.roll;
 	}
 	
 	public void setHeadingVel(float vel) {

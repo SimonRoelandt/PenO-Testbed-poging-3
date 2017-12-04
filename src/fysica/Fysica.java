@@ -5,7 +5,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import drone.Airfoil;
 import drone.Drone;
-import drone.DroneObject;
 import drone.DronePart;
 import drone.Engine;
 import org.lwjgl.util.vector.Matrix3f;
@@ -132,12 +131,19 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
+	public void print(Object obj){
+		System.out.println(obj);
+	}
+	
 	public Vector3f getTotalForceOnDroneInWorld(Drone drone) {
 		DronePart[] partArray = drone.getDroneParts();
 		Vector3f v = new Vector3f(0,0,0);
 		for (DronePart part: partArray) {
 			v = sum(part.getTotalForceInWorld(), v);
 		}
+		print("total force is");
+		print(v);
+
 		return v;
 	}
 	
@@ -188,6 +194,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 			
 			momentVector = sum(momentVector, this.getMoment(posVectorInWorld, forceVector));
 		}
+		
+		print("Resulting Moment:");
+		print(momentVector);
 		
 		return momentVector;
 	}
