@@ -263,7 +263,7 @@ public class DummyGame implements IGameLogic {
 	        	if(gameItems.get(i).getRenderOnPlaneView() == true) end = false;
 	        }
 	        //if (end == true) window.simulationEnded = true;
-	        if (end == true) simulationEnded = true;
+	        //if (end == true) simulationEnded = true;
 	        
 	        
 	//        if (timer.getTot() > 2000000) {
