@@ -38,7 +38,7 @@ public class GUI {
 	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos;
 	GLPanel glpanel;
 	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube;
-	LabelPanel positie, hpr, snelheid, versnelling;
+	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa;
 	JFileChooser fc;
 	JTabbedPane tabbedPaneGenerate;
 	
@@ -61,13 +61,15 @@ public class GUI {
 		
 		
 		panelValues = new JPanel();
-		panelValues.setLayout(new GridLayout(4,1));
+		panelValues.setLayout(new GridLayout(5,1));
 		Border valuesBorder = BorderFactory.createTitledBorder("Values");
 		panelValues.setBorder(valuesBorder);
 		positie = new LabelPanel("Position", panelValues);
 		hpr = new LabelPanel("Head, Pitch, Roll", panelValues);
 		snelheid =  new LabelPanel("Velocity", panelValues);
 		versnelling = new LabelPanel("Acceleration", panelValues);
+		inclinatie = new LabelPanel("Inclinations left, right, hor, ver", panelValues);
+		//aoa = new LabelPanel("Angle of Attack", panelValues);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
@@ -75,8 +77,6 @@ public class GUI {
 		c.gridheight = 1;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelValues, c);
-		
-		
 		
 		
 		
@@ -222,18 +222,28 @@ public class GUI {
 	
 	public void update() {
 		positie.labelValue.setText("(" + round(dummyGame.drone.getPositionInWorld().x,2) +
-				", "+ round(dummyGame.drone.getPositionInWorld().y,2) + ", "
-				+ round(dummyGame.drone.getPositionInWorld().z,2) + ")");
+
+				", " + round(dummyGame.drone.getPositionInWorld().y,2) + 
+				", " + round(dummyGame.drone.getPositionInWorld().z,2) +
+				")");
 		hpr.labelValue.setText("(" + round(dummyGame.drone.getHeading(),2) +
-				", "+ round(dummyGame.drone.getPitch(),2)+ ", "
-				+ round(dummyGame.drone.getRoll(),2) + ")");
+				", " + round(dummyGame.drone.getPitch(),2) + 
+				", " + round(dummyGame.drone.getRoll(),2) + 
+				")");
 		snelheid.labelValue.setText("(" + round(dummyGame.drone.getVelocityInWorld().x,2)+
-				", "+ round(dummyGame.drone.getVelocityInWorld().y,2)+ ", "
-				+ round(dummyGame.drone.getVelocityInWorld().z,2) + ")");
+				", " + round(dummyGame.drone.getVelocityInWorld().y,2)+ 
+				", " + round(dummyGame.drone.getVelocityInWorld().z,2) + 
+				")");
 		versnelling.labelValue.setText("(" + round(dummyGame.drone.fysica.getAccelerationInWorld(dummyGame.drone).x,2) +
-				", "+ round(dummyGame.drone.fysica.getAccelerationInWorld(dummyGame.drone).y,2)+ ", "
-				+ round(dummyGame.drone.fysica.getAccelerationInWorld(dummyGame.drone).z,2) + ")");
-		
+				", " + round(dummyGame.drone.fysica.getAccelerationInWorld(dummyGame.drone).y,2)+ 
+				", " + round(dummyGame.drone.fysica.getAccelerationInWorld(dummyGame.drone).z,2) + 
+				")");
+		inclinatie.labelValue.setText("(" + round(dummyGame.drone.getLeftWingInclination(),2) + 
+				", " + round(dummyGame.drone.getRightWingInclination(),2) + 
+				", " + round(dummyGame.drone.getHorStabInclination(),2) + 
+				", " + round(dummyGame.drone.getVerStabInclination(),2) +
+				")");
+		//aoa.labelValue.setText("(" + round(dummyGame.drone.getAOA(),2) + ")");		
 	}
 	
 	
@@ -319,9 +329,9 @@ public class GUI {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(panelWingX.tf.getText());
 			dummyGame.drone.wingX = input;
-			dummyGame.drone.leftWing         = new Airfoil(0, dummyGame.drone.wingMass,   false, new Vector3f(-input,0,0));
+			dummyGame.drone.leftWing         = new Airfoil(0, dummyGame.drone.wingMass, false, 0.1f, new Vector3f(-input,0,0));
 			dummyGame.drone.leftWing.setDrone(dummyGame.drone);
-			dummyGame.drone.rightWing        = new Airfoil(0, dummyGame.drone.wingMass,   false, new Vector3f(input,0,0));
+			dummyGame.drone.rightWing        = new Airfoil(0, dummyGame.drone.wingMass,   false, 0.1f, new Vector3f(input,0,0));
 			dummyGame.drone.rightWing.setDrone(dummyGame.drone);
 			dummyGame.drone.setInertiaMatrix();
 		}
@@ -331,9 +341,9 @@ public class GUI {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(paneltailsize.tf.getText());
 			dummyGame.drone.tailSize = input;
-			dummyGame.drone.horStabilization = new Airfoil(0, dummyGame.drone.tailMass/2, false, new Vector3f(0,0,input));
+			dummyGame.drone.horStabilization = new Airfoil(0, dummyGame.drone.tailMass/2, false, 0.05f, new Vector3f(0,0,input));
 			dummyGame.drone.horStabilization.setDrone(dummyGame.drone);	
-			dummyGame.drone.verStabilization = new Airfoil(0, dummyGame.drone.tailMass/2, true,  new Vector3f(0,0,input));
+			dummyGame.drone.verStabilization = new Airfoil(0, dummyGame.drone.tailMass/2, true, 0.05f,  new Vector3f(0,0,input));
 			dummyGame.drone.verStabilization.setDrone(dummyGame.drone);
 			dummyGame.drone.setInertiaMatrix();
 		}
@@ -352,9 +362,9 @@ public class GUI {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(panelwingmass.tf.getText());
 			dummyGame.drone.wingMass= input;
-			dummyGame.drone.leftWing         = new Airfoil(0, input,   false, new Vector3f(-dummyGame.drone.wingX,0,0));
+			dummyGame.drone.leftWing         = new Airfoil(0, input,   false,  0.1f, new Vector3f(-dummyGame.drone.wingX,0,0));
 			dummyGame.drone.leftWing.setDrone(dummyGame.drone);
-			dummyGame.drone.rightWing        = new Airfoil(0, input,   false, new Vector3f(dummyGame.drone.wingX,0,0));
+			dummyGame.drone.rightWing        = new Airfoil(0, input,   false,  0.1f, new Vector3f(dummyGame.drone.wingX,0,0));
 			dummyGame.drone.rightWing.setDrone(dummyGame.drone);
 			dummyGame.drone.setInertiaMatrix();
 		}
@@ -364,9 +374,9 @@ public class GUI {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(paneltailmass.tf.getText());
 			dummyGame.drone.tailMass = input;
-			dummyGame.drone.horStabilization = new Airfoil(0, input/2, false, new Vector3f(0,0,dummyGame.drone.tailSize));
+			dummyGame.drone.horStabilization = new Airfoil(0, input/2, false,  0.05f, new Vector3f(0,0,dummyGame.drone.tailSize));
 			dummyGame.drone.horStabilization.setDrone(dummyGame.drone);			
-			dummyGame.drone.verStabilization = new Airfoil(0, input/2, true,  new Vector3f(0,0,dummyGame.drone.tailSize));
+			dummyGame.drone.verStabilization = new Airfoil(0, input/2, true,  0.05f,  new Vector3f(0,0,dummyGame.drone.tailSize));
 			dummyGame.drone.verStabilization.setDrone(dummyGame.drone);
 			dummyGame.drone.setInertiaMatrix();
 		}

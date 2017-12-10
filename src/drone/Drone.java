@@ -19,23 +19,23 @@ public class Drone {
 	public Engine engine;
 	
 	//Waarden van de drone
-	public float wingX = 4;
-	public float tailSize = 4;
+	public float wingX = 0.5f;
+	public float tailSize = 0.5f;
 	
-	public float engineMass = 2;
-	public float wingMass = 2;
-	public float tailMass = 2;
+	public float engineMass = 0.25f;
+	public float wingMass = 0.25f;
+	public float tailMass = 0.125f;
 	
 	public float maxThrust = 1000;
 	public float maxAOA = (float) (Math.PI /12);
 	
 	
 	private Vector3f positionInWorld = new Vector3f(0,0,0);
-	private Vector3f velocityInWorld = new Vector3f(0,0,9);
+	private Vector3f velocityInWorld = new Vector3f(0,0,-10);
 
 
-	private Vector3f angularPositionInWorld = new Vector3f(0,0,9);
-	private Vector3f angularRotationInWorld = new Vector3f(0,0,9);
+	private Vector3f angularPositionInWorld = new Vector3f(0,0,0);
+	private Vector3f angularRotationInWorld = new Vector3f(0,0,0);
 	
 
 	private static float wingLiftSlope = 1;
@@ -70,19 +70,21 @@ public class Drone {
 		this.setVelocityInWorld(velocity);
 
 		
-		this.leftWing         = new Airfoil(0, wingMass,   false, new Vector3f(-wingX,0,0));
+		this.leftWing         = new Airfoil(0, wingMass,   false, 0.1f, new Vector3f(-wingX,0,0));
 		this.leftWing.setDrone(this);
 
-		this.rightWing        = new Airfoil(0, wingMass,   false, new Vector3f(wingX,0,0));
+		this.rightWing        = new Airfoil(0, wingMass,   false, 0.1f, new Vector3f(wingX,0,0));
 		this.rightWing.setDrone(this);
 
-		this.horStabilization = new Airfoil(0, tailMass/2, false, new Vector3f(0,0,tailSize));
+		this.horStabilization = new Airfoil(0, tailMass/2, false, 0.05f, new Vector3f(0,0,tailSize));
 		this.horStabilization.setDrone(this);
 		
-		this.verStabilization = new Airfoil(0, tailMass/2, true,  new Vector3f(0,0,tailSize));
+		this.verStabilization = new Airfoil(0, tailMass/2, true, 0.05f,  new Vector3f(0,0,tailSize));
 		this.verStabilization.setDrone(this);
 		
-		this.engine           = new Engine(0,  engineMass,        new Vector3f(0,0,-1));
+		Vector3f engineRelLocation= this.getEngineLocation();
+
+		this.engine           = new Engine(0,  engineMass, engineRelLocation);
 		this.engine.setDrone(this);
 		
 		this.engine.setMaxThrust(maxThrust);
@@ -94,14 +96,14 @@ public class Drone {
 	
 	//Bepaalt de verandering die elke stap gebeurt
 	public void update(AutopilotOutputs outputs,float time){
-		System.out.println("-RUNNING UPDATE WITH INPUTS: " + outputs);
-		System.out.println("---------------------------------------------------");
-
         this.getEngine().setThrust(20);
+        this.fysica.print("engine thrust forceis " + outputs.getThrust(), 4);
+
+        float scaledThrust = Math.max(0,Math.min(5, outputs.getLeftWingInclination()));
         
-        float incl = 0.10f;
-        this.getLeftWing().updateInclinationAngle(incl);
-        this.getRightWing().updateInclinationAngle(incl);
+        
+        this.getLeftWing().updateInclinationAngle(scaledThrust);
+        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
 
@@ -239,9 +241,7 @@ public class Drone {
 	}
 	
 	public Vector3f getVelocityInWorld() {
-		Vector3f v = new Vector3f(0,0,-50);
-		return v;
-		//return this.velocityInWorld;
+		return this.velocityInWorld;
 	}
 	
 	
@@ -384,7 +384,7 @@ public class Drone {
 	}
 
 	public Vector3f getEngineLocation() {
-		Vector3f EngineLocation= new Vector3f(0,0,-2*this.tailSize*this.tailMass/this.engineMass);
+		Vector3f EngineLocation= new Vector3f(0,0,-this.tailSize*this.tailMass/this.engineMass);
 		return EngineLocation;
 	}
 	

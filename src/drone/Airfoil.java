@@ -8,17 +8,20 @@ public class Airfoil extends DronePart {
 	private boolean vertical;	
 	private Vector3f axisVector = new Vector3f(0,0,0);
 	private Vector3f attackVector = new Vector3f(0,0,0);
+	private float liftslope;
 	
 	
 	public Airfoil(
 			double inclination, 
 			double mass, 
 			boolean vertical, 
+			float liftslope,
 			Vector3f relativePosition) {		
 		
 		this.inclination = (float) inclination;
 		this.mass = (float) mass;
 		this.setAxisVector(vertical);
+		this.setLiftslope(liftslope);
 		this.setAttackVector(inclination, vertical);
 		
 		this.setRelativePosition(relativePosition);
@@ -33,25 +36,11 @@ public class Airfoil extends DronePart {
 		Vector3f axis = this.getAxisVector();
 		
 		Vector3f projectedAirspeed = Vector3f.sub(airspeed, fysica.mul( fysica.mul(airspeed,axis),axis),null);
-		System.out.println("projected airspeed");
-		System.out.println(projectedAirspeed);
-
 		float angleOfAttack = (float) -Math.atan2(fysica.scalarProduct(projectedAirspeed,normal), 
 				fysica.scalarProduct(projectedAirspeed,this.getAttackVector()));
 		Vector3f proj = new Vector3f(0,0,projectedAirspeed.getZ());
 		Vector3f liftForce = fysica.product((float)(angleOfAttack * Math.pow(proj.getZ(),2)), 
 				fysica.product(this.getLiftSlope(),normal));
-
-		
-		System.out.println("axis: " + this.getAxisVector());
-		System.out.println("attack: " + this.getAttackVector());
-
-		System.out.println("normal: " + normal);
-		System.out.println("AOA: " + angleOfAttack);
-		System.out.println("Proj: " + proj);
-		System.out.println("slope: " + this.getLiftSlope());
-
-		System.out.println("Lift: " + liftForce);
 		return liftForce;
 	}
 	
@@ -125,12 +114,13 @@ public class Airfoil extends DronePart {
 		return this.vertical; 
 	}
 	
+	public void setLiftslope(float liftslope){
+		this.liftslope = liftslope;
+	}
+	
 	
 	public float getLiftSlope() {
-		if (isVertical()) {
-			return (float) 1.0;
-		}
-		return (float) 1.0;
+		return this.liftslope;
 	}
 
 	
