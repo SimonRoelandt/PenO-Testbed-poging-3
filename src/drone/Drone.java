@@ -469,7 +469,6 @@ public class Drone {
 		
 	}
 
-
 	//INERTIA MATRIX
 	
 	private Matrix3f getInertiaMatrix(){

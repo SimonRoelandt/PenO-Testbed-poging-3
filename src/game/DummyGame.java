@@ -6,7 +6,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -205,7 +204,7 @@ public class DummyGame implements IGameLogic {
     	        							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
     	        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeightAutopilot);
     	        //Maak eerste input aan voor autopilot
-    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
+    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getTot());
     	        //Start de simulatie in autopilot
     	        AutopilotOutputs outputs = comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
     	        //Update de drone
@@ -214,14 +213,14 @@ public class DummyGame implements IGameLogic {
     		}
     		
 	        //Roep een timePassed op in Autopilot
-	        float time = timer.getElapsedTime();
+	        float time = timer.getTot();
 	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
 	        
 	        System.out.println("TIME" + time);
 	        
 	        //Update de drone
-	        System.out.println("LASTLOOPTIME" + timer.getLastLoopTime());
-	        drone.update(outputs,(float) timer.getLastLoopTime());
+	        //System.out.println("LASTLOOPTIME" + timer.getElapsedTime());
+	        drone.update(outputs,timer.getElapsedTime());
 	        
 //	        drone.setLeftWingInclination((float) Math.PI/6);
 //	        drone.setRightWingInclination((float) Math.PI/6);
@@ -232,6 +231,7 @@ public class DummyGame implements IGameLogic {
 	        //System.out.println("Vel: " + drone.getVelocity());
 	        //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
 	        droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+	        System.out.println("positie " + drone.getXPos() + drone.getYPos() + drone.getZPos());
 	        droneItem.setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
 	        
 	        //meer impressionant:
@@ -276,7 +276,6 @@ public class DummyGame implements IGameLogic {
     	else {
     		float f = timer.getElapsedTime();
     	}
-
     }
     
     //Genereert n willekeurige kubussen
