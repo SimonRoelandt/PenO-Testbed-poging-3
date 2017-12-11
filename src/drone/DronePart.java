@@ -68,7 +68,8 @@ public abstract class DronePart {
 		Vector3f gravitationForce = this.getGraviationForceInWorld();
 		
 		Vector3f v = fysica.sum(dronePartForceInWorld, gravitationForce);
-		return fysica.sum(dronePartForceInWorld, gravitationForce);
+		System.out.println("lift " + dronePartForceInWorld + " grav " + gravitationForce);
+		return v;
 	}
 
 	

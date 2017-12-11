@@ -47,8 +47,6 @@ public class Airfoil extends DronePart {
 		
 		fysica.print("liftforce is: " + liftForce, 4);
 		
-		//return new Vector3f(0,0,0);
-		
 		return liftForce;
 	}
 	
