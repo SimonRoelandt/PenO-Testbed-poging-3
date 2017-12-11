@@ -308,13 +308,18 @@ public class Renderer {
         wChannel.close(); 
         */
      
-      //Maak byte[] aan van het zicht van de drone
+
+       
+        //TESTEN
+
+        //Maak byte[] aan van het zicht van de drone
         glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
         glReadPixels(0, 0, imageWidthAutopilot, imageHeightAutopilot, GL_RGB, GL_BYTE, pixels);   
         for (int i = 0; i < imageWidthAutopilot*imageHeightAutopilot*3; i++)
         	pixelsarray[i] = pixels.get(i);
-   
-
+        
+        
+      
       if (view == "plane") {
     	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
     	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
