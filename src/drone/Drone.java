@@ -153,7 +153,7 @@ public class Drone {
 		this.setHeadingVel(newHeadingRate);
 		
 		
-		//HEADING
+		//PITCH
 		
 		float newPitch = this.getPitch() + this.getPitchVel() * time;
 		this.setPitch(newPitch);
@@ -275,7 +275,6 @@ public class Drone {
 	//ANGULAR POSITION IN WORLD
 
 	public Vector3f getAngularPositionInWorld() {
-		// TODO Auto-generated method stub
 		return this.angularPositionInWorld;
 	}
 	
