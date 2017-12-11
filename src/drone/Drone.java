@@ -68,16 +68,16 @@ public class Drone {
 		this.setVelocityInWorld(velocity);
 
 		
-		this.leftWing         = new Airfoil(0, wingMass,   false, 0.1f, new Vector3f(-wingX,0,0));
+		this.leftWing         = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(-wingX,0,0));
 		this.leftWing.setDrone(this);
 
-		this.rightWing        = new Airfoil(0, wingMass,   false, 0.1f, new Vector3f(wingX,0,0));
+		this.rightWing        = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(wingX,0,0));
 		this.rightWing.setDrone(this);
 
-		this.horStabilization = new Airfoil(0, tailMass/2, false, 0f, new Vector3f(0,0,tailSize));
+		this.horStabilization = new Airfoil(0, tailMass/2, false, horStabLiftSlope, new Vector3f(0,0,tailSize));
 		this.horStabilization.setDrone(this);
 		
-		this.verStabilization = new Airfoil(0, tailMass/2, false, 0f,  new Vector3f(0,0,tailSize));
+		this.verStabilization = new Airfoil(0, tailMass/2, false, verStabLiftSlope,  new Vector3f(0,0,tailSize));
 		this.verStabilization.setDrone(this);
 		
 		Vector3f engineRelLocation= this.getEngineLocation();
@@ -104,7 +104,8 @@ public class Drone {
 		this.fysica.print("Autopilot outputs are: " 
 		+ ", scaled thrust:" + scaledThrust
 		+ ", thrust:" +  outputs.getThrust()
-		+ ", wings:" +  outputs.getLeftWingInclination()
+		+ ", leftwing:" +  outputs.getLeftWingInclination()
+		+ ", rightwing:" +  outputs.getRightWingInclination()
 		+ ", hor:" +  outputs.getHorStabInclination()
 		+ ", ver:" +  outputs.getVerStabInclination(), 10);
 

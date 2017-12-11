@@ -223,9 +223,9 @@ public class DummyGame implements IGameLogic {
 	        System.out.println("LASTLOOPTIME" + timer.getLastLoopTime());
 	        drone.update(outputs,(float) timer.getLastLoopTime());
 	        
-	//        drone.setLeftWingInclination((float) Math.PI/6);
-	//        drone.setRightWingInclination((float) Math.PI/6);
-	//        drone.setHorStabInclination((float) Math.PI/6);
+//	        drone.setLeftWingInclination((float) Math.PI/6);
+//	        drone.setRightWingInclination((float) Math.PI/6);
+//	        drone.setHorStabInclination((float) Math.PI/6);
 	
 	        //Vlieg recht door + gravitatie
 	        //System.out.println("Pos: " + drone.getPos());
@@ -340,7 +340,6 @@ public class DummyGame implements IGameLogic {
     
     public void createMesh(Color color) {
     	Balk createbalk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, color);
-    	System.out.println("HALLO");
     	meshList.add(new Mesh(createbalk.positions(), createbalk.colours(), createbalk.indices()));	
     }
     
