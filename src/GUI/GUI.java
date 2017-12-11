@@ -55,7 +55,7 @@ public class GUI {
 		frame = new JFrame("hello");
 		frame.setSize(400, 1000);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocation(1400, 20);
+		frame.setLocation(1000, 20);
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension dim = tk.getScreenSize();
 		frame.setLayout(new GridBagLayout());
@@ -199,7 +199,6 @@ public class GUI {
 		frame.add(panelStart, c);
 		
 		update();
-		
 		/*
 		BufferedImage img = dummyGame.renderer.screenshot;
 		Canvas canvas = new Canvas();
