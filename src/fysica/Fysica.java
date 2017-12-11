@@ -141,7 +141,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		for (DronePart part: partArray) {
 			v = sum(part.getTotalForceInWorld(), v);
 		}
-		print("total force is: " + v, 5);
+		print("total force is: " + v, 9);
 
 		return v;
 	}
@@ -159,6 +159,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
 		Vector3f v = sum(droneVelocityInWorld, at);
 	
+		this.print("vel calculated to:" + v, 11);
 		return v;
 	}
 	

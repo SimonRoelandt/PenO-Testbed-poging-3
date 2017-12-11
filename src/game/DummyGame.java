@@ -94,7 +94,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setPosition(-20, 300, -50);
         cameraTop.setRotation(90f, -90f, 0);
         timer = new Timer();
-        drone = new Drone(0, 0, 0, new Vector3f(0,0,-8));
+        drone = new Drone(0, 0, 0, new Vector3f(0,0,-10));
         gui = new GUI(this);
     }
 
@@ -168,16 +168,18 @@ public class DummyGame implements IGameLogic {
         //Maak eerste input aan voor autopilot
         Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
         //Start de simulatie in autopilot
-        AutopilotOutputs outputs = comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
-        
-   
-        float scaledThrust = Math.max(0,Math.min(5, outputs.getThrust()));
+       AutopilotOutputs outputs = 
+    		   comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
+        	
+        System.out.println("INITIAL drone settings");
+        //drone.update(outputs, 0);
+        /*float scaledThrust = Math.max(0,Math.min(5, outputs.getThrust()));
         drone.getEngine().setThrust(scaledThrust);
         drone.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
         drone.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
         drone.getHorStabilizator().setInclinationAngle(outputs.getHorStabInclination());        
         drone.getVerStabilizator().setInclinationAngle(outputs.getVerStabInclination());
-        
+        */
     }
 
     @Override
@@ -217,6 +219,7 @@ public class DummyGame implements IGameLogic {
 	    	
 	        //Roep een timePassed op in Autopilot
 	        float time = timer.getElapsedTime();
+	        System.out.println("elapsed time is " + time);
 	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
 	        
 	        //Update de drone

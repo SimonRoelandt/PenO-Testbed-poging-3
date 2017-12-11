@@ -31,6 +31,7 @@ public class Drone {
 	
 	
 	private Vector3f positionInWorld = new Vector3f(0,0,0);
+	
 	private Vector3f velocityInWorld = new Vector3f(0,0,0);
 
 
@@ -263,7 +264,6 @@ public class Drone {
 		this.getRightWing().setVelocityAirfoil(vel);
 		this.getHorStabilizator().setVelocityAirfoil(vel);
 		this.getVerStabilizator().setVelocityAirfoil(vel);
-		
 		*/
 	}
 	
