@@ -48,11 +48,6 @@ public abstract class DronePart {
 		return fysica.sum(droneCenterPositionInWorld, relativePositionInWorld);
 	}
 	
-	//SPEED
-	public Vector3f getSpeedInWorld(){
-		return null;
-	}
-
 	public Vector3f getGraviationForceInWorld() {
 		float gravitationForce = 
 				(float) (this.getMass() * fysica.getGravity());
@@ -71,7 +66,8 @@ public abstract class DronePart {
 		
 		Vector3f dronePartForceInWorld = this.getDronePartForceInWorld();
 		Vector3f gravitationForce = this.getGraviationForceInWorld();
-
+		
+		Vector3f v = fysica.sum(dronePartForceInWorld, gravitationForce);
 		return fysica.sum(dronePartForceInWorld, gravitationForce);
 	}
 

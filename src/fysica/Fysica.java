@@ -5,15 +5,12 @@ import org.lwjgl.util.vector.Vector3f;
 
 import drone.Airfoil;
 import drone.Drone;
-import drone.DroneObject;
 import drone.DronePart;
 import drone.Engine;
 import org.lwjgl.util.vector.Matrix3f;
 
 public class Fysica {
 	
-	
-	private float liftSlope = (float) 1.5;
 
 	final static float gravity = (float) 9.81;
 	
@@ -132,12 +129,20 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
+	public void print(Object obj, int priority){
+		if(priority >= 10){
+			System.out.println("PRINTLOG: "+ obj);
+		}
+	}
+	
 	public Vector3f getTotalForceOnDroneInWorld(Drone drone) {
 		DronePart[] partArray = drone.getDroneParts();
 		Vector3f v = new Vector3f(0,0,0);
 		for (DronePart part: partArray) {
 			v = sum(part.getTotalForceInWorld(), v);
 		}
+		print("total force is: " + v, 5);
+
 		return v;
 	}
 	
@@ -153,6 +158,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
 		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
 		Vector3f v = sum(droneVelocityInWorld, at);
+	
 		return v;
 	}
 	
@@ -181,21 +187,30 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f momentVector = new Vector3f(0, 0, 0);
 		DronePart[] partArray = drone.getDroneParts();
 		
+		print("--Start calc moment", 3);
+		
 		for (DronePart part: partArray) {
 			Vector3f posVector = part.getRelativePosition();
 			Vector3f posVectorInWorld = this.convertToWorld(posVector);
 			Vector3f forceVector = part.getTotalForceInWorld();
 			
-			momentVector = sum(momentVector, this.getMoment(posVectorInWorld, forceVector));
+			Vector3f moment = this.getMoment(posVectorInWorld, forceVector);
+			
+			print("calc moment: " + posVectorInWorld + " " + forceVector +" resulted in " + moment, 3);
+			momentVector = sum(momentVector, moment);
 		}
 		
+		print("---Resulting Moment: " + momentVector, 3);		
 		return momentVector;
 	}
 	
 	
 		
 	public Vector3f getAngularAccelerationInWorld(Drone drone){
-	  		
+		
+		
+		print("--calc angular acc ", 3);
+		
 		Vector3f angularAcceleration = new Vector3f();
 		
 		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone);
@@ -203,6 +218,12 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Matrix3f inverseMomentOfInertia = (Matrix3f) momentOfInertia.invert();
 		
 		Matrix3f.transform(inverseMomentOfInertia,droneResultingMoment,angularAcceleration);
+		
+		
+		print("moment is " + droneResultingMoment, 3);
+		print("imoi is " + inverseMomentOfInertia, 3);
+		
+		print("ang acc is " + angularAcceleration, 3);
 		
 		return angularAcceleration; 
 		
@@ -213,52 +234,43 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		Vector3f angularAccelerationInWorld = this.getAngularAccelerationInWorld(drone);
 		Vector3f at = new Vector3f(angularAccelerationInWorld.getX()*time,angularAccelerationInWorld.getY()*time,angularAccelerationInWorld.getZ()*time);
-		Vector3f droneAngularRoatationInWorld = drone.getAngularRotationInWorld();
-		Vector3f v = sum(droneAngularRoatationInWorld, at);
 		
+		Vector3f droneAngularRotationInWorld = drone.getAngularRotationInWorld();
+		Vector3f v = sum(droneAngularRotationInWorld, at);
+		
+		print("-- total droneAngularRotationInWorld is: " + droneAngularRotationInWorld, 3);
+		print("-- total at is: " + at, 3);
+		print("-- total ang vel is: " + v, 3);
+
 		return v;
 	}
 	
 	
 	private float[] getHPRVelocity(Drone drone, float time){
 		
+		
 		Vector3f angularVelocityInWorld = this.getNewAngularVelocityInWorld(drone, time);
-		
-		Vector3f HPRVector = new Vector3f();
 	
-		Matrix3f system_matrix = new Matrix3f();
 		
+		float wx = angularVelocityInWorld.getX();
+		float wy = angularVelocityInWorld.getY();
+		float wz = angularVelocityInWorld.getZ();
 		
 		float heading = this.getHeading();
 		float pitch = this.getPitch();
-
-		float sinH = (float) Math.sin(heading);
-		float cosH = (float) Math.cos(heading);
 		
-		float sinP = (float) Math.sin(pitch);
-		float cosP = (float) Math.cos(pitch);
+		float sinh = (float) Math.sin(heading);
+		float cosh = (float) Math.cos(heading);
 		
+		float sinp = (float) Math.sin(pitch);
+		float cosp = (float) Math.cos(pitch);
 		
-		system_matrix.m00=(float) 1;
-		system_matrix.m01=(float) 0;
-		system_matrix.m02=(float) -(sinH)/(cosH);
-		system_matrix.m10=(float) 0;
-		system_matrix.m11=(float) 1;
-		system_matrix.m12=(float) (sinP)/(cosH*cosP);
-		system_matrix.m20=(float) 0;
-		system_matrix.m21=(float) 0;
-		system_matrix.m22=(float) 1/(cosH*cosP);
+		float headingRate = wy - wz*cosh +wx*sinp*sinh/(cosp);
+		float pitchRate = wx*cosh + wz*sinh;
+		float rollRate = wz*cosh/cosp - wx*sinh/cosp;
 		
-		
-		
-		
-		Matrix3f.transform(system_matrix,angularVelocityInWorld,HPRVector);
-		
-		float headingVelocity = HPRVector.getY();
-		float pitchVelocity = HPRVector.getX(); 
-		float rollVelocity = HPRVector.getZ(); 
-
-		return new float[] {headingVelocity, pitchVelocity, rollVelocity};
+		float[] rates = new float[] {headingRate, pitchRate, rollRate};
+		return rates;
 	}
 	
 	public float getNewHeadingRate(Drone drone, float time){

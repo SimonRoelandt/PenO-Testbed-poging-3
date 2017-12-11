@@ -8,17 +8,20 @@ public class Airfoil extends DronePart {
 	private boolean vertical;	
 	private Vector3f axisVector = new Vector3f(0,0,0);
 	private Vector3f attackVector = new Vector3f(0,0,0);
+	private float liftslope;
 	
 	
 	public Airfoil(
 			double inclination, 
 			double mass, 
 			boolean vertical, 
+			float liftslope,
 			Vector3f relativePosition) {		
 		
 		this.inclination = (float) inclination;
 		this.mass = (float) mass;
 		this.setAxisVector(vertical);
+		this.setLiftslope(liftslope);
 		this.setAttackVector(inclination, vertical);
 		
 		this.setRelativePosition(relativePosition);
@@ -32,18 +35,26 @@ public class Airfoil extends DronePart {
 		Vector3f airspeed = this.getVelocityAirfoil();
 		Vector3f axis = this.getAxisVector();
 		
-		Vector3f projectedAirspeed = Vector3f.sub(airspeed, fysica.mul( fysica.mul(airspeed,axis),axis),null);
+		Vector3f projectedAirspeed = airspeed;
 		
-		float angleOfAttack = (float) -Math.atan2(fysica.scalarProduct(projectedAirspeed,normal), fysica.scalarProduct(projectedAirspeed,this.getAttackVector()));
-		Vector3f proj = new Vector3f(0,0,projectedAirspeed.getZ());
-		Vector3f liftForce = fysica.product((float)(angleOfAttack * Math.pow(proj.getZ(),2)), fysica.product(this.getLiftSlope(),normal));
-		//System.out.println("Lift: " + liftForce);
+		float angleOfAttack = (float) -Math.atan2(fysica.scalarProduct(projectedAirspeed,normal), 
+				fysica.scalarProduct(projectedAirspeed,this.getAttackVector()));
+		
+		float speedSquared = airspeed.lengthSquared();
+		
+		Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared), 
+				fysica.product(this.getLiftSlope(),normal));
+		
+		fysica.print("liftforce is: " + liftForce, 4);
+		
+		//return new Vector3f(0,0,0);
+		
 		return liftForce;
 	}
 	
 	private Vector3f getVelocityAirfoil() {
 		// TODO Auto-generated method stub
-		return new Vector3f(0,0,9);
+		return this.getDrone().getVelocityInWorld();
 	}
 
 	public Vector3f getDronePartForce(){
@@ -99,23 +110,24 @@ public class Airfoil extends DronePart {
 	public void updateInclinationAngle(float angle){
 		this.inclination = angle;
 		this.setAttackVector(this.inclination, vertical);
-		
 	}
 	
 	public void setInclinationAngle(float angle) {
 		this.inclination = angle;
+		this.setAttackVector(this.inclination, vertical);
 	}
 	
 	public boolean isVertical() {
 		return this.vertical; 
 	}
 	
+	public void setLiftslope(float liftslope){
+		this.liftslope = liftslope;
+	}
+	
 	
 	public float getLiftSlope() {
-		if (isVertical()) {
-			return (float) 1.0;
-		}
-		return (float) 1.0;
+		return this.liftslope;
 	}
 
 	

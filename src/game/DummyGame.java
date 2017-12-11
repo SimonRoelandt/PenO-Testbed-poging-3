@@ -75,6 +75,7 @@ public class DummyGame implements IGameLogic {
     
     public boolean simulationEnded = false;
     
+    public boolean sendConfig = false;
 
 
     public DummyGame() {
@@ -94,7 +95,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setPosition(-20, 300, -50);
         cameraTop.setRotation(90f, -90f, 0);
         timer = new Timer();
-        drone = new Drone(0, 0, 0, new Vector3f(0,0,-8));
+        drone = new Drone(0, 0, 0, new Vector3f(0,0,-10));
         gui = new GUI(this);
     }
 
@@ -102,11 +103,11 @@ public class DummyGame implements IGameLogic {
     @Override
     public void init(Window window) throws Exception {
         renderer.init(window);
-        timer.init();
         gui.init();
         gui.run();
         this.window = window;
         comm = new CommunicatieTestbed();
+        sendConfig = true;
         
         // Maak de gameItem meshes aan
         
@@ -159,24 +160,6 @@ public class DummyGame implements IGameLogic {
        //gameItems = worldGenerator(5);
        gameItems.add(droneItem);
         
-        //Maak config file aan voor de autopilot
-        Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
-        							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
-        							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
-        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeightAutopilot);
-        
-        //Maak eerste input aan voor autopilot
-        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
-        //Start de simulatie in autopilot
-        AutopilotOutputs outputs = comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
-        
-        //Schrijf output
-        drone.getEngine().setThrust(outputs.getThrust());
-        drone.getLeftWing().setInclinationAngle(outputs.getLeftWingInclination());
-        drone.getRightWing().setInclinationAngle(outputs.getRightWingInclination());
-        drone.getHorStabilizator().setInclinationAngle(outputs.getHorStabInclination());        
-        drone.getVerStabilizator().setInclinationAngle(outputs.getVerStabInclination());
-        
     }
 
     @Override
@@ -214,12 +197,31 @@ public class DummyGame implements IGameLogic {
 	        
     	if (startSimulation && simulationEnded == false) {
 	    	
+    		if(sendConfig == true){
+    			timer.init();
+    			//Maak config file aan voor de autopilot
+    	        Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
+    	        							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
+    	        							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
+    	        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeightAutopilot);
+    	        //Maak eerste input aan voor autopilot
+    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
+    	        //Start de simulatie in autopilot
+    	        AutopilotOutputs outputs = comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
+    	        //Update de drone
+    	        drone.update(outputs,0);
+    	        sendConfig = false;
+    		}
+    		
 	        //Roep een timePassed op in Autopilot
 	        float time = timer.getElapsedTime();
 	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
 	        
+	        System.out.println("TIME" + time);
+	        
 	        //Update de drone
-	        drone.update(outputs,time);
+	        System.out.println("LASTLOOPTIME" + timer.getLastLoopTime());
+	        drone.update(outputs,(float) timer.getLastLoopTime());
 	        
 	//        drone.setLeftWingInclination((float) Math.PI/6);
 	//        drone.setRightWingInclination((float) Math.PI/6);
