@@ -288,7 +288,7 @@ public class DummyGame implements IGameLogic {
         for(int i=0;i<n;i++){
         	GameItem gameItem = new GameItem(randomMesh(),true);
         	
-        	float z = i * -90f/n -10;
+        	float z = i * -40f - 30;
         	float x = rand.nextInt(20) -10;
             float y = rand.nextInt(10);
             while(Math.sqrt(Math.pow(x,2) + Math.pow(y,2)) > 10){
