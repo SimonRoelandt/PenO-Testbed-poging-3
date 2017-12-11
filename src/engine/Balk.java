@@ -1,5 +1,7 @@
 package engine;
 
+import java.awt.Color;
+
 public class Balk {
 	
 	private float xpos;
@@ -14,25 +16,35 @@ public class Balk {
 	private float[] colorright;
 	private float[] colorup;
 	private float[] colordown;
+	private Color color; 
 	
 
-	public Balk(float xpos, float ypos, float zpos, float length, float width, float heigth,
-			float[] colorfront,float[] colorback,float[] colorleft,float[] colorright,float[] colorup,float[] colordown ) {
+	public Balk(float xpos, float ypos, float zpos, float length, float width, float heigth, Color color ) {
 	this.xpos = xpos;
 	this.ypos = ypos;
 	this.zpos = zpos;
 	this.length = length;
 	this.width = width;
 	this.heigth = heigth;
-	this.colorfront = colorfront;
-	this.colorback = colorback;
-	this.colorleft = colorleft;
-	this.colorright = colorright;
-	this.colorup = colorup;
-	this.colordown = colordown;
+	this.color = color;
+	
+	getAllColorFaces(color);
+	
 	}
 	
+	public void getAllColorFaces(Color color) {
+		colorfront = getColorFace(color, 0.7f);
+		colorback = getColorFace(color, 0.45f);
+		colorleft = getColorFace(color, 0.3f);
+		colorright = getColorFace(color, 0.85f);
+		colorup = getColorFace(color, 1f);
+		colordown = getColorFace(color, 0.15f);
+		
+	}
 	
+	public float[] getColorFace(Color color, float value) {
+		return new float[]{color.getRed()/255f*value,color.getGreen()/255f*value,color.getBlue()/255f*value};
+	}
 	
 	public float[] positions() {
 		float[] positions = new float[]{

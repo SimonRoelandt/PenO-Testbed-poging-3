@@ -22,6 +22,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import drone.Airfoil;
 import drone.Engine;
+import engine.GameItem;
 
 import javax.swing.*;
 
@@ -30,9 +31,9 @@ import game.DummyGame;
 public class GUI {
 	DummyGame dummyGame;
 	private JFrame frame;
-	JButton buttonPlane, buttonChase, buttonSide;
+	JButton buttonPlane, buttonChase, buttonSide, buttonFree;
 	int buttonClicked;				
-	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube;
+	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove;
 	JLabel label1, label2;
 	JTextField textfield1, textfield2;
 	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos;
@@ -41,6 +42,8 @@ public class GUI {
 	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa;
 	JFileChooser fc;
 	JTabbedPane tabbedPaneGenerate;
+	JList<GameItem> list;
+	DefaultListModel<GameItem> listModel;
 	
 	float xPos, yPos, zPos;
 	
@@ -110,17 +113,22 @@ public class GUI {
 		
 		
 		//panel met view-buttons
-		buttonPlane = new JButton("Plane view");
+		buttonPlane = new JButton("Plane");
 		buttonPlane.addActionListener(new ListenForPlaneButton());
-		buttonChase = new JButton("Chase view");
+		buttonChase = new JButton("Chase");
 		buttonChase.addActionListener(new ListenForChaseButton());
-		buttonSide = new JButton("Top and Side view");
+		buttonSide = new JButton("Ortho");
 		buttonSide.addActionListener(new ListenForSideButton());
+		buttonFree = new JButton("Custom");
+		buttonFree.addActionListener(new ListenForFreeButton());
 		
 		panelViews = new JPanel();
-		panelViews.add(buttonPlane);
+		panelViews.setLayout(new GridLayout(1,4));
+		panelViews.add(buttonFree);
 		panelViews.add(buttonChase);
+		panelViews.add(buttonPlane);
 		panelViews.add(buttonSide);
+		
 		Border viewBorder = BorderFactory.createTitledBorder("Views");
 		panelViews.setBorder(viewBorder);
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -153,9 +161,23 @@ public class GUI {
 		panelZPos.tf.addActionListener(new ListenForZ());
 		buttonCustomCube = addButtonPanelCustomCube("Generate");
 		buttonCustomCube.button.addActionListener(new ListenForCustomGenerate());
+		
+		panelRemove = new JPanel();
+		panelRemove.setLayout(new GridLayout(3,1));
+		listModel = new DefaultListModel<GameItem>();
+		
+		list = new JList<GameItem>(listModel);
+		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		list.setLayoutOrientation(JList.VERTICAL);
+		list.setVisibleRowCount(-1);
+		//JScrollPane listScroller = new JScrollPane(list);
+		//listScroller.setPreferredSize(new Dimension(250, 80));
+		
+		panelRemove.add(list);
+		
 		tabbedPaneGenerate.addTab("Generate Cubes", panelGenerate);
 		tabbedPaneGenerate.addTab("Custom Cube", panelCustomCube);
-		
+		//tabbedPaneGenerate.addTab("Remove Cubes", panelRemove);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -243,7 +265,19 @@ public class GUI {
 				", " + round(dummyGame.drone.getHorStabInclination(),2) + 
 				", " + round(dummyGame.drone.getVerStabInclination(),2) +
 				")");
-		//aoa.labelValue.setText("(" + round(dummyGame.drone.getAOA(),2) + ")");		
+
+		//aoa.labelValue.setText("(" + round(dummyGame.drone.getAOA(),2) + ")");
+		
+		/*
+		listModel.clear();
+		if (dummyGame.getGameItems() != null) {
+			for (GameItem gameItem: dummyGame.getGameItems()) {
+				listModel.clear();
+				if (gameItem.getRenderOnPlaneView() == true)
+					listModel.addElement(gameItem);
+			}
+		}
+		*/
 	}
 	
 	
@@ -316,6 +350,12 @@ public class GUI {
 	private class ListenForSideButton implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dummyGame.renderer.view =  "side";
+		}
+	}
+	
+	private class ListenForFreeButton implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			dummyGame.renderer.view =  "free";
 		}
 	}
 	

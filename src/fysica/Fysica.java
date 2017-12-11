@@ -11,8 +11,6 @@ import org.lwjgl.util.vector.Matrix3f;
 
 public class Fysica {
 	
-	
-	private float liftSlope = (float) 1.5;
 
 	final static float gravity = (float) 9.81;
 	
@@ -132,8 +130,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
 	public void print(Object obj, int priority){
-		if(priority >= 3){
-			System.out.println(obj);
+		if(priority >= 10){
+			System.out.println("PRINTLOG: "+ obj);
 		}
 	}
 	
@@ -143,7 +141,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		for (DronePart part: partArray) {
 			v = sum(part.getTotalForceInWorld(), v);
 		}
-		print("total force is: " + v, 0);
+		print("total force is: " + v, 5);
 
 		return v;
 	}
@@ -161,7 +159,6 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
 		Vector3f v = sum(droneVelocityInWorld, at);
 	
-		
 		return v;
 	}
 	
@@ -196,7 +193,6 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 			Vector3f posVector = part.getRelativePosition();
 			Vector3f posVectorInWorld = this.convertToWorld(posVector);
 			Vector3f forceVector = part.getTotalForceInWorld();
-			
 			
 			Vector3f moment = this.getMoment(posVectorInWorld, forceVector);
 			
@@ -272,7 +268,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		float headingRate = wy - wz*cosh +wx*sinp*sinh/(cosp);
 		float pitchRate = wx*cosh + wz*sinh;
 		float rollRate = wz*cosh/cosp - wx*sinh/cosp;
-		float[] rates = new float[] {0, 0, 0};
+		
+		float[] rates = new float[] {headingRate, pitchRate, rollRate};
 		return rates;
 	}
 	

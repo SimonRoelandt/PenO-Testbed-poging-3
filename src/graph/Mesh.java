@@ -110,6 +110,23 @@ public class Mesh {
     	
     }
     
+    public void renderFree(int framebuffer, int imageWidth, int imageHeight, int windowWidth, int windowHeight) {
+    	// Draw the mesh OFF SCREEN (FRAMEBUFFER framebuffer)
+    	
+    	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    	glViewport(0,0,imageWidth,imageHeight);
+        glBindVertexArray(getVaoId());
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glDrawElements(GL_TRIANGLES, getVertexCount(), GL_UNSIGNED_INT, 0);
+        // Restore state
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glBindVertexArray(0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    	
+    }
+    
     public void renderCameraSide(int framebuffer, int imageWidth, int imageHeight, int windowWidth, int windowHeight) {
     	// Draw the mesh OFF SCREEN (FRAMEBUFFER framebuffer)
     	

@@ -31,16 +31,16 @@ public class Drone {
 	
 	
 	private Vector3f positionInWorld = new Vector3f(0,0,0);
-	private Vector3f velocityInWorld = new Vector3f(0,0,-10);
+	private Vector3f velocityInWorld = new Vector3f(0,0,0);
 
 
 	private Vector3f angularPositionInWorld = new Vector3f(0,0,0);
 	private Vector3f angularRotationInWorld = new Vector3f(0,0,0);
 	
 
-	private static float wingLiftSlope = 1;
-	private static float horStabLiftSlope = 1;
-	private static float verStabLiftSlope = 1;
+	private static float wingLiftSlope = 0.1f;
+	private static float horStabLiftSlope = 0.05f;
+	private static float verStabLiftSlope = 0.05f;
 	
 	private float xPos;
 	private float yPos;
@@ -56,8 +56,6 @@ public class Drone {
 
 	private Matrix3f inertiaMatrix;
 	
-	private Matrix3f inertiaMatrixInWorld;
-
 	
 	//-1.97864475 voor 1 wing
 	
@@ -76,10 +74,10 @@ public class Drone {
 		this.rightWing        = new Airfoil(0, wingMass,   false, 0.1f, new Vector3f(wingX,0,0));
 		this.rightWing.setDrone(this);
 
-		this.horStabilization = new Airfoil(0, tailMass/2, false, 0.05f, new Vector3f(0,0,tailSize));
+		this.horStabilization = new Airfoil(0, tailMass/2, false, 0f, new Vector3f(0,0,tailSize));
 		this.horStabilization.setDrone(this);
 		
-		this.verStabilization = new Airfoil(0, tailMass/2, true, 0.05f,  new Vector3f(0,0,tailSize));
+		this.verStabilization = new Airfoil(0, tailMass/2, false, 0f,  new Vector3f(0,0,tailSize));
 		this.verStabilization.setDrone(this);
 		
 		Vector3f engineRelLocation= this.getEngineLocation();
@@ -95,18 +93,44 @@ public class Drone {
 	}
 	
 	//Bepaalt de verandering die elke stap gebeurt
-	public void update(AutopilotOutputs outputs,float time){
-        this.getEngine().setThrust(20);
-        this.fysica.print("engine thrust forceis " + outputs.getThrust(), 4);
+	
 
-        float scaledThrust = Math.max(0,Math.min(5, outputs.getLeftWingInclination()));
+	public void update(AutopilotOutputs outputs,float time){
+		
+        float scaledThrust = Math.max(0,Math.min(5, outputs.getThrust()));
+
+		
+		this.fysica.print("UPDATE with time= " +time, 10);
+		this.fysica.print("Autopilot outputs are: " 
+		+ ", scaled thrust:" + scaledThrust
+		+ ", thrust:" +  outputs.getThrust()
+		+ ", wings:" +  outputs.getLeftWingInclination()
+		+ ", hor:" +  outputs.getHorStabInclination()
+		+ ", ver:" +  outputs.getVerStabInclination(), 10);
+
         
-        
-        this.getLeftWing().updateInclinationAngle(scaledThrust);
+        this.getEngine().setThrust(scaledThrust);
+
+        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
 
+        
+        this.fysica.print("resulting force is:" + 
+        		this.fysica.getTotalForceOnDroneInWorld(this), 10);
+        
+        this.fysica.print("resulting acceleration is:" + 
+        		this.fysica.getAccelerationInWorld(this), 10);
+        
+        this.fysica.print("old speed is:" + 
+        		this.getVelocityInWorld(), 10);
+        
+        this.fysica.print("a*t is:" + 
+        		this.fysica.product(time, this.fysica.getAccelerationInWorld(this)), 10);
+       
+        this.fysica.print("resulting speed is:" + 
+        		this.fysica.getNewVelocityInWorld(this, time), 10);
         
         //UPDATE POSITION AND VELOCITY IN WORLD
 		Vector3f p = fysica.getNewPositionInWorld(this, time);
@@ -145,6 +169,9 @@ public class Drone {
 		float newRollRate = fysica.getNewRollRate(this, time);
 		this.setRollVel(newRollRate);
 		
+		
+		this.fysica.print("HPR: " + newHeading + newPitch + newRoll, 10);
+        
 	}
 	
 	
@@ -186,7 +213,7 @@ public class Drone {
 	public Vector3f getPositionInWorld() {
 		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
 		Vector3f n = new Vector3f(0,0,0);
-		return n;
+		return v;
 	}
 	
 	public void setPositionInWorld(Vector3f pos) {
