@@ -52,7 +52,7 @@ public class GUI {
 	}
 	
 	public void init() {	
-		frame = new JFrame("hello");
+		frame = new JFrame("Testbed Team Wit");
 		frame.setSize(400, 1000);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocation(1000, 20);
@@ -61,6 +61,7 @@ public class GUI {
 		frame.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
+		
 		
 		
 		panelValues = new JPanel();
@@ -197,6 +198,8 @@ public class GUI {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		frame.add(panelStart, c);
+		
+		frame.pack();
 		
 		update();
 		/*

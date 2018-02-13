@@ -17,6 +17,7 @@ import drone.Drone;
 import engine.Balk;
 import engine.CubeLoader;
 import engine.GameItem;
+import engine.Ground;
 import engine.IGameLogic;
 import engine.MouseInput;
 import engine.OBJLoader;
@@ -121,6 +122,7 @@ public class DummyGame implements IGameLogic {
         this.droneItem = droneItem;
         
        
+       
         
         //Kubussen
         balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, Color.red);
@@ -158,6 +160,14 @@ public class DummyGame implements IGameLogic {
         
        //gameItems = worldGenerator(5);
        gameItems.add(droneItem);
+      
+       /*
+       //wereld
+       Ground ground = new Ground();
+       Mesh groundMesh = new Mesh(ground.vertices(), ground.colours(), ground.indices());
+       GameItem groundItem = new GameItem(groundMesh, false);
+       gameItems.add(groundItem);
+       */
         
     }
 
