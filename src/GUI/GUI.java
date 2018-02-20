@@ -39,7 +39,7 @@ public class GUI {
 	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos;
 	GLPanel glpanel;
 	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube;
-	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa;
+	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust;
 	JFileChooser fc;
 	JTabbedPane tabbedPaneGenerate;
 	JList<GameItem> list;
@@ -65,7 +65,7 @@ public class GUI {
 		
 		
 		panelValues = new JPanel();
-		panelValues.setLayout(new GridLayout(5,1));
+		panelValues.setLayout(new GridLayout(6,1));
 		Border valuesBorder = BorderFactory.createTitledBorder("Values");
 		panelValues.setBorder(valuesBorder);
 		positie = new LabelPanel("Position", panelValues);
@@ -73,6 +73,7 @@ public class GUI {
 		snelheid =  new LabelPanel("Velocity", panelValues);
 		versnelling = new LabelPanel("Acceleration", panelValues);
 		inclinatie = new LabelPanel("Inclinations left, right, hor, ver", panelValues);
+		thrust = new LabelPanel("Thrust", panelValues);
 		//aoa = new LabelPanel("Angle of Attack", panelValues);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -267,6 +268,8 @@ public class GUI {
 				", " + round(dummyGame.drone.getHorStabInclination(),2) + 
 				", " + round(dummyGame.drone.getVerStabInclination(),2) +
 				")");
+		
+		thrust.labelValue.setText("(" + round(dummyGame.drone.engine.getThrustScalar(),5) + ")");
 
 		//aoa.labelValue.setText("(" + round(dummyGame.drone.getAOA(),2) + ")");
 		

@@ -150,7 +150,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f force = this.getTotalForceOnDroneInWorld(drone);
 		float mass = drone.getTotalMass();
 		Vector3f acceleration = product((1/mass), force);
+		System.out.println("++++++++++++++++++++++++++++++++++++" + acceleration);
 		return acceleration;
+		
 	}
 	
 	public Vector3f getNewVelocityInWorld(Drone drone, float time) {

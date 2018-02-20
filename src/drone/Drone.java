@@ -98,6 +98,9 @@ public class Drone {
 	public void update(AutopilotOutputs outputs,float time){
 		
         float scaledThrust = Math.max(0,Math.min(5, outputs.getThrust()));
+        
+        //OM TE TESTEN LATER WEGDOEN:
+        scaledThrust = 0;
 
 		
 		this.fysica.print("UPDATE with time= " +time, 10);
@@ -111,12 +114,26 @@ public class Drone {
 
         
         this.getEngine().setThrust(scaledThrust);
-
+        
+        
+        //OM TE TESTEN LATER WEGDOEN
+        
+        /*
         this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
+        */
+        
+        this.getLeftWing().updateInclinationAngle(this.getLeftWingInclination());
+        this.getRightWing().updateInclinationAngle(this.getRightWingInclination());
+        this.getHorStabilizator().updateInclinationAngle(this.getHorStabInclination());        
+        this.getVerStabilizator().updateInclinationAngle(this.getVerStabInclination());
+        this.getEngine().setThrust(this.getEngine().getThrustScalar());
 
+        
+        
+        // TOT HIER
         
         this.fysica.print("resulting force is:" + 
         		this.fysica.getTotalForceOnDroneInWorld(this), 10);
