@@ -97,7 +97,7 @@ public class Drone {
 
 	public void update(AutopilotOutputs outputs,float time){
 		
-        float scaledThrust = Math.max(0,Math.min(5, outputs.getThrust()));
+        float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
         
         //OM TE TESTEN LATER WEGDOEN:
         
