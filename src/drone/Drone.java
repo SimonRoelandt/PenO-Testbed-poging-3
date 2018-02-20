@@ -160,6 +160,7 @@ public class Drone {
 		 
         //UPDATE HEAD PITCH ROLL POSITION AND RATE
 		
+		this.setAngularRotationInWorld(fysica.getNewAngularVelocityInWorld(this, time));
 		
 		//HEADING
 		

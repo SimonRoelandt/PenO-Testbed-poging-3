@@ -234,7 +234,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	}
 
 	
-	private Vector3f getNewAngularVelocityInWorld(Drone drone, float time){
+	public Vector3f getNewAngularVelocityInWorld(Drone drone, float time){
 		
 		Vector3f angularAccelerationInWorld = this.getAngularAccelerationInWorld(drone);
 		Vector3f at = new Vector3f(angularAccelerationInWorld.getX()*time,angularAccelerationInWorld.getY()*time,angularAccelerationInWorld.getZ()*time);
@@ -253,7 +253,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	private float[] getHPRVelocity(Drone drone, float time){
 		
 		Vector3f angularVelocityInWorld = this.getNewAngularVelocityInWorld(drone, time);
-		drone.setAngularRotationInWorld(angularVelocityInWorld);
+		
 		
 		float wx = angularVelocityInWorld.getX();
 		float wy = angularVelocityInWorld.getY();
