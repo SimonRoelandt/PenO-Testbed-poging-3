@@ -68,13 +68,13 @@ public class Drone {
 		this.setVelocityInWorld(velocity);
 
 		
-		this.leftWing         = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(-wingX,0,0));
+		this.leftWing         = new Airfoil(0, wingMass,   true, wingLiftSlope, new Vector3f(-wingX,0,0));
 		this.leftWing.setDrone(this);
 
-		this.rightWing        = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(wingX,0,0));
+		this.rightWing        = new Airfoil(0, wingMass,   true, wingLiftSlope, new Vector3f(wingX,0,0));
 		this.rightWing.setDrone(this);
 
-		this.horStabilization = new Airfoil(0, tailMass/2, false, horStabLiftSlope, new Vector3f(0,0,tailSize));
+		this.horStabilization = new Airfoil(0, tailMass/2, true, horStabLiftSlope, new Vector3f(0,0,tailSize));
 		this.horStabilization.setDrone(this);
 		
 		this.verStabilization = new Airfoil(0, tailMass/2, false, verStabLiftSlope,  new Vector3f(0,0,tailSize));
@@ -100,7 +100,7 @@ public class Drone {
         float scaledThrust = Math.max(0,Math.min(5, outputs.getThrust()));
         
         //OM TE TESTEN LATER WEGDOEN:
-        scaledThrust = 0;
+        
 
 		
 		this.fysica.print("UPDATE with time= " +time, 10);
@@ -118,19 +118,19 @@ public class Drone {
         
         //OM TE TESTEN LATER WEGDOEN
         
-        /*
+        
         this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
-        */
         
+        /*
         this.getLeftWing().updateInclinationAngle(this.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(this.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(this.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(this.getVerStabInclination());
         this.getEngine().setThrust(this.getEngine().getThrustScalar());
-
+		*/
         
         
         // TOT HIER
