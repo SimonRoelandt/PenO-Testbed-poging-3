@@ -7,15 +7,11 @@ import fysica.Fysica;
 public abstract class DronePart {
 	
 	Fysica fysica = new Fysica();
-	
 	Drone drone;
-	
 	float mass;
 	Vector3f relativePostion;
 	Vector3f velocityInWorld;
 	
-	
-	//DRONE
 	
 	public Drone getDrone(){
 		return this.drone;
@@ -25,19 +21,21 @@ public abstract class DronePart {
 		this.drone = drone;
 	}
 	
-	//MASS
+	public void setMass(float newMass){
+		this.mass = newMass;
+	}
+	
 	public float getMass(){
 		return this.mass;
-	};
+	}
 	
-	//RELATIVE POSITION
 	public void setRelativePosition(Vector3f relativePosition){
 		this.relativePostion = relativePosition;
 	}
 	
 	public Vector3f getRelativePosition(){
 		return this.relativePostion;
-	};
+	}
 	
 	//ABSOLUTE POSITION
 	public Vector3f getAbsolutePositionInWorld(){
@@ -71,6 +69,4 @@ public abstract class DronePart {
 		System.out.println("lift " + dronePartForceInWorld + " grav " + gravitationForce);
 		return v;
 	}
-
-	
 }

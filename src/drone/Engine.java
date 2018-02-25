@@ -1,20 +1,18 @@
 package drone;
 
 import org.lwjgl.util.vector.Vector3f;
+
 public class Engine extends DronePart{
 
 	private float thrust;
-	private float maxThrust= 5000;
+	private float maxThrust = 5000;
 	
-	public Engine(
-			double thrust, 
-			double mass, 
-			Vector3f relativePosition) {
-		
-		this.thrust = (float) thrust;
-		this.mass = (float) mass;
-		
-		this.setRelativePosition(relativePosition);
+	public Engine(float thrust, float mass, Vector3f relativePosition, Drone drone, float maxThrust) {	
+		setThrust(thrust);
+		setMass(mass);
+		setMaxThrust(maxThrust);
+		setDrone(drone);
+		setRelativePosition(relativePosition);
 	}
 	
 	private Vector3f getThrust() {
@@ -31,7 +29,6 @@ public class Engine extends DronePart{
 		return this.thrust;
 	}
 	
-
 	public void setThrust(float thrust) {
 		this.thrust = thrust;
 	}
@@ -43,8 +40,4 @@ public class Engine extends DronePart{
 	public void setMaxThrust(float maxthrust) {
 		this.maxThrust = maxthrust;
 	}
-	
-
-	
-	
 }

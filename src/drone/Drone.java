@@ -26,7 +26,7 @@ public class Drone {
 	public float wingMass = 0.25f;
 	public float tailMass = 0.125f;
 	
-	public float maxThrust = 1000;
+	public float maxThrust = 5000;
 	public float maxAOA = (float) (Math.PI /12);
 	
 	
@@ -60,41 +60,25 @@ public class Drone {
 	//-1.97864475 voor 1 wing
 	
 	
-	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {
-		//float incl = (float) -2.08343282;
-		
+	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {	
 		//SETTING POSITION AND VELOCITY IN WORLD
 		this.setPositionInWorld(xPos, yPos, zPos);
 		this.setVelocityInWorld(velocity);
-
 		
-		this.leftWing         = new Airfoil(0, wingMass,   true, wingLiftSlope, new Vector3f(-wingX,0,0));
-		this.leftWing.setDrone(this);
-
-		this.rightWing        = new Airfoil(0, wingMass,   true, wingLiftSlope, new Vector3f(wingX,0,0));
-		this.rightWing.setDrone(this);
-
-		this.horStabilization = new Airfoil(0, tailMass/2, true, horStabLiftSlope, new Vector3f(0,0,tailSize));
-		this.horStabilization.setDrone(this);
-		
-		this.verStabilization = new Airfoil(0, tailMass/2, false, verStabLiftSlope,  new Vector3f(0,0,tailSize));
-		this.verStabilization.setDrone(this);
+		//SETTING DRONE PARTS
+		this.leftWing = new Airfoil(0, wingMass,   true, wingLiftSlope, new Vector3f(-wingX,0,0),this);
+		this.rightWing = new Airfoil(0, wingMass,   true, wingLiftSlope, new Vector3f(wingX,0,0),this);
+		this.horStabilization = new Airfoil(0, tailMass/2, true, horStabLiftSlope, new Vector3f(0,0,tailSize),this);
+		this.verStabilization = new Airfoil(0, tailMass/2, false, verStabLiftSlope,  new Vector3f(0,0,tailSize),this);
 		
 		Vector3f engineRelLocation= this.getEngineLocation();
-
-		this.engine           = new Engine(0,  engineMass, engineRelLocation);
-		this.engine.setDrone(this);
+		this.engine = new Engine(0,  engineMass, engineRelLocation, this, this.maxThrust);
 		
-		this.engine.setMaxThrust(maxThrust);
-		//setting inertia matrix
-		this.setInertiaMatrix();
-		
-		
+		//SETTING INERTIA MATRIX
+		this.setInertiaMatrix();	
 	}
 	
-	//Bepaalt de verandering die elke stap gebeurt
-	
-
+	//UPDATE THE DRONE AT EVERY TIME STEP
 	public void update(AutopilotOutputs outputs,float time){
 		
         float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
