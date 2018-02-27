@@ -91,7 +91,7 @@ public class Airfoil extends DronePart {
 	}
 	
 	public void setInclination(float incl) {
-		this.inclination = incl;
+		this.inclination = fysica.clean(incl);
 	}
 	
 	public float getInclination() {
