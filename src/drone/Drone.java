@@ -288,7 +288,6 @@ public class Drone {
 	//ANGULAR ROTATION IN WORLD
 	
 	public Vector3f getAngularVelocityInWorld() {
-		// TODO Auto-generated method stub
 		return this.angularVelocityInWorld;
 	}
 	
