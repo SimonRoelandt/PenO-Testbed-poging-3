@@ -272,7 +272,10 @@ public class GUI {
 		
 		thrust.labelValue.setText("(" + round(dummyGame.drone.engine.getThrustScalar(),5) + ")");
 
-		force.labelValue.setText("(" + round(dummyGame.drone.getVerStabilizator().getTotalForceInWorld().getY(),5) + ")");
+		force.labelValue.setText("(" + round(dummyGame.drone.fysica.getTotalForceOnDroneInWorld(dummyGame.drone).getX(),5) +
+				", " + round(dummyGame.drone.fysica.getTotalForceOnDroneInWorld(dummyGame.drone).getY(),5) +
+				", " + round(dummyGame.drone.fysica.getTotalForceOnDroneInWorld(dummyGame.drone).getZ(),5) +
+				")");
 		
 		aoa.labelValue.setText("(" + dummyGame.drone.leftWing.getAngleOfAttack() + ")");
 		//aoa.labelValue.setText("(" + round(dummyGame.drone.getAOA(),2) + ")");
