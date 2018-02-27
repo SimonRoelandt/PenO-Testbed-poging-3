@@ -65,16 +65,7 @@ public class Airfoil extends DronePart {
 	@Override
 	public Vector3f getDronePartForce(){
 		return this.getLiftForce();		
-	}
-	
-	public void setInclination(float incl) {
-		this.inclination = fysica.clean(incl);
-	}
-	
-	public float getInclination() {
-		return this.inclination;
-	}
-	
+	}S
 	public Vector3f getAxisVector() {
 		Vector3f axisVector = new Vector3f(0,0,0);
 		if (!isVertical()) {
@@ -107,6 +98,14 @@ public class Airfoil extends DronePart {
 		return this.attackVector;
 	}
 	
+	public void setInclination(float incl) {
+		this.inclination = fysica.clean(incl);
+	}
+	
+	public float getInclination() {
+		return this.inclination;
+	}
+	
 	public void updateInclinationAngle(float angle){
 		setInclination(angle);
 		this.setAttackVector(this.inclination);
@@ -131,4 +130,6 @@ public class Airfoil extends DronePart {
 	public float getLiftSlope() {
 		return this.liftslope;
 	}
+	
+	
 }
