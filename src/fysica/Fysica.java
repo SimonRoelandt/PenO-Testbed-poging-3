@@ -123,8 +123,10 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f force = this.getTotalForceOnDroneInWorld(drone);
 		float mass = drone.getTotalMass();
 		Vector3f acceleration = product(1/mass,force);
-		return acceleration;
 		
+		System.out.println("GETACCCCCC" + acceleration);
+		
+		return acceleration;
 	}
 	
 	public Vector3f getNewVelocityInWorld(Drone drone, float time) {
@@ -134,6 +136,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f v = sum(droneVelocityInWorld, at);
 	
 		this.print("vel calculated to:" + v, 11);
+		
+		System.out.println("VELOCCITY" + v);
+		
 		return v;
 	}
 	
@@ -204,11 +209,11 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		Matrix3f.transform(inverseMomentOfInertia,droneResultingMoment,angularAcceleration);
 		
-		
 		print("moment is " + droneResultingMoment, 3);
 		print("imoi is " + inverseMomentOfInertia, 3);
-		
 		print("ang acc is " + angularAcceleration, 3);
+		
+		System.out.println("AACCCCCCCCCCCCCCCCC" + angularAcceleration);
 		
 		return angularAcceleration; 
 		
@@ -222,8 +227,6 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Matrix3f.transform(inertia, angularVelocity, impulseMoment);
 		
 		return impulseMoment;
-		
-		
 	}
 
 	
@@ -246,7 +249,6 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	private float[] getHPRVelocity(Drone drone, float time){
 		
 		Vector3f angularVelocityInWorld = this.getNewAngularVelocityInWorld(drone, time);
-		
 		
 		float wx = angularVelocityInWorld.getX();
 		float wy = angularVelocityInWorld.getY();
