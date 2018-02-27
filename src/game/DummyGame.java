@@ -95,7 +95,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setPosition(-20, 300, -50);
         cameraTop.setRotation(90f, -90f, 0);
         timer = new Timer();
-        drone = new Drone(0, 0, 0, new Vector3f(0,0,-20));
+        drone = new Drone(0, 0, 0, new Vector3f(0,0,-5));
         gui = new GUI(this);
     }
 
@@ -277,7 +277,7 @@ public class DummyGame implements IGameLogic {
 	        //bepaalt wanneer de simulatie stopt
 	        boolean end = true;
 	        for(int i = 0 ; i < gameItems.size(); i++){
-	        	if(gameItems.get(i) != null && gameItems.get(i)!=droneItem){
+	        	if(gameItems.get(i) != null && gameItems.get(i).getRenderOnPlaneView()){
 			        Vector3f.sub(drone.getPositionInWorld(), gameItems.get(i).getPosition(), afstand);
 			        if (afstand.length()<4f) {
 			        	//System.out.println(timer.getTot() + "end");
@@ -285,7 +285,7 @@ public class DummyGame implements IGameLogic {
 			       	    System.out.println("TARGET HIT");
 			        }
 	        	}
-	        	if(gameItems.get(i).getRenderOnPlaneView() == true) end = false;
+	        	//if(gameItems.get(i).getRenderOnPlaneView() == true) end = false;
 	        }
 	        //if (end == true) window.simulationEnded = true;
 	        //if (end == true) simulationEnded = true;
