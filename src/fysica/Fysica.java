@@ -122,6 +122,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	public Vector3f getAccelerationInWorld(Drone drone) {
 		Vector3f force = this.getTotalForceOnDroneInWorld(drone);
 		float mass = drone.getTotalMass();
+		Vector3f acceleration = product(1/mass,force);
 		return acceleration;
 		
 	}
@@ -192,7 +193,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f orientation = drone.getAngularPositionInWorld();
 		Vector3f angularVelocity = drone.getAngularVelocityInWorld();
 		
-		Vector3f impulsmoment = getImpulsMoment(drone);
+		Vector3f impulsmoment = getImpulseMoment(drone);
 		Vector3f term = new Vector3f();
 		Vector3f.cross(angularVelocity, impulsmoment, term);
 		
