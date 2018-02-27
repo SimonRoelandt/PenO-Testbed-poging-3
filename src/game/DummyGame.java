@@ -31,7 +31,7 @@ import autopilotLibrary.CommunicatieTestbed;
 
 public class DummyGame implements IGameLogic {
 
-	private static final float MOUSE_SENSITIVITY = 0.05f;
+	private static final float MOUSE_SENSITIVITY = 0.01f;
 	
     public final Renderer renderer;
     
@@ -49,7 +49,7 @@ public class DummyGame implements IGameLogic {
     
     public final Camera cameraTop;
     
-    private static final float CAMERA_POS_STEP = 0.05f;
+    private static final float CAMERA_POS_STEP = 0.01f;
     
     private List<GameItem> gameItems;
 
@@ -161,13 +161,13 @@ public class DummyGame implements IGameLogic {
        //gameItems = worldGenerator(5);
        gameItems.add(droneItem);
       
-       /*
+       
        //wereld
        Ground ground = new Ground();
        Mesh groundMesh = new Mesh(ground.vertices(), ground.colours(), ground.indices());
        GameItem groundItem = new GameItem(groundMesh, false);
        gameItems.add(groundItem);
-       */
+       
         
     }
 
