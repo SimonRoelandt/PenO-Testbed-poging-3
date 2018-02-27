@@ -2,15 +2,13 @@ package engine;
 
 public class Timer {
 
-	private double firstLoopTime;
     private double lastLoopTime;
-    private float elapTime;
-    private boolean first = false;
+    private float elapTime = 0.0f;
+    private double firstLoopTime;
     
     public void init() {
-    	firstLoopTime = getTime();
         lastLoopTime = getTime();
-        first = true;
+        firstLoopTime = getTime();
     }
 
     public double getTime() {
@@ -19,17 +17,19 @@ public class Timer {
 
     public float getElapsedTime() {
         double time = getTime();
-        float elapsedTime = (float) (time - firstLoopTime);
+        float elapsedTime = (float) (time - lastLoopTime);
+        //elapTime = elapTime + elapsedTime;
         lastLoopTime = time;
+        System.out.println("ELAPPP" + elapsedTime);
         return elapsedTime;
     }
     
     public float getTot() {
-    	return elapTime;
+    	//return elapTime;
+    	return (float) (getTime() - firstLoopTime);
     }
 
     public double getLastLoopTime() {
-    	double time = getTime();
-        return (float) (time - lastLoopTime);
+        return lastLoopTime;
     }
 }

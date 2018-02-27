@@ -26,7 +26,7 @@ public class Drone {
 	public float wingMass = 0.25f;
 	public float tailMass = 0.125f;
 	
-	public float maxThrust = 1000;
+	public float maxThrust = 5000;
 	public float maxAOA = (float) (Math.PI /12);
 	
 	
@@ -36,7 +36,7 @@ public class Drone {
 
 
 	private Vector3f angularPositionInWorld = new Vector3f(0,0,0);
-	private Vector3f angularRotationInWorld = new Vector3f(0,0,0);
+	private Vector3f angularVelocityInWorld = new Vector3f(0,0,0);
 	
 
 	private static float wingLiftSlope = 0.1f;
@@ -61,62 +61,64 @@ public class Drone {
 	//-1.97864475 voor 1 wing
 	
 	
-	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {
-		//float incl = (float) -2.08343282;
-		
+	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {	
 		//SETTING POSITION AND VELOCITY IN WORLD
 		this.setPositionInWorld(xPos, yPos, zPos);
 		this.setVelocityInWorld(velocity);
-
 		
-		this.leftWing         = new Airfoil(0, wingMass,   false, 0.1f, new Vector3f(-wingX,0,0));
-		this.leftWing.setDrone(this);
-
-		this.rightWing        = new Airfoil(0, wingMass,   false, 0.1f, new Vector3f(wingX,0,0));
-		this.rightWing.setDrone(this);
-
-		this.horStabilization = new Airfoil(0, tailMass/2, false, 0f, new Vector3f(0,0,tailSize));
-		this.horStabilization.setDrone(this);
-		
-		this.verStabilization = new Airfoil(0, tailMass/2, false, 0f,  new Vector3f(0,0,tailSize));
-		this.verStabilization.setDrone(this);
+		//SETTING DRONE PARTS
+		this.leftWing = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(-wingX,0,0),this);
+		this.rightWing = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(wingX,0,0),this);
+		this.horStabilization = new Airfoil(0, tailMass/2, false, horStabLiftSlope, new Vector3f(0,0,tailSize),this);
+		this.verStabilization = new Airfoil(0, tailMass/2, true, verStabLiftSlope,  new Vector3f(0,0,tailSize),this);
 		
 		Vector3f engineRelLocation= this.getEngineLocation();
-
-		this.engine           = new Engine(0,  engineMass, engineRelLocation);
-		this.engine.setDrone(this);
+		this.engine = new Engine(0,  engineMass, engineRelLocation, this, this.maxThrust);
 		
-		this.engine.setMaxThrust(maxThrust);
-		//setting inertia matrix
-		this.setInertiaMatrix();
-		
-		
+		//SETTING INERTIA MATRIX
+		this.setInertiaMatrix();	
 	}
 	
-	//Bepaalt de verandering die elke stap gebeurt
-	
-
+	//UPDATE THE DRONE AT EVERY TIME STEP
 	public void update(AutopilotOutputs outputs,float time){
 		
-        float scaledThrust = Math.max(0,Math.min(5, outputs.getThrust()));
+        float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
+        
+        //OM TE TESTEN LATER WEGDOEN:
+        
 
 		
 		this.fysica.print("UPDATE with time= " +time, 10);
 		this.fysica.print("Autopilot outputs are: " 
 		+ ", scaled thrust:" + scaledThrust
 		+ ", thrust:" +  outputs.getThrust()
-		+ ", wings:" +  outputs.getLeftWingInclination()
+		+ ", leftwing:" +  outputs.getLeftWingInclination()
+		+ ", rightwing:" +  outputs.getRightWingInclination()
 		+ ", hor:" +  outputs.getHorStabInclination()
 		+ ", ver:" +  outputs.getVerStabInclination(), 10);
 
         
         this.getEngine().setThrust(scaledThrust);
-
+        
+        
+        //OM TE TESTEN LATER WEGDOEN
+        
+        
         this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
-
+        
+        /*
+        this.getLeftWing().updateInclinationAngle(this.getLeftWingInclination());
+        this.getRightWing().updateInclinationAngle(this.getRightWingInclination());
+        this.getHorStabilizator().updateInclinationAngle(this.getHorStabInclination());        
+        this.getVerStabilizator().updateInclinationAngle(this.getVerStabInclination());
+        this.getEngine().setThrust(this.getEngine().getThrustScalar());
+		*/
+        
+        
+        // TOT HIER
         
         this.fysica.print("resulting force is:" + 
         		this.fysica.getTotalForceOnDroneInWorld(this), 10);
@@ -143,10 +145,11 @@ public class Drone {
 		 
         //UPDATE HEAD PITCH ROLL POSITION AND RATE
 		
+		this.setAngularVelocityInWorld(fysica.getNewAngularVelocityInWorld(this, time));
 		
 		//HEADING
 		
-		float newHeading = this.getHeading() + this.getHeadingVel() * time;
+		float newHeading = this.getHeading() + (this.getHeadingVel() * time);
 		this.setHeading(newHeading);
 		
 		float newHeadingRate = fysica.getNewHeadingRate(this, time);
@@ -159,7 +162,7 @@ public class Drone {
 		this.setPitch(newPitch);
 		
 		float newPitchRate = fysica.getNewPitchRate(this, time);
-		this.setHeadingVel(newPitchRate);
+		this.setPitchVel(newPitchRate);
 		
 		
 		//ROLL
@@ -203,7 +206,7 @@ public class Drone {
 	}
 	
 	public float getGravity() {
-		return fysica.getGravity();
+		return Fysica.gravity;
 	}
 	
 	
@@ -213,7 +216,6 @@ public class Drone {
 	
 	public Vector3f getPositionInWorld() {
 		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
-		Vector3f n = new Vector3f(0,0,0);
 		return v;
 	}
 	
@@ -285,13 +287,12 @@ public class Drone {
 	
 	//ANGULAR ROTATION IN WORLD
 	
-	public Vector3f getAngularRotationInWorld() {
-		// TODO Auto-generated method stub
-		return this.angularRotationInWorld;
+	public Vector3f getAngularVelocityInWorld() {
+		return this.angularVelocityInWorld;
 	}
 	
-	public void setAngularRotationInWorld(Vector3f angularRotation) {
-		this.angularRotationInWorld = angularRotation;
+	public void setAngularVelocityInWorld(Vector3f angularRotation) {
+		this.angularVelocityInWorld = angularRotation;
 	}
 	
 
@@ -432,15 +433,15 @@ public class Drone {
 	}
 	
 	public float getWingLiftSlope() {
-		return this.wingLiftSlope;
+		return Drone.wingLiftSlope;
 	}
 
 	public float getHorStabLiftSlope() {
-		return this.horStabLiftSlope;
+		return Drone.horStabLiftSlope;
 	}
 
 	public float getVerStabLiftSlope() {
-		return this.verStabLiftSlope;
+		return Drone.verStabLiftSlope;
 	}
 	
 	
@@ -467,7 +468,6 @@ public class Drone {
 		this.inertiaMatrix=inertiaMatrix;
 		
 	}
-
 
 	//INERTIA MATRIX
 	

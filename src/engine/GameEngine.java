@@ -57,11 +57,12 @@ public class GameEngine implements Runnable {
     protected void gameLoop() throws Exception {
         float elapsedTime;
         float accumulator = 0f;
-        float interval = 1f / TARGET_UPS;
+        float interval = 1f / 30;//TARGET_UPS;
 
         boolean running = true;
         while (running && !window.windowShouldClose()) {
             elapsedTime = timer.getElapsedTime();
+            System.out.println("ELAP TIME" + elapsedTime);
             accumulator += elapsedTime;
 
             input();

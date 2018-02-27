@@ -6,7 +6,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -18,6 +17,7 @@ import drone.Drone;
 import engine.Balk;
 import engine.CubeLoader;
 import engine.GameItem;
+import engine.Ground;
 import engine.IGameLogic;
 import engine.MouseInput;
 import engine.OBJLoader;
@@ -31,7 +31,7 @@ import autopilotLibrary.CommunicatieTestbed;
 
 public class DummyGame implements IGameLogic {
 
-	private static final float MOUSE_SENSITIVITY = 0.05f;
+	private static final float MOUSE_SENSITIVITY = 0.01f;
 	
     public final Renderer renderer;
     
@@ -49,7 +49,7 @@ public class DummyGame implements IGameLogic {
     
     public final Camera cameraTop;
     
-    private static final float CAMERA_POS_STEP = 0.05f;
+    private static final float CAMERA_POS_STEP = 0.01f;
     
     private List<GameItem> gameItems;
 
@@ -95,7 +95,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setPosition(-20, 300, -50);
         cameraTop.setRotation(90f, -90f, 0);
         timer = new Timer();
-        drone = new Drone(0, 0, 0, new Vector3f(0,0,-10));
+        drone = new Drone(0, 0, 0, new Vector3f(0,0,-20));
         gui = new GUI(this);
     }
 
@@ -121,6 +121,7 @@ public class DummyGame implements IGameLogic {
         droneItem.setRotation(0f, 0f, 0f);
         this.droneItem = droneItem;
         
+       
        
         
         //Kubussen
@@ -159,6 +160,14 @@ public class DummyGame implements IGameLogic {
         
        //gameItems = worldGenerator(5);
        gameItems.add(droneItem);
+      
+       
+       //wereld
+       Ground ground = new Ground();
+       Mesh groundMesh = new Mesh(ground.vertices(), ground.colours(), ground.indices());
+       GameItem groundItem = new GameItem(groundMesh, false);
+       gameItems.add(groundItem);
+       
         
     }
 
@@ -205,7 +214,7 @@ public class DummyGame implements IGameLogic {
     	        							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
     	        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeightAutopilot);
     	        //Maak eerste input aan voor autopilot
-    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getElapsedTime());
+    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getTot());
     	        //Start de simulatie in autopilot
     	        AutopilotOutputs outputs = comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
     	        //Update de drone
@@ -214,25 +223,40 @@ public class DummyGame implements IGameLogic {
     		}
     		
 	        //Roep een timePassed op in Autopilot
+<<<<<<< HEAD
 	        float time = timer.getElapsedTime();
 	        System.out.println("elapsed time is " + time);
+=======
+	        float time = timer.getTot();
+>>>>>>> branch 'master' of https://github.com/SimonRoelandt/PenO-Testbed-poging-3.git
 	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
 	        
 	        System.out.println("TIME" + time);
 	        
 	        //Update de drone
-	        System.out.println("LASTLOOPTIME" + timer.getLastLoopTime());
-	        drone.update(outputs,(float) timer.getLastLoopTime());
+	        //System.out.println("LASTLOOPTIME" + timer.getElapsedTime());
 	        
-	//        drone.setLeftWingInclination((float) Math.PI/6);
-	//        drone.setRightWingInclination((float) Math.PI/6);
-	//        drone.setHorStabInclination((float) Math.PI/6);
+	        
+	        
+	        
+	        
+	        drone.update(outputs,timer.getElapsedTime());
+	        
+	        
+	        
+	        
+	        
+	        
+//	        drone.setLeftWingInclination((float) Math.PI/6);
+//	        drone.setRightWingInclination((float) Math.PI/6);
+//	        drone.setHorStabInclination((float) Math.PI/6);
 	
 	        //Vlieg recht door + gravitatie
 	        //System.out.println("Pos: " + drone.getPos());
 	        //System.out.println("Vel: " + drone.getVelocity());
 	        //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
 	        droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+	        System.out.println("positie " + drone.getXPos() + drone.getYPos() + drone.getZPos());
 	        droneItem.setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
 	        
 	        //meer impressionant:
@@ -277,7 +301,6 @@ public class DummyGame implements IGameLogic {
     	else {
     		float f = timer.getElapsedTime();
     	}
-
     }
     
     //Genereert n willekeurige kubussen
@@ -290,7 +313,7 @@ public class DummyGame implements IGameLogic {
         for(int i=0;i<n;i++){
         	GameItem gameItem = new GameItem(randomMesh(),true);
         	
-        	float z = i * -90f/n -10;
+        	float z = i * -40f - 30;
         	float x = rand.nextInt(20) -10;
             float y = rand.nextInt(10);
             while(Math.sqrt(Math.pow(x,2) + Math.pow(y,2)) > 10){
@@ -341,7 +364,6 @@ public class DummyGame implements IGameLogic {
     
     public void createMesh(Color color) {
     	Balk createbalk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, color);
-    	System.out.println("HALLO");
     	meshList.add(new Mesh(createbalk.positions(), createbalk.colours(), createbalk.indices()));	
     }
     

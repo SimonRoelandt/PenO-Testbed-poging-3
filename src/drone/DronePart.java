@@ -7,15 +7,11 @@ import fysica.Fysica;
 public abstract class DronePart {
 	
 	Fysica fysica = new Fysica();
-	
 	Drone drone;
-	
 	float mass;
 	Vector3f relativePostion;
 	Vector3f velocityInWorld;
 	
-	
-	//DRONE
 	
 	public Drone getDrone(){
 		return this.drone;
@@ -25,51 +21,42 @@ public abstract class DronePart {
 		this.drone = drone;
 	}
 	
-	//MASS
+	public void setMass(float newMass){
+		this.mass = newMass;
+	}
+	
 	public float getMass(){
 		return this.mass;
-	};
+	}
 	
-	//RELATIVE POSITION
 	public void setRelativePosition(Vector3f relativePosition){
 		this.relativePostion = relativePosition;
 	}
 	
 	public Vector3f getRelativePosition(){
 		return this.relativePostion;
-	};
+	}
 	
-	//ABSOLUTE POSITION
 	public Vector3f getAbsolutePositionInWorld(){
-		
 		Vector3f droneCenterPositionInWorld = this.getDrone().getPositionInWorld();
-		Vector3f relativePositionInWorld = fysica.convertToWorld(this.getRelativePosition());
-		
+		Vector3f relativePositionInWorld = fysica.convertToWorld(this.getRelativePosition());		
 		return fysica.sum(droneCenterPositionInWorld, relativePositionInWorld);
 	}
 	
 	public Vector3f getGraviationForceInWorld() {
-		float gravitationForce = 
-				(float) (this.getMass() * fysica.getGravity());
+		float gravitationForce = (float) (this.getMass() * Fysica.gravity);
 		return new Vector3f(0,-gravitationForce,0);
-		
 	}
 	
 	public abstract Vector3f getDronePartForce();
 	
-	
 	private Vector3f getDronePartForceInWorld() {
-		return fysica.convertToWorld(this.getDronePartForce());
+		return fysica.convertToWorld(getDronePartForce());
 	}
 	
-	public Vector3f getTotalForceInWorld() {
-		
-		Vector3f dronePartForceInWorld = this.getDronePartForceInWorld();
-		Vector3f gravitationForce = this.getGraviationForceInWorld();
-		
-		Vector3f v = fysica.sum(dronePartForceInWorld, gravitationForce);
-		return fysica.sum(dronePartForceInWorld, gravitationForce);
+	public Vector3f getTotalForceInWorld() {	
+		Vector3f totalForce = fysica.sum(getDronePartForceInWorld(), getGraviationForceInWorld());
+		System.out.println("lift " + getDronePartForceInWorld() + " grav " + getGraviationForceInWorld());
+		return totalForce;
 	}
-
-	
 }
