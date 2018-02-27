@@ -86,7 +86,6 @@ public class Drone {
         
         //OM TE TESTEN LATER WEGDOEN:
         
-
 		
 		this.fysica.print("UPDATE with time= " +time, 10);
 		this.fysica.print("Autopilot outputs are: " 
@@ -109,13 +108,7 @@ public class Drone {
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
         
-        /*
-        this.getLeftWing().updateInclinationAngle(this.getLeftWingInclination());
-        this.getRightWing().updateInclinationAngle(this.getRightWingInclination());
-        this.getHorStabilizator().updateInclinationAngle(this.getHorStabInclination());        
-        this.getVerStabilizator().updateInclinationAngle(this.getVerStabInclination());
-        this.getEngine().setThrust(this.getEngine().getThrustScalar());
-		*/
+       
         
         
         // TOT HIER
@@ -259,14 +252,6 @@ public class Drone {
 	//VELOCITY IN WORLD ---------------------------------------------------
 	public void setVelocityInWorld(Vector3f vel) {
 		this.velocityInWorld = vel;
-		
-	/*	Niet overtuigd van deze manier van werken
-	 * this.velocity = vel;
-		this.getLeftWing().setVelocityAirfoil(vel);
-		this.getRightWing().setVelocityAirfoil(vel);
-		this.getHorStabilizator().setVelocityAirfoil(vel);
-		this.getVerStabilizator().setVelocityAirfoil(vel);
-		*/
 	}
 	
 	public Vector3f getVelocityInWorld() {
@@ -296,7 +281,6 @@ public class Drone {
 	}
 	
 
-	//
 	
 	public void setThrust(float thrust) {
 		this.getEngine().setThrust(thrust);
@@ -342,7 +326,7 @@ public class Drone {
 
 		
 	public void setHeading(float heading) {
-		this.heading = heading;
+		this.heading = fysica.clean(heading);
 	}
 
 	public float getHeading() {
@@ -350,7 +334,7 @@ public class Drone {
 	}
 	
 	public void setPitch(float pitch) {
-		this.pitch = pitch;
+		this.pitch = fysica.clean(pitch);
 	}
 
 	public float getPitch() {
@@ -358,7 +342,7 @@ public class Drone {
 	}
 	
 	public void setRoll(float roll) {
-		this.roll = roll;
+		this.roll = fysica.clean(roll);
 	}
 
 	public float getRoll() {

@@ -122,10 +122,6 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	public Vector3f getAccelerationInWorld(Drone drone) {
 		Vector3f force = this.getTotalForceOnDroneInWorld(drone);
 		float mass = drone.getTotalMass();
-		Vector3f acceleration = product((1/mass), force);
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println("++++++++++++++++++++++++++++++++++++" + force.getY() + "++++++++++++++++++++++++++++++");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		return acceleration;
 		
 	}
@@ -192,6 +188,16 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f angularAcceleration = new Vector3f();
 		
 		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone);
+		
+		Vector3f orientation = drone.getAngularPositionInWorld();
+		Vector3f angularVelocity = drone.getAngularVelocityInWorld();
+		
+		Vector3f impulsmoment = getImpulsMoment(drone);
+		Vector3f term = new Vector3f();
+		Vector3f.cross(angularVelocity, impulsmoment, term);
+		
+		Vector3f MomentDiff = sum(droneResultingMoment, product(-1,term));
+		
 		Matrix3f momentOfInertia = drone.getIneriaMatrixInWorld();
 		Matrix3f inverseMomentOfInertia = (Matrix3f) momentOfInertia.invert();
 		
@@ -204,6 +210,18 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		print("ang acc is " + angularAcceleration, 3);
 		
 		return angularAcceleration; 
+		
+	}
+	
+	public Vector3f getImpulseMoment(Drone drone){
+		Matrix3f inertia = drone.getIneriaMatrixInWorld();
+		Vector3f angularVelocity = drone.getAngularVelocityInWorld();
+		Vector3f impulseMoment = new Vector3f();
+		
+		Matrix3f.transform(inertia, angularVelocity, impulseMoment);
+		
+		return impulseMoment;
+		
 		
 	}
 
@@ -264,11 +282,6 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 
 	}
 	
-	
-	
-	
-	
-	
 	//HULPFUNCTIES
 	
 	public Vector3f crossProduct(Vector3f v1, Vector3f v2) {
@@ -311,7 +324,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	}
 
 	public void setHeading(float heading) {
-		this.heading = heading;
+		this.heading = clean(heading);
 	}
 
 	public float getPitch() {
@@ -319,7 +332,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	}
 
 	public void setPitch(float pitch) {
-		this.pitch = pitch;
+		
+		this.pitch = clean(pitch);
 	}
 
 	public float getRoll() {
@@ -327,6 +341,13 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	}
 
 	public void setRoll(float roll) {
-		this.roll = roll;
+		this.roll = clean(roll);
+	}
+	
+	public float clean(float f){
+		while( f > 2*Math.PI){
+			f = (float) (f -2*Math.PI);
+		}
+		return f;
 	}
 }
