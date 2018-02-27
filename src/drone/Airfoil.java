@@ -22,36 +22,23 @@ public class Airfoil extends DronePart {
 	}
 	
 	private Vector3f getLiftForce() {
-		
 		Vector3f normal = fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
 		Vector3f airspeed = this.getVelocityAirfoil();
 		Vector3f axis = this.getAxisVector();
-		
-		
+			
 		Vector3f projectedAirspeed = fysica.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
 		
-		
-		
-		float angleOfAttack = (float) -Math.atan2(fysica.scalarProduct(projectedAirspeed,normal), 
-				fysica.scalarProduct(projectedAirspeed,this.getAttackVector()));
+		float angleOfAttack = getAngleOfAttack();
 		
 		float speedSquared = projectedAirspeed.lengthSquared();
 		
-		
 		Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared), 
 				fysica.product(this.getLiftSlope(),normal));
-		
-		
-		
-		
-		System.out.println("amezlfjhamlerzhfmùlerzkfhaezmlfkhazemlfhkj" + projectedAirspeed + " morgihfeamkrjhfeamrgj");
-		System.out.println("amezlfjhamlerzhfmùlerzkfhaezmlfkhazemlfhkj" + airspeed + " morgihfeamkrjhfeamrgj");
 		
 		return liftForce;
 	}
 	
 	public float getAngleOfAttack() {
-		
 		Vector3f normal = this.fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
 		Vector3f airspeed = this.getVelocityAirfoil();
 		Vector3f axis = this.getAxisVector();
@@ -61,20 +48,10 @@ public class Airfoil extends DronePart {
 		float angleOfAttack = (float) -Math.atan2(fysica.scalarProduct(projectedAirspeed,normal), 
 				fysica.scalarProduct(projectedAirspeed,this.getAttackVector()));
 		
-		float speedSquared = projectedAirspeed.lengthSquared();
-		
-		
-		Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared), 
-				fysica.product(this.getLiftSlope(),normal));
-		
-		fysica.print("liftforce is: " + liftForce, 4);
-		
 		return angleOfAttack;
 	}
 	
 	private Vector3f getVelocityAirfoil() {
-		// TODO Auto-generated method stub
-		
 		Vector3f angularVelocity = this.getDrone().getAngularVelocityInWorld();
 		Vector3f relativeDistance = fysica.convertToWorld(this.getRelativePosition());
 		Vector3f relSpeed = new Vector3f();
