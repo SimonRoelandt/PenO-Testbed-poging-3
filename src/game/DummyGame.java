@@ -243,9 +243,11 @@ public class DummyGame implements IGameLogic {
 	        
 	        
 	        
-//	        drone.setLeftWingInclination((float) Math.PI/6);
-//	        drone.setRightWingInclination((float) Math.PI/6);
-//	        drone.setHorStabInclination((float) Math.PI/6);
+	        drone.setLeftWingInclination((float) 0.0);
+	        drone.setRightWingInclination((float) 0.0);
+	        drone.setHorStabInclination((float) 0.0);
+	        drone.setVerStabInclination((float) 0.0);
+	        drone.setThrust((float) 0.0);
 	
 	        //Vlieg recht door + gravitatie
 	        //System.out.println("Pos: " + drone.getPos());
@@ -380,5 +382,4 @@ public class DummyGame implements IGameLogic {
         }
         comm.simulationEnded();
     }
-
 }

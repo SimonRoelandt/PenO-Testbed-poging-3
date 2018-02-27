@@ -57,7 +57,7 @@ public class GameEngine implements Runnable {
     protected void gameLoop() throws Exception {
         float elapsedTime;
         float accumulator = 0f;
-        float interval = 1f / 30;//TARGET_UPS;
+        float interval = 1f / TARGET_UPS;
 
         boolean running = true;
         while (running && !window.windowShouldClose()) {
@@ -69,6 +69,8 @@ public class GameEngine implements Runnable {
 
             while (accumulator >= interval) {
                 update(interval);
+                input();
+                render();
                 accumulator -= interval;
             }
 
