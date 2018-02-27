@@ -35,7 +35,7 @@ public class Drone {
 
 
 	private Vector3f angularPositionInWorld = new Vector3f(0,0,0);
-	private Vector3f angularRotationInWorld = new Vector3f(0,0,0);
+	private Vector3f angularVelocityInWorld = new Vector3f(0,0,0);
 	
 
 	private static float wingLiftSlope = 0.1f;
@@ -66,10 +66,10 @@ public class Drone {
 		this.setVelocityInWorld(velocity);
 		
 		//SETTING DRONE PARTS
-		this.leftWing = new Airfoil(0, wingMass,   true, wingLiftSlope, new Vector3f(-wingX,0,0),this);
-		this.rightWing = new Airfoil(0, wingMass,   true, wingLiftSlope, new Vector3f(wingX,0,0),this);
-		this.horStabilization = new Airfoil(0, tailMass/2, true, horStabLiftSlope, new Vector3f(0,0,tailSize),this);
-		this.verStabilization = new Airfoil(0, tailMass/2, false, verStabLiftSlope,  new Vector3f(0,0,tailSize),this);
+		this.leftWing = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(-wingX,0,0),this);
+		this.rightWing = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(wingX,0,0),this);
+		this.horStabilization = new Airfoil(0, tailMass/2, false, horStabLiftSlope, new Vector3f(0,0,tailSize),this);
+		this.verStabilization = new Airfoil(0, tailMass/2, true, verStabLiftSlope,  new Vector3f(0,0,tailSize),this);
 		
 		Vector3f engineRelLocation= this.getEngineLocation();
 		this.engine = new Engine(0,  engineMass, engineRelLocation, this, this.maxThrust);
@@ -144,7 +144,7 @@ public class Drone {
 		 
         //UPDATE HEAD PITCH ROLL POSITION AND RATE
 		
-		this.setAngularRotationInWorld(fysica.getNewAngularVelocityInWorld(this, time));
+		this.setAngularVelocityInWorld(fysica.getNewAngularVelocityInWorld(this, time));
 		
 		//HEADING
 		
@@ -205,7 +205,7 @@ public class Drone {
 	}
 	
 	public float getGravity() {
-		return fysica.getGravity();
+		return Fysica.gravity;
 	}
 	
 	
@@ -215,7 +215,6 @@ public class Drone {
 	
 	public Vector3f getPositionInWorld() {
 		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
-		Vector3f n = new Vector3f(0,0,0);
 		return v;
 	}
 	
@@ -288,13 +287,13 @@ public class Drone {
 	
 	//ANGULAR ROTATION IN WORLD
 	
-	public Vector3f getAngularRotationInWorld() {
+	public Vector3f getAngularVelocityInWorld() {
 		// TODO Auto-generated method stub
-		return this.angularRotationInWorld;
+		return this.angularVelocityInWorld;
 	}
 	
-	public void setAngularRotationInWorld(Vector3f angularRotation) {
-		this.angularRotationInWorld = angularRotation;
+	public void setAngularVelocityInWorld(Vector3f angularRotation) {
+		this.angularVelocityInWorld = angularRotation;
 	}
 	
 
@@ -435,15 +434,15 @@ public class Drone {
 	}
 	
 	public float getWingLiftSlope() {
-		return this.wingLiftSlope;
+		return Drone.wingLiftSlope;
 	}
 
 	public float getHorStabLiftSlope() {
-		return this.horStabLiftSlope;
+		return Drone.horStabLiftSlope;
 	}
 
 	public float getVerStabLiftSlope() {
-		return this.verStabLiftSlope;
+		return Drone.verStabLiftSlope;
 	}
 	
 	

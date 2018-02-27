@@ -274,7 +274,7 @@ public class GUI {
 
 		force.labelValue.setText("(" + round(dummyGame.drone.getVerStabilizator().getTotalForceInWorld().getY(),5) + ")");
 		
-		aoa.labelValue.setText("(" + dummyGame.drone.leftWing.getaoa() + ")");
+		aoa.labelValue.setText("(" + dummyGame.drone.leftWing.getAngleOfAttack() + ")");
 		//aoa.labelValue.setText("(" + round(dummyGame.drone.getAOA(),2) + ")");
 		
 		/*
