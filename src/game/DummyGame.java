@@ -223,12 +223,8 @@ public class DummyGame implements IGameLogic {
     		}
     		
 	        //Roep een timePassed op in Autopilot
-<<<<<<< HEAD
-	        float time = timer.getElapsedTime();
-	        System.out.println("elapsed time is " + time);
-=======
+
 	        float time = timer.getTot();
->>>>>>> branch 'master' of https://github.com/SimonRoelandt/PenO-Testbed-poging-3.git
 	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
 	        
 	        System.out.println("TIME" + time);

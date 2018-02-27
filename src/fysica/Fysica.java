@@ -112,11 +112,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		for (DronePart part: partArray) {
 			v = sum(part.getTotalForceInWorld(), v);
 		}
-<<<<<<< HEAD
-		print("total force is: " + v, 9);
-=======
+
 		print("total force is: " + v, 10);
->>>>>>> branch 'master' of https://github.com/SimonRoelandt/PenO-Testbed-poging-3.git
+
 
 		return v;
 	}
