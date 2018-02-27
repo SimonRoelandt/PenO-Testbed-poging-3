@@ -100,7 +100,7 @@ public class Airfoil extends DronePart {
 	
 	public Vector3f getAxisVector() {
 		Vector3f axisVector = new Vector3f(0,0,0);
-		if (isVertical()) {
+		if (!isVertical()) {
 			axisVector.x = 1;
 			axisVector.y = 0;
 			axisVector.z = 0;
@@ -114,7 +114,7 @@ public class Airfoil extends DronePart {
 	}
 	
 	public void setAttackVector(double incl) {
-		if (isVertical()) { 
+		if (!isVertical()) { 
 			attackVector.x = (float) Math.sin(0);
 			attackVector.y = (float) Math.sin(incl);
 			attackVector.z = (float) -Math.cos(incl);
