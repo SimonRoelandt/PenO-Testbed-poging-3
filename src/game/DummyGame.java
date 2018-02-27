@@ -95,7 +95,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setPosition(-20, 300, -50);
         cameraTop.setRotation(90f, -90f, 0);
         timer = new Timer();
-        drone = new Drone(0, 0, 0, new Vector3f(0,0,0));
+        drone = new Drone(0, 0, 0, new Vector3f(0,0,-20));
         gui = new GUI(this);
     }
 
@@ -241,11 +241,11 @@ public class DummyGame implements IGameLogic {
 	        
 	        
 	        
-	        drone.setLeftWingInclination((float) 0.0);
-	        drone.setRightWingInclination((float) 0.0);
-	        drone.setHorStabInclination((float) 0.0);
-	        drone.setVerStabInclination((float) 0.0);
-	        drone.setThrust((float) 0.0);
+//	        drone.setLeftWingInclination((float) 0.0);
+//	        drone.setRightWingInclination((float) 0.0);
+//	        drone.setHorStabInclination((float) 0.0);
+//	        drone.setVerStabInclination((float) 0.0);
+//	        drone.setThrust((float) 0.0);
 	
 	        //Vlieg recht door + gravitatie
 	        //System.out.println("Pos: " + drone.getPos());

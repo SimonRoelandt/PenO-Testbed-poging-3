@@ -59,8 +59,7 @@ public class Airfoil extends DronePart {
 		
 		Vector3f droneCenterVel = this.getDrone().getVelocityInWorld();
 		
-		//return fysica.sum(relSpeed, droneCenterVel);
-		return getDrone().getVelocityInWorld();
+		return fysica.sum(relSpeed, droneCenterVel);
 	}
 	
 	@Override

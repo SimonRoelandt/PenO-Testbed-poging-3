@@ -112,10 +112,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		for (DronePart part: partArray) {
 			v = sum(part.getTotalForceInWorld(), v);
 		}
-
-		print("total force is: " + v, 10);
-
-
+		
 		return v;
 	}
 	
@@ -123,9 +120,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f force = this.getTotalForceOnDroneInWorld(drone);
 		float mass = drone.getTotalMass();
 		Vector3f acceleration = product(1/mass,force);
-		
-		System.out.println("GETACCCCCC" + acceleration);
-		
+
 		return acceleration;
 	}
 	
@@ -134,11 +129,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
 		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
 		Vector3f v = sum(droneVelocityInWorld, at);
-	
+		
 		this.print("vel calculated to:" + v, 11);
-		
-		System.out.println("VELOCCITY" + v);
-		
+
 		return v;
 	}
 	
@@ -207,7 +200,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Matrix3f momentOfInertia = drone.getIneriaMatrixInWorld();
 		Matrix3f inverseMomentOfInertia = (Matrix3f) momentOfInertia.invert();
 		
-		Matrix3f.transform(inverseMomentOfInertia,droneResultingMoment,angularAcceleration);
+		Matrix3f.transform(inverseMomentOfInertia,MomentDiff,angularAcceleration);
 		
 		print("moment is " + droneResultingMoment, 3);
 		print("imoi is " + inverseMomentOfInertia, 3);

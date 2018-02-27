@@ -86,8 +86,6 @@ public class Drone {
         
         //OM TE TESTEN LATER WEGDOEN:
         
-
-		
 		this.fysica.print("UPDATE with time= " +time, 10);
 		this.fysica.print("Autopilot outputs are: " 
 		+ ", scaled thrust:" + scaledThrust
@@ -98,16 +96,16 @@ public class Drone {
 		+ ", ver:" +  outputs.getVerStabInclination(), 10);
 
         
-        this.getEngine().setThrust(scaledThrust);
+        setThrust(scaledThrust);
         
         
         //OM TE TESTEN LATER WEGDOEN
         
         
-        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
-        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
-        this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());        
-        this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
+        this.getLeftWing().updateInclinationAngle(-outputs.getLeftWingInclination());
+        this.getRightWing().updateInclinationAngle(-outputs.getRightWingInclination());
+        this.getHorStabilizator().updateInclinationAngle(-outputs.getHorStabInclination());        
+        this.getVerStabilizator().updateInclinationAngle(-outputs.getVerStabInclination());
         
         /*
         this.getLeftWing().updateInclinationAngle(this.getLeftWingInclination());
@@ -259,14 +257,6 @@ public class Drone {
 	//VELOCITY IN WORLD ---------------------------------------------------
 	public void setVelocityInWorld(Vector3f vel) {
 		this.velocityInWorld = vel;
-		
-	/*	Niet overtuigd van deze manier van werken
-	 * this.velocity = vel;
-		this.getLeftWing().setVelocityAirfoil(vel);
-		this.getRightWing().setVelocityAirfoil(vel);
-		this.getHorStabilizator().setVelocityAirfoil(vel);
-		this.getVerStabilizator().setVelocityAirfoil(vel);
-		*/
 	}
 	
 	public Vector3f getVelocityInWorld() {
@@ -294,9 +284,6 @@ public class Drone {
 	public void setAngularVelocityInWorld(Vector3f angularRotation) {
 		this.angularVelocityInWorld = angularRotation;
 	}
-	
-
-	//
 	
 	public void setThrust(float thrust) {
 		this.getEngine().setThrust(thrust);
@@ -334,12 +321,10 @@ public class Drone {
 		return this.getVerStabilizator().getInclination();
 	}
 	
-
 	public DronePart[] getDroneParts() {
 		DronePart[] droneParts = {getLeftWing(), getRightWing(), getHorStabilizator(), getVerStabilizator(), getEngine()};
 		return droneParts;
 	}
-
 		
 	public void setHeading(float heading) {
 		this.heading = fysica.clean(heading);
