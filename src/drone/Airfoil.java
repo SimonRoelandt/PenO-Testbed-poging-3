@@ -65,7 +65,8 @@ public class Airfoil extends DronePart {
 	@Override
 	public Vector3f getDronePartForce(){
 		return this.getLiftForce();		
-	}S
+	}
+	
 	public Vector3f getAxisVector() {
 		Vector3f axisVector = new Vector3f(0,0,0);
 		if (!isVertical()) {
