@@ -9,37 +9,37 @@ import org.lwjgl.util.vector.Matrix3f;
 public class Fysica {
 
 	public final static float gravity = (float) 9.81;
-	
-	private float heading;
-	private float pitch;
-	private float roll;
+
 	
 	
-	public Matrix3f getRotationMatrix(){
-		float heading = this.getHeading();
-		float pitch = this.getPitch();
-		float roll = this.getRoll();
+	public Matrix3f getRotationMatrix(Drone drone){
+		float heading = drone.getHeading();
+		float pitch = drone.getPitch();
+		float roll = drone.getRoll();
 		
 		Matrix3f conversionMatrix = Rotation_matrix_Roll(roll);
 		Matrix3f.mul(Rotation_matrix_Pitch(pitch), Rotation_matrix_Roll(roll), conversionMatrix);
 		Matrix3f.mul(Rotation_matrix_Heading(heading), conversionMatrix, conversionMatrix);
-		
+		/*
+		Matrix3f.mul(Rotation_matrix_Roll(roll), Rotation_matrix_Heading(heading), conversionMatrix);
+		Matrix3f.mul(conversionMatrix, Rotation_matrix_Pitch(pitch), conversionMatrix);
+		*/
 		return conversionMatrix;
 	}
 	
-	public Vector3f convertToWorld(Vector3f Drone_vector){
+	public Vector3f convertToWorld(Drone drone, Vector3f Drone_vector){
 		
 		Vector3f worldVector = new Vector3f();
-		Matrix3f conversionMatrix = getRotationMatrix();
+		Matrix3f conversionMatrix = getRotationMatrix(drone);
 		Matrix3f.transform(conversionMatrix,Drone_vector,worldVector);
 		
 		return worldVector;
 	}
 	
 	
-	public Vector3f convertToDroneCords(Vector3f worldVector){
+	public Vector3f convertToDroneCords(Drone drone, Vector3f worldVector){
 	
-		Matrix3f conversionMatrixInverse = (Matrix3f) getRotationMatrix().invert();
+		Matrix3f conversionMatrixInverse = (Matrix3f) getRotationMatrix(drone).invert();
 
 		Vector3f droneVector = new Vector3f();
 		Matrix3f.transform(conversionMatrixInverse,worldVector,droneVector);
@@ -164,7 +164,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		for (DronePart part: partArray) {
 			Vector3f posVector = part.getRelativePosition();
-			Vector3f posVectorInWorld = this.convertToWorld(posVector);
+			Vector3f posVectorInWorld = this.convertToWorld(drone, posVector);
 			Vector3f forceVector = part.getTotalForceInWorld();
 			
 			Vector3f moment = this.getMoment(posVectorInWorld, forceVector);
@@ -187,6 +187,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f angularAcceleration = new Vector3f();
 		
 		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone);
+		
+		System.out.println("RESULTING MOMENT" + droneResultingMoment);
 		
 		Vector3f orientation = drone.getAngularPositionInWorld();
 		Vector3f angularVelocity = drone.getAngularVelocityInWorld();
@@ -226,6 +228,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	public Vector3f getNewAngularVelocityInWorld(Drone drone, float time){
 		
 		Vector3f angularAccelerationInWorld = this.getAngularAccelerationInWorld(drone);
+		
+		System.out.println("ANGULAR AC" + angularAccelerationInWorld);
+		
 		Vector3f at = new Vector3f(angularAccelerationInWorld.getX()*time,angularAccelerationInWorld.getY()*time,angularAccelerationInWorld.getZ()*time);
 		
 		Vector3f droneAngularRotationInWorld = drone.getAngularVelocityInWorld();
@@ -240,15 +245,17 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	
 	private float[] getHPRVelocity(Drone drone, float time){
-		
+		//TODO controleren
 		Vector3f angularVelocityInWorld = this.getNewAngularVelocityInWorld(drone, time);
+		
+		System.out.println("ANGULARVELOCITY" + angularVelocityInWorld);
 		
 		float wx = angularVelocityInWorld.getX();
 		float wy = angularVelocityInWorld.getY();
 		float wz = angularVelocityInWorld.getZ();
 		
-		float heading = this.getHeading();
-		float pitch = this.getPitch();
+		float heading = drone.getHeading();
+		float pitch = drone.getPitch();
 		
 		float sinh = (float) Math.sin(heading);
 		float cosh = (float) Math.cos(heading);
@@ -256,9 +263,14 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		float sinp = (float) Math.sin(pitch);
 		float cosp = (float) Math.cos(pitch);
 		
-		float headingRate = wy - wz*cosh +wx*sinp*sinh/(cosp);
-		float pitchRate = wx*cosh + wz*sinh;
-		float rollRate = wz*cosh/cosp - wx*sinh/cosp;
+		//TODO verandert:
+		//headingrate headingRate = wy - wz*cosh +wx*sinp*sinh/(cosp);
+		//pitchrate =  wx*cosh + wz*sinh
+		//rollRate = wz*cosh/cosp - wx*sinh/cosp;
+		
+		float headingRate = wy + wz*cosh*sinp/cosp +wx*sinp*sinh/(cosp);
+		float pitchRate = wx*cosh - wz*sinh;
+		float rollRate = wz*cosh/cosp + wx*sinh/cosp;
 		
 		float[] rates = new float[] {headingRate, pitchRate, rollRate};
 		return rates;
@@ -315,35 +327,19 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		System.out.println(force.getX() + " " + force.getY()+ " " + force.getZ());
 	}
 
-	public float getHeading() {
-		return heading;
-	}
-
-	public void setHeading(float heading) {
-		this.heading = clean(heading);
-	}
-
-	public float getPitch() {
-		return pitch;
-	}
-
-	public void setPitch(float pitch) {
-		
-		this.pitch = clean(pitch);
-	}
-
-	public float getRoll() {
-		return roll;
-	}
-
-	public void setRoll(float roll) {
-		this.roll = clean(roll);
-	}
 	
 	public float clean(float f){
+		//TODO
+		
 		while( f > 2*Math.PI){
 			f = (float) (f -2*Math.PI);
 		}
+		
+		while(f < -2*Math.PI){
+			f = (float) (f+2*Math.PI);
+		}
+		
+		
 		return f;
 	}
 }

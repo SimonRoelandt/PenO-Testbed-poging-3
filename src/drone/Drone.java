@@ -82,7 +82,8 @@ public class Drone {
 	//UPDATE THE DRONE AT EVERY TIME STEP
 	public void update(AutopilotOutputs outputs,float time){
 		
-        float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
+        //float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
+        float scaledThrust = 0;
         
         //OM TE TESTEN LATER WEGDOEN:
         
@@ -97,26 +98,28 @@ public class Drone {
 
         
         setThrust(scaledThrust);
+       
         
         
         //OM TE TESTEN LATER WEGDOEN
         
-        
+        /*
         this.getLeftWing().updateInclinationAngle(-outputs.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(-outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(-outputs.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(-outputs.getVerStabInclination());
+        */
         
-        /*
         this.getLeftWing().updateInclinationAngle(this.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(this.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(this.getHorStabInclination());        
         this.getVerStabilizator().updateInclinationAngle(this.getVerStabInclination());
-        this.getEngine().setThrust(this.getEngine().getThrustScalar());
-		*/
+        this.getEngine().setThrust(0f);
+		
         
         
         // TOT HIER
+        System.out.println("thrust is " + scaledThrust);
         
         this.fysica.print("resulting force is:" + 
         		this.fysica.getTotalForceOnDroneInWorld(this), 10);
@@ -162,6 +165,9 @@ public class Drone {
 		float newPitchRate = fysica.getNewPitchRate(this, time);
 		this.setPitchVel(newPitchRate);
 		
+		System.out.println("PITCH AND PITCHRATE");
+		System.out.println(fysica.getNewPitchRate(this, time));
+		System.out.println(this.getPitchVel());
 		
 		//ROLL
 		
@@ -336,10 +342,17 @@ public class Drone {
 	
 	public void setPitch(float pitch) {
 		this.pitch = fysica.clean(pitch);
+		System.out.println("PITCH LOL NEGATIEF MAAR NAAR BOVEN" + pitch);
 	}
 
 	public float getPitch() {
+		
+		//TODO getters 0
+		
 		return this.pitch;
+		
+		
+		//return 0;
 	}
 	
 	public void setRoll(float roll) {
@@ -347,7 +360,12 @@ public class Drone {
 	}
 
 	public float getRoll() {
-		return this.roll;
+		
+		
+		//return this.roll;
+		
+		
+		return 0;
 	}
 	
 	public void setHeadingVel(float vel) {
@@ -355,7 +373,14 @@ public class Drone {
 	}
 	
 	public float getHeadingVel() {
+		
+		
 		return this.headingVel;
+		
+		
+		//return 0;
+		
+		
 	}
 	
 	public void setPitchVel(float vel) {
@@ -464,7 +489,7 @@ public class Drone {
 		
 		Matrix3f inertiaMatrix = this.getInertiaMatrix();
 		
-		Matrix3f conversionMatrix = this.fysica.getRotationMatrix();
+		Matrix3f conversionMatrix = this.fysica.getRotationMatrix(this);
 		Matrix3f conversionMatrixInverted = new Matrix3f();
 		Matrix3f.transpose(conversionMatrix, conversionMatrixInverted);
 		

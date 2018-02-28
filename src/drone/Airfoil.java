@@ -53,7 +53,7 @@ public class Airfoil extends DronePart {
 	
 	private Vector3f getVelocityAirfoil() {
 		Vector3f angularVelocity = this.getDrone().getAngularVelocityInWorld();
-		Vector3f relativeDistance = fysica.convertToWorld(this.getRelativePosition());
+		Vector3f relativeDistance = fysica.convertToWorld(this.getDrone(), this.getRelativePosition());
 		Vector3f relSpeed = new Vector3f();
 		Vector3f.cross(angularVelocity, relativeDistance, relSpeed);
 		
