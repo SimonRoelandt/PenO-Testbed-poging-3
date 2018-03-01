@@ -207,11 +207,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		print("moment is " + droneResultingMoment, 3);
 		print("imoi is " + inverseMomentOfInertia, 3);
 		print("ang acc is " + angularAcceleration, 3);
-		
-		System.out.println("AACCCCCCCCCCCCCCCCC" + angularAcceleration);
-		
-		return angularAcceleration; 
-		
+	
+		return angularAcceleration; 	
 	}
 	
 	public Vector3f getImpulseMoment(Drone drone){

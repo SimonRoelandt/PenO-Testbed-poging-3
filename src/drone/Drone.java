@@ -19,14 +19,14 @@ public class Drone {
 	public Engine engine;
 	
 	//Waarden van de drone
-	public float wingX = 0.5f;
-	public float tailSize = 0.5f;
+	public float wingX = 4.2f;
+	public float tailSize = 4.2f;
 	
-	public float engineMass = 0.25f;
-	public float wingMass = 0.25f;
-	public float tailMass = 0.125f;
+	public float engineMass = 180f;
+	public float wingMass = 100f;
+	public float tailMass = 100f;
 	
-	public float maxThrust = 5000;
+	public float maxThrust = 100000;
 	public float maxAOA = (float) (Math.PI /12);
 	
 	
@@ -39,9 +39,9 @@ public class Drone {
 	private Vector3f angularVelocityInWorld = new Vector3f(0,0,0);
 	
 
-	private static float wingLiftSlope = 0.1f;
-	private static float horStabLiftSlope = 0.05f;
-	private static float verStabLiftSlope = 0.05f;
+	private static float wingLiftSlope = 10f;
+	private static float horStabLiftSlope = 5f;
+	private static float verStabLiftSlope = 5f;
 	
 	private float xPos;
 	private float yPos;
@@ -96,7 +96,6 @@ public class Drone {
 		+ ", hor:" +  outputs.getHorStabInclination()
 		+ ", ver:" +  outputs.getVerStabInclination(), 10);
 
-        
         setThrust(scaledThrust);
        
         
@@ -144,8 +143,7 @@ public class Drone {
 		this.setVelocityInWorld(v);
 		
 		 
-        //UPDATE HEAD PITCH ROLL POSITION AND RATE
-		
+        //UPDATE HEAD PITCH ROLL POSITION AND RATE 
 		this.setAngularVelocityInWorld(fysica.getNewAngularVelocityInWorld(this, time));
 		
 		//HEADING
