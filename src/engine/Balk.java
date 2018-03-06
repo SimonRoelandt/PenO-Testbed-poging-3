@@ -33,12 +33,12 @@ public class Balk {
 	}
 	
 	public void getAllColorFaces(Color color) {
-		colorfront = getColorFace(color, 0.7f);
-		colorback = getColorFace(color, 0.45f);
-		colorleft = getColorFace(color, 0.3f);
-		colorright = getColorFace(color, 0.85f);
-		colorup = getColorFace(color, 1f);
-		colordown = getColorFace(color, 0.15f);
+		colorfront = getColorFace(color, 0.35f);
+		colorback = getColorFace(color, 0.30f);
+		colorleft = getColorFace(color, 0.25f);
+		colorright = getColorFace(color, 0.40f);
+		colorup = getColorFace(color, 0.45f);
+		colordown = getColorFace(color, 0.20f);
 		
 	}
 	

@@ -21,7 +21,7 @@ public class Airfoil extends DronePart {
 		
 	}
 	
-	private Vector3f getLiftForce() {
+	public Vector3f getLiftForce() {
 		Vector3f normal = fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
 		Vector3f airspeed = this.getVelocityAirfoil();
 		Vector3f axis = this.getAxisVector();

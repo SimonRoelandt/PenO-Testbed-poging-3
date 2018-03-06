@@ -168,10 +168,10 @@ public class Drone {
        /* this.fysica.print("updating new pos and vel --- ", 12);
         //UPDATE POSITION AND VELOCITY IN WORLD
 		Vector3f p = fysica.getNewPositionInWorld(this, time);
-		this.setPositionInWorld(p);
+		
 		
 		Vector3f v = fysica.getNewVelocityInWorld(this, time);
-		this.setVelocityInWorld(v);
+		
 		
         this.fysica.print("stop updating new pos and vel", 12);
 */
@@ -211,9 +211,15 @@ public class Drone {
 		
 		this.fysica.print("HPR: " + newHeading + newPitch + newRoll, 10);
 		
+
+		//WHEELS TODO NIEUWE AUTOPILOT NODIG
+		this.frontWheel.update(0.0f, time);
+	    this.leftWheel.update(0.0f, time);
+	    this.rightWheel.update(0.0f, time);
+		
+	    
         this.goToNextState();
 
-        
 	}
 	
 	
