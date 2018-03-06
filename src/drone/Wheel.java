@@ -11,7 +11,7 @@ public class Wheel extends DronePart {
 	private float maxWrijving;
 	private float D;
 	private float lastD;
-	private Vector3f wheelForce = new Vector3f(0.0f,0.0f,0.0f);
+	private Vector3f wheelForce;
 	private Vector3f wrijvingForce = new Vector3f(0.0f,0.0f,0.0f);
 
 	public Wheel(float tyreRadius, float tyreSlope , float dampSlope,  float maxWrijving, Vector3f relativePosition, Drone drone) {		
@@ -22,6 +22,9 @@ public class Wheel extends DronePart {
 		setRelativePosition(relativePosition);
 		setMaxWrijvingsCoeff(maxWrijving);
 		setBrakeForce(0); // standaard in de lucht
+		setWheelForce(new Vector3f(1.0f,0.0f,0.0f));
+		setWrijvingForce(new Vector3f(0.0f,0.0f,0.0f));
+		setD(0);
 	}
 	
 	public void update(float brakeForce, float time){
@@ -93,24 +96,27 @@ public class Wheel extends DronePart {
 	
 	
 	private Vector3f getNewWheelForce(float time) {
-			if (this.drone.getYPos()<-this.getRelativePosition().getY())
-				return null; //CRASH
-			else
-				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/time),0); //afgeleide nog doen
+//			if (this.drone.getYPos() < -this.getRelativePosition().getY())
+//				return null; //CRASH
+//			else
+				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/1),0); //afgeleide nog doen
 		
 	}
 
 	public Vector3f getNewWrijvingForce(float time) {
+		if(isGround()){
 			Vector3f normaliseSpeed = null;
 			
 			float x_speed = this.getDrone().getVelocityInWorld().getX(); // TODO draaining rond y-as meerekening
-			
+			System.out.println("SPEEEd" + this.getWheelForce());
+			System.out.println(this.getWheelForce().length());
 			float scalar = this.getWheelForce().length()*this.getMaxWrijvingsCoeff()*x_speed;											//richting
 			
 			this.getDrone().getVelocityInWorld().normalise(normaliseSpeed);
 			
 			return fysica.product(scalar,normaliseSpeed);
-
+		}
+		else return else return new Vector3f(0,0,0);
 	}
 
 	@Override
@@ -144,7 +150,7 @@ public class Wheel extends DronePart {
 	}
 
 	public Vector3f getWheelForce() {
-		return wheelForce;
+		return this.wheelForce;
 	}
 
 	public void setWheelForce(Vector3f wheelForce) {
