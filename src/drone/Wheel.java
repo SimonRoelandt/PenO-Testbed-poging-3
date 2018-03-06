@@ -1,19 +1,21 @@
 package drone;
 
-import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Wheel extends DronePart {
 
-	
+	private float tyreRadius;
 	private float tyreslope;
 	private float dampslope;
 	private float BrakeForce;
 	private float maxWrijving;
 	private float D;
 	private float lastD;
+	private Vector3f wheelForce;
+	private Vector3f wrijvingForce;
 
 	public Wheel(float tyreRadius, float tyreSlope , float dampSlope,  float maxWrijving, Vector3f relativePosition, Drone drone) {		
+		setTyreRadius(tyreRadius);
 		setDampslope(dampSlope);
 		setTyreslope(tyreSlope);
 		setDrone(drone);
@@ -22,11 +24,19 @@ public class Wheel extends DronePart {
 		setBrakeForce(0); // standaard in de lucht
 	}
 	
+	public void update(float brakeForce, float time){
+		setBrakeForce(brakeForce);
+		setLastD(getD());
+		setD(calcNewD());
+		setWheelForce(getNewWheelForce(time));
+		setWrijvingForce(getNewWrijvingForce(time));
+	}
+	
 	private void setD(float D) {
 		this.D=D;
 	}
 	
-	public float getD(float D ) {
+	public float getD() {
 		return this.D;
 	}
 	
@@ -69,39 +79,89 @@ public class Wheel extends DronePart {
 	
 	public float getBrakeForce() {
 		return this.BrakeForce;
-}
+	}
+	
+	public boolean isGround(){
+		if(getAbsolutePositionInWorld().getY() <= getTyreRadius()) return true;
+		else return false;
+	}
+	
+	public float calcNewD(){
+		if(isGround()){
+			float gravForce = getDrone().getGravity()*getDrone().getTotalMass();
+			return - (gravForce / getDampSlope());
+		}
+		else return 0.0f;
+	}
 	
 	
-	private Vector3f getWheelForce(float time) {
-		
-		if (this.drone.getYPos() > this.getTyreSlope()+this.getRelativePosition().getY())  //kan problemen geven bij machine nauwkeurigheid
+	private Vector3f getNewWheelForce(float time) {
+		if (!isGround())  //kan problemen geven bij machine nauwkeurigheid
 			return new Vector3f (0,0,0) ;
 		else {
 			if (this.drone.getYPos()<-this.getRelativePosition().getY())
 				return null; //CRASH
 			else
 				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY())+this.getDampSlope()*Math.abs((D-lastD)/time),0); //afgeleide nog doen
-	}
+		}
 		
 	}
 
-	public Vector3f getWrijvingForce(float time) {
-		Vector3f normaliseSpeed = null;
-		
-		float x_speed = this.getDrone().getVelocityInWorld().getX(); // draaining rond y-as meerekening
-		
-		float scalar = this.getWheelForce(time).length()*this.getMawWrijvingsCoeff()*x_speed;											//richting
-		
-		this.getDrone().getVelocityInWorld().normalise(normaliseSpeed);
-		
-		return fysica.product(scalar,normaliseSpeed);
+	public Vector3f getNewWrijvingForce(float time) {
+		if(isGround()){
+			Vector3f normaliseSpeed = null;
 			
+			float x_speed = this.getDrone().getVelocityInWorld().getX(); // TODO draaining rond y-as meerekening
+			
+			float scalar = this.getWheelForce().length()*this.getMawWrijvingsCoeff()*x_speed;											//richting
+			
+			this.getDrone().getVelocityInWorld().normalise(normaliseSpeed);
+			
+			return fysica.product(scalar,normaliseSpeed);
+		}
+		else return new Vector3f(0,0,0);
 	}
 
 	@Override
 	public Vector3f getDronePartForce() {
-		// TODO Auto-generated method stub
-		return null;
+		float brake = this.getBrakeForce();
+		Vector3f wrijving = this.getWrijvingForce();
+		Vector3f wheelforce = this.getWheelForce();
+		
+		Vector3f total = null;
+		
+		//TODO WELKE RICHTING GAAT DE BRAKEFORCE UIT
+		getDrone().getHeading();
+		Vector3f brakeForce = new Vector3f(brake,0,0);
+		
+		Vector3f.add(brakeForce, wrijving, total);
+		Vector3f.add(total, wheelforce, total);
+		
+		return total;
+	}
+
+	public float getTyreRadius() {
+		return tyreRadius;
+	}
+
+	public void setTyreRadius(float tyreRadius) {
+		this.tyreRadius = tyreRadius;
+	}
+
+	public Vector3f getWheelForce() {
+		return wheelForce;
+	}
+
+	public void setWheelForce(Vector3f wheelForce) {
+		this.wheelForce = wheelForce;
+	}
+
+	public Vector3f getWrijvingForce() {
+		return wrijvingForce;
+	}
+
+	public void setWrijvingForce(Vector3f wrijvingForce) {
+		this.wrijvingForce = wrijvingForce;
 	}
 	
 	// TO DO 
