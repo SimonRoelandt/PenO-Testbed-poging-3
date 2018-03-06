@@ -97,7 +97,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setPosition(-20, 300, -50);
         cameraTop.setRotation(90f, -90f, 0);
         timer = new Timer();
-        drone = new Drone(0, 0, 0, new Vector3f(0,0,0));
+        drone = new Drone(0, 20, 0, new Vector3f(0,0,0));
         gui = new GUI(this);
     }
 
@@ -121,6 +121,7 @@ public class DummyGame implements IGameLogic {
         GameItem droneItem = new GameItem(meshDrone,false);
         droneItem.setScale(0.2f);
         droneItem.setRotation(0f, 0f, 0f);
+        droneItem.setPosition(0, 10, 0);
         this.droneItem = droneItem;
         
        
@@ -168,7 +169,7 @@ public class DummyGame implements IGameLogic {
        Ground ground = new Ground();
        Mesh groundMesh = new Mesh(ground.vertices(), ground.colours(), ground.indices());
        GameItem groundItem = new GameItem(groundMesh, false);
-       //gameItems.add(groundItem);
+       gameItems.add(groundItem);
     }
 
     @Override
