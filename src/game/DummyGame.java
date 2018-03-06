@@ -119,7 +119,7 @@ public class DummyGame implements IGameLogic {
         //Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
         Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
         GameItem droneItem = new GameItem(meshDrone,false);
-        droneItem.setScale(0.7f);
+        droneItem.setScale(0.2f);
         droneItem.setRotation(0f, 0f, 0f);
         this.droneItem = droneItem;
         
