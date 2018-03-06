@@ -87,28 +87,20 @@ public class Wheel extends DronePart {
 	}
 	
 	public float calcNewD(){
-		if(isGround()){
 			float gravForce = getDrone().getGravity()*getDrone().getTotalMass();
 			return - (gravForce / getDampSlope());
-		}
-		else return 0.0f;
 	}
 	
 	
 	private Vector3f getNewWheelForce(float time) {
-		if (!isGround())  //kan problemen geven bij machine nauwkeurigheid
-			return new Vector3f (0,0,0) ;
-		else {
 			if (this.drone.getYPos()<-this.getRelativePosition().getY())
 				return null; //CRASH
 			else
 				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY())+this.getDampSlope()*Math.abs((D-lastD)/time),0); //afgeleide nog doen
-		}
 		
 	}
 
 	public Vector3f getNewWrijvingForce(float time) {
-		if(isGround()){
 			Vector3f normaliseSpeed = null;
 			
 			float x_speed = this.getDrone().getVelocityInWorld().getX(); // TODO draaining rond y-as meerekening
@@ -118,26 +110,29 @@ public class Wheel extends DronePart {
 			this.getDrone().getVelocityInWorld().normalise(normaliseSpeed);
 			
 			return fysica.product(scalar,normaliseSpeed);
-		}
-		else return new Vector3f(0,0,0);
+
 	}
 
 	@Override
 	public Vector3f getDronePartForce() {
-		float brake = this.getBrakeForce();
-		Vector3f wrijving = this.getWrijvingForce();
-		Vector3f wheelforce = this.getWheelForce();
-		
-		Vector3f total = null;
-		
-		//TODO WELKE RICHTING GAAT DE BRAKEFORCE UIT
-		getDrone().getHeading();
-		Vector3f brakeForce = new Vector3f(brake,0,0);
-		
-		Vector3f.add(brakeForce, wrijving, total);
-		Vector3f.add(total, wheelforce, total);
-		
-		return total;
+		if(isGround()){
+			float brake = this.getBrakeForce();
+			Vector3f wrijving = this.getWrijvingForce();
+			Vector3f wheelforce = this.getWheelForce();
+			
+			Vector3f total = null;
+			
+			//TODO WELKE RICHTING GAAT DE BRAKEFORCE UIT
+			// HOEK KAN NOG NEGATIEF ZIJN -> FOUTE KANT
+			float heading = getDrone().getHeading();
+			Vector3f brakeForce = new Vector3f((float) (brake*Math.cos(heading)),0.0f,(float) (brake*Math.sin(heading)));
+			
+			Vector3f.add(brakeForce, wrijving, total);
+			Vector3f.add(total, wheelforce, total);
+			
+			return total;
+		}
+		else return new Vector3f(0,0,0);
 	}
 
 	public float getTyreRadius() {
