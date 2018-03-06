@@ -374,6 +374,11 @@ public class GUI {
 	private class ListenForStartButton implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dummyGame.startSimulation = true;
+			System.out.println("");
+			System.out.println("");
+			System.out.println("");
+			System.out.println("");
+			System.out.println("============================= START SIMULATION ===============");
 		}
 	}
 	

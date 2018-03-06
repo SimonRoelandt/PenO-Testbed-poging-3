@@ -82,6 +82,10 @@ public class Drone {
 	//UPDATE THE DRONE AT EVERY TIME STEP
 	public void update(AutopilotOutputs outputs,float time){
 		
+		System.out.println("========================================================================");
+		System.out.println("======================== UPDATE DRONE ==================================");
+		System.out.println("========================================================================");
+		
         //float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
         float scaledThrust = 0;
         
