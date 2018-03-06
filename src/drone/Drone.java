@@ -18,6 +18,21 @@ public class Drone {
 	public Airfoil verStabilization;
 	public Engine engine;
 	
+	public Wheel frontWheel;
+	public Wheel leftWheel;
+	public Wheel rightWheel;
+	
+	//Wheel waarden
+	public float wheelY = -1.12f;
+	public float frontWheelZ = -2.079f;
+	public float rearWheelZ = 0.959f;
+	public float rearWheelX = 1.24f;
+	public float wheelRadius = 0.2f;
+	
+	public float tyreSlope = 50000;
+	public float dampSlope = 5000;
+	public float maxWrijving = 2486;
+	
 	//Waarden van de drone
 	public float wingX = 4.2f;
 	public float tailSize = 4.2f;
@@ -71,6 +86,11 @@ public class Drone {
 		this.rightWing = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(wingX,0,0),this);
 		this.horStabilization = new Airfoil(0, tailMass/2, false, horStabLiftSlope, new Vector3f(0,0,tailSize),this);
 		this.verStabilization = new Airfoil(0, tailMass/2, true, verStabLiftSlope,  new Vector3f(0,0,tailSize),this);
+		
+		this.frontWheel = new Wheel(wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(0, wheelY, frontWheelZ),this);
+		this.leftWheel = new Wheel(wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(-rearWheelX, wheelY, rearWheelZ),this);
+		this.rightWheel = new Wheel(wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(rearWheelX, wheelY, rearWheelZ),this);
+		
 		
 		Vector3f engineRelLocation= this.getEngineLocation();
 		this.engine = new Engine(0,  engineMass, engineRelLocation, this, this.maxThrust);

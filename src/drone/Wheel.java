@@ -8,18 +8,16 @@ public class Wheel extends DronePart {
 	
 	private float tyreslope;
 	private float dampslope;
-	private float radius;
 	private float BrakeForce;
 	private float maxWrijving;
 	private float D;
 	private float lastD;
 
-	public Wheel(float radius, float tyreSlope , float dampSlope, float tyreRadius, float maxWrijving, Vector3f relativePosition, Drone drone) {		
+	public Wheel(float tyreRadius, float tyreSlope , float dampSlope,  float maxWrijving, Vector3f relativePosition, Drone drone) {		
 		setDampslope(dampSlope);
 		setTyreslope(tyreSlope);
 		setDrone(drone);
 		setRelativePosition(relativePosition);
-		setRadius(radius);
 		setMaxWrijvingsCoeff(maxWrijving);
 		setBrakeForce(0); // standaard in de lucht
 	}
@@ -46,14 +44,6 @@ public class Wheel extends DronePart {
 	
 	public float getMawWrijvingsCoeff() {
 		return this.maxWrijving;
-	}
-
-	public void setRadius(float radius){
-		this.radius = radius;
-	}
-	
-	public float getRadius() {
-		return this.radius;
 	}
 	
 	public void setTyreslope(float liftslope){
