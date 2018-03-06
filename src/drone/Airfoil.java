@@ -21,7 +21,7 @@ public class Airfoil extends DronePart {
 		
 	}
 	
-	private Vector3f getLiftForce() {
+	public Vector3f getLiftForce() {
 		Vector3f normal = fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
 		Vector3f airspeed = this.getVelocityAirfoil();
 		Vector3f axis = this.getAxisVector();
@@ -51,7 +51,7 @@ public class Airfoil extends DronePart {
 		return angleOfAttack;
 	}
 	
-	private Vector3f getVelocityAirfoil() {
+	public Vector3f getVelocityAirfoil() {
 		Vector3f angularVelocity = this.getDrone().getAngularVelocityInWorld();
 		Vector3f relativeDistance = fysica.convertToWorld(this.getDrone(), this.getRelativePosition());
 		Vector3f relSpeed = new Vector3f();

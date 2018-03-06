@@ -165,14 +165,14 @@ public class Drone {
         
         //UPDATE POSITION AND VELOCITY IN WORLD
 		Vector3f p = fysica.getNewPositionInWorld(this, time);
-		this.setPositionInWorld(p);
+		
 		
 		Vector3f v = fysica.getNewVelocityInWorld(this, time);
-		this.setVelocityInWorld(v);
+		
 		
 		 
         //UPDATE HEAD PITCH ROLL POSITION AND RATE 
-		this.setAngularVelocityInWorld(fysica.getNewAngularVelocityInWorld(this, time));
+		Vector3f a = fysica.getNewAngularVelocityInWorld(this, time);
 		
 		//HEADING
 		
@@ -213,6 +213,9 @@ public class Drone {
 		
 		
         
+		this.setPositionInWorld(p);
+		this.setVelocityInWorld(v);
+		this.setAngularVelocityInWorld(a);
 	}
 	
 	
