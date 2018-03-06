@@ -11,8 +11,8 @@ public class Wheel extends DronePart {
 	private float maxWrijving;
 	private float D;
 	private float lastD;
-	private Vector3f wheelForce;
-	private Vector3f wrijvingForce;
+	private Vector3f wheelForce = new Vector3f(0.0f,0.0f,0.0f);
+	private Vector3f wrijvingForce = new Vector3f(0.0f,0.0f,0.0f);
 
 	public Wheel(float tyreRadius, float tyreSlope , float dampSlope,  float maxWrijving, Vector3f relativePosition, Drone drone) {		
 		setTyreRadius(tyreRadius);
@@ -52,7 +52,7 @@ public class Wheel extends DronePart {
 		this.maxWrijving=maxWrijving;
 	}
 	
-	public float getMawWrijvingsCoeff() {
+	public float getMaxWrijvingsCoeff() {
 		return this.maxWrijving;
 	}
 	
@@ -105,7 +105,7 @@ public class Wheel extends DronePart {
 			
 			float x_speed = this.getDrone().getVelocityInWorld().getX(); // TODO draaining rond y-as meerekening
 			
-			float scalar = this.getWheelForce().length()*this.getMawWrijvingsCoeff()*x_speed;											//richting
+			float scalar = this.getWheelForce().length()*this.getMaxWrijvingsCoeff()*x_speed;											//richting
 			
 			this.getDrone().getVelocityInWorld().normalise(normaliseSpeed);
 			
