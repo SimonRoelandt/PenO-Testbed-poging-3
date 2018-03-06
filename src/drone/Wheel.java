@@ -116,7 +116,7 @@ public class Wheel extends DronePart {
 			
 			return fysica.product(scalar,normaliseSpeed);
 		}
-		else return else return new Vector3f(0,0,0);
+		else return new Vector3f(0,0,0);
 	}
 
 	@Override
