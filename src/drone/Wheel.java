@@ -72,7 +72,7 @@ public class Wheel extends DronePart {
 }
 	
 	
-	private Vector3f getwheelForce(float time) {
+	private Vector3f getWheelForce(float time) {
 		
 		if (this.drone.getYPos() > this.getTyreSlope()+this.getRelativePosition().getY())  //kan problemen geven bij machine nauwkeurigheid
 			return new Vector3f (0,0,0) ;
@@ -90,7 +90,7 @@ public class Wheel extends DronePart {
 		
 		float x_speed = this.getDrone().getVelocityInWorld().getX(); // draaining rond y-as meerekening
 		
-		float scalar = this.getwheelForce(time).length()*this.getMawWrijvingsCoeff()*x_speed;											//richting
+		float scalar = this.getWheelForce(time).length()*this.getMawWrijvingsCoeff()*x_speed;											//richting
 		
 		this.getDrone().getVelocityInWorld().normalise(normaliseSpeed);
 		
