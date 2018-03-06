@@ -112,12 +112,12 @@ public class Wheel extends DronePart {
 		if(isGround()){
 			Vector3f normaliseSpeed = null;
 			
-			float x_speed = this.getDrone().getVelocityInWorld().getX(); // TODO draaining rond y-as meerekening
+			float x_speed = this.getDrone().getState().getVelocity().getX(); // TODO draaining rond y-as meerekening
 			System.out.println("SPEEEd" + this.getWheelForce());
 			System.out.println(this.getWheelForce().length());
 			float scalar = this.getWheelForce().length()*this.getMaxWrijvingsCoeff()*x_speed;											//richting
 			
-			this.getDrone().getVelocityInWorld().normalise(normaliseSpeed);
+			this.getDrone().getState().getVelocity().normalise(normaliseSpeed);
 			
 			return fysica.product(scalar,normaliseSpeed);
 		}

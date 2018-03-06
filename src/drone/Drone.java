@@ -98,10 +98,9 @@ public class Drone {
 		
 		//SETTING POSITION AND VELOCITY STATE IN WORLD
 		State initState = new State();
+		initState.setPosition(new Vector3f(xPos, yPos, zPos));
+		initState.setVelocity(velocity);
 		this.state = initState;
-		state.setNextPosition(new Vector3f(xPos, yPos, zPos));
-		state.setNextVelocity(velocity);
-		this.goToNextState();
 	}
 	
 	
@@ -137,8 +136,7 @@ public class Drone {
 		
         
  
-        
-        
+ 
         // TOT HIER
         System.out.println("thrust is " + scaledThrust);
         
@@ -159,11 +157,13 @@ public class Drone {
         
         
         //UPDATE STATE
-        this.state.createNextState();
-        this.state.setNextVelocity(fysica.getNewVelocityInWorld(this, time));
-        this.state.setNextPosition(fysica.getNewPositionInWorld(this, time));
+      
+        State newState = new State();
         
-        this.state.setNextAngularRotation(fysica.getNewAngularVelocityInWorld(this, time));
+        newState.setVelocity(fysica.getNewVelocityInWorld(this, time));
+        newState.setPosition(fysica.getNewPositionInWorld(this, time));
+        
+        newState.setAngularRotation(fysica.getNewAngularVelocityInWorld(this, time));
       //  this.state.setNextAngularOrienation(fysica.get);
         
        /* this.fysica.print("updating new pos and vel --- ", 12);
@@ -219,14 +219,10 @@ public class Drone {
 	    this.rightWheel.update(0.0f, time);
 		
 	    
-        this.goToNextState();
+        this.state = newState;
 
 	}
 	
-	
-	private void goToNextState() {
-		this.state = this.getState().getNextState();
-	}
 	
 	public State getState() {
 		return this.state;

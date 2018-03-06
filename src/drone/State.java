@@ -13,10 +13,10 @@ public class State {
 		return this.position;
 	}
 	
-	public void setNextPosition(Vector3f position) {
+	public void setPosition(Vector3f position) {
 		this.nextState = new State();
 
-		this.getNextState().position = position;
+		this.position = position;
 	}
 	
 	//VELOCITY
@@ -24,8 +24,8 @@ public class State {
 		return this.velocity;
 	}
 	
-	public void setNextVelocity(Vector3f velocity) {
-		this.getNextState().velocity = velocity;
+	public void setVelocity(Vector3f velocity) {
+		this.velocity = velocity;
 	}
 	
 	//ANGULAR ORIENTATION
@@ -33,28 +33,20 @@ public class State {
 		return this.angularOrientation;
 	}
 	
-	public void setNextAngularOrienation(Vector3f angularorientation) {
-		this.getNextState().angularOrientation = angularOrientation;
+	public void setAngularOrientation(Vector3f angularOrientation) {
+		this.angularOrientation = angularOrientation;
 	}
 	
 	//ANGULAR ROTATION
 	public Vector3f getAngularRotation() {
-		return this.angularRotation;
+		return new Vector3f();
+		//return this.angularRotation;
 	}
 	
-	public void setNextAngularRotation(Vector3f angularRotation) {
-		this.getNextState().angularRotation = angularRotation;
+	public void setAngularRotation(Vector3f angularRotation) {
+		this.angularRotation = angularRotation;
 	}
 	
-	
-	//NEXT STATE
-	public State getNextState() {
-		return this.nextState;
-	}
-	
-	public void createNextState() {
-		this.nextState = new State();
-	}
 	
 	
 	private Vector3f position;
