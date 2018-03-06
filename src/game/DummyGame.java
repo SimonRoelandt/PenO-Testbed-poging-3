@@ -57,6 +57,8 @@ public class DummyGame implements IGameLogic {
     
     private final float cubeScale = 5f;
     
+    private final Vector3f droneBeginPos = new Vector3f(0,20,0);
+    
     private Balk balk;
     
     private Mesh mesh;
@@ -78,6 +80,8 @@ public class DummyGame implements IGameLogic {
     public boolean simulationEnded = false;
     
     public boolean sendConfig = false;
+    
+    
 
 
     public DummyGame() {
@@ -86,7 +90,7 @@ public class DummyGame implements IGameLogic {
         camera.setPosition(0, 1, 2);
         camera.setRotation(0,0,0);
         cameraFree = new Camera();
-        cameraFree.setPosition(0, 1, 2);
+        cameraFree.setPosition(0, 1, 20);
         cameraSide = new Camera();
         cameraSide.setPosition(30, 30, -50);
         cameraSide.setRotation(0, -90f, 0);
@@ -97,7 +101,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setPosition(-20, 300, -50);
         cameraTop.setRotation(90f, -90f, 0);
         timer = new Timer();
-        drone = new Drone(0, 20, 0, new Vector3f(0,0,0));
+        drone = new Drone(droneBeginPos.x, droneBeginPos.y, droneBeginPos.z, new Vector3f(0,0,0));
         gui = new GUI(this);
     }
 
@@ -121,7 +125,7 @@ public class DummyGame implements IGameLogic {
         GameItem droneItem = new GameItem(meshDrone,false);
         droneItem.setScale(0.2f);
         droneItem.setRotation(0f, 0f, 0f);
-        droneItem.setPosition(0, 10, 0);
+        droneItem.setPosition(droneBeginPos.x, droneBeginPos.y, droneBeginPos.z);
         this.droneItem = droneItem;
         
        

@@ -118,6 +118,7 @@ public class Wheel extends DronePart {
 			float scalar = this.getWheelForce().length()*this.getMaxWrijvingsCoeff()*x_speed;											//richting
 			
 			this.getDrone().getState().getVelocity().normalise(normaliseSpeed);
+
 			
 			return fysica.product(scalar,normaliseSpeed);
 		}
@@ -155,7 +156,7 @@ public class Wheel extends DronePart {
 	}
 
 	public Vector3f getWheelForce() {
-		return this.wheelForce;
+		return wheelForce;
 	}
 
 	public void setWheelForce(Vector3f wheelForce) {
