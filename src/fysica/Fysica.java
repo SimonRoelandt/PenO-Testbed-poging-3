@@ -9,7 +9,10 @@ import org.lwjgl.util.vector.Matrix3f;
 public class Fysica {
 
 	public final static float gravity = (float) 9.81;
-
+	public Vector3f totalForceOnDroneInWorld = new Vector3f(0,0,0);
+	public Vector3f accelerationInWorld = new Vector3f(0,0,0);
+	public Vector3f newVelocityInWorld = new Vector3f(0,0,0);
+	public Vector3f newAngularVelocityInWorld = new Vector3f(0,0,0);
 	
 	
 	public Matrix3f getRotationMatrix(Drone drone){
@@ -107,20 +110,26 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	}
 	
 	public Vector3f getTotalForceOnDroneInWorld(Drone drone) {
+		System.out.println(" TOTAL FORCE ON DRONE WORLD +++++++++++++++++");
 		DronePart[] partArray = drone.getDroneParts();
 		Vector3f v = new Vector3f(0,0,0);
 		for (DronePart part: partArray) {
 			v = sum(part.getTotalForceInWorld(), v);
 		}
 		
+		totalForceOnDroneInWorld = v;
 		return v;
+		
+	
+		
 	}
 	
 	public Vector3f getAccelerationInWorld(Drone drone) {
 		Vector3f force = this.getTotalForceOnDroneInWorld(drone);
 		float mass = drone.getTotalMass();
 		Vector3f acceleration = product(1/mass,force);
-
+		
+		accelerationInWorld = acceleration;
 		return acceleration;
 	}
 	
@@ -131,7 +140,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f v = sum(droneVelocityInWorld, at);
 		
 		this.print("vel calculated to:" + v, 11);
-
+		
+		newVelocityInWorld = v;
 		return v;
 	}
 	
@@ -156,7 +166,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	
 	public Vector3f getDroneResultingMomentInWorld(Drone drone){
-		
+		System.out.println(" DRONE RESULTING MOMENT IN WORLD ---------------------------");
 		Vector3f momentVector = new Vector3f(0, 0, 0);
 		DronePart[] partArray = drone.getDroneParts();
 		
@@ -236,14 +246,15 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		print("-- total droneAngularRotationInWorld is: " + droneAngularRotationInWorld, 3);
 		print("-- total at is: " + at, 3);
 		print("-- total ang vel is: " + v, 3);
-
+		
+		newAngularVelocityInWorld = v;
 		return v;
 	}
 	
 	
 	private float[] getHPRVelocity(Drone drone, float time){
 		//TODO controleren
-		Vector3f angularVelocityInWorld = this.getNewAngularVelocityInWorld(drone, time);
+		Vector3f angularVelocityInWorld = this.newAngularVelocityInWorld;
 		
 		System.out.println("ANGULARVELOCITY" + angularVelocityInWorld);
 		

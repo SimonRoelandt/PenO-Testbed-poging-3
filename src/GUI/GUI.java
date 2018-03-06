@@ -260,9 +260,9 @@ public class GUI {
 				", " + round(dummyGame.drone.getVelocityInWorld().y,2)+ 
 				", " + round(dummyGame.drone.getVelocityInWorld().z,2) + 
 				")");
-		versnelling.labelValue.setText("(" + round(dummyGame.drone.fysica.getAccelerationInWorld(dummyGame.drone).x,2) +
-				", " + round(dummyGame.drone.fysica.getAccelerationInWorld(dummyGame.drone).y,2)+ 
-				", " + round(dummyGame.drone.fysica.getAccelerationInWorld(dummyGame.drone).z,2) + 
+		versnelling.labelValue.setText("(" + round(dummyGame.drone.fysica.accelerationInWorld.x,2) +
+				", " + round(dummyGame.drone.fysica.accelerationInWorld.y,2)+ 
+				", " + round(dummyGame.drone.fysica.accelerationInWorld.z,2) + 
 				")");
 		inclinatie.labelValue.setText("(" + round(dummyGame.drone.getLeftWingInclination(),2) + 
 				", " + round(dummyGame.drone.getRightWingInclination(),2) + 
@@ -272,9 +272,9 @@ public class GUI {
 		
 		thrust.labelValue.setText("(" + round(dummyGame.drone.engine.getThrustScalar(),5) + ")");
 
-		force.labelValue.setText("(" + round(dummyGame.drone.fysica.getTotalForceOnDroneInWorld(dummyGame.drone).getX(),5) +
-				", " + round(dummyGame.drone.fysica.getTotalForceOnDroneInWorld(dummyGame.drone).getY(),5) +
-				", " + round(dummyGame.drone.fysica.getTotalForceOnDroneInWorld(dummyGame.drone).getZ(),5) +
+		force.labelValue.setText("(" + round(dummyGame.drone.fysica.totalForceOnDroneInWorld.getX(),5) +
+				", " + round(dummyGame.drone.fysica.totalForceOnDroneInWorld.getY(),5) +
+				", " + round(dummyGame.drone.fysica.totalForceOnDroneInWorld.getZ(),5) +
 				")");
 		
 		aoa.labelValue.setText("(" + dummyGame.drone.leftWing.getAngleOfAttack() + ")");

@@ -125,19 +125,23 @@ public class Drone {
         System.out.println("thrust is " + scaledThrust);
         
         this.fysica.print("resulting force is:" + 
-        		this.fysica.getTotalForceOnDroneInWorld(this), 10);
+        		this.fysica.totalForceOnDroneInWorld, 10);
         
         this.fysica.print("resulting acceleration is:" + 
-        		this.fysica.getAccelerationInWorld(this), 10);
+        		this.fysica.accelerationInWorld, 10);
         
         this.fysica.print("old speed is:" + 
         		this.getVelocityInWorld(), 10);
         
         this.fysica.print("a*t is:" + 
-        		this.fysica.product(time, this.fysica.getAccelerationInWorld(this)), 10);
+        		this.fysica.product(time, this.fysica.accelerationInWorld), 10);
        
         this.fysica.print("resulting speed is:" + 
-        		this.fysica.getNewVelocityInWorld(this, time), 10);
+        		this.fysica.newVelocityInWorld, 10);
+        
+        
+        //UPDATE FORCES
+        
         
         //UPDATE POSITION AND VELOCITY IN WORLD
 		Vector3f p = fysica.getNewPositionInWorld(this, time);
