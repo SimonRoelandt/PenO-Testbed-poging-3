@@ -90,8 +90,11 @@ public class Wheel extends DronePart {
 	}
 	
 	public float calcNewD(){
+		if(isGround()){
 			float gravForce = getDrone().getGravity()*getDrone().getTotalMass();
 			return - (gravForce / getDampSlope());
+		}
+		else return 0.0f;
 	}
 	
 	
@@ -99,8 +102,10 @@ public class Wheel extends DronePart {
 //			if (this.drone.getYPos() < -this.getRelativePosition().getY())
 //				return null; //CRASH
 //			else
+		if(isGround()){
 				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/1),0); //afgeleide nog doen
-		
+		}
+		else return new Vector3f(0,0,0);
 	}
 
 	public Vector3f getNewWrijvingForce(float time) {
