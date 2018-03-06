@@ -4,8 +4,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class State {
 	
-	public void State() {
-		this.nextState = new State();
+	public State() {
+		
 	}
 	
 	//POSITION
@@ -14,6 +14,8 @@ public class State {
 	}
 	
 	public void setNextPosition(Vector3f position) {
+		this.nextState = new State();
+
 		this.getNextState().position = position;
 	}
 	
@@ -48,6 +50,10 @@ public class State {
 	//NEXT STATE
 	public State getNextState() {
 		return this.nextState;
+	}
+	
+	public void createNextState() {
+		this.nextState = new State();
 	}
 	
 	

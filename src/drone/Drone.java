@@ -98,9 +98,9 @@ public class Drone {
 		
 		//SETTING POSITION AND VELOCITY STATE IN WORLD
 		State initState = new State();
+		this.state = initState;
 		state.setNextPosition(new Vector3f(xPos, yPos, zPos));
 		state.setNextVelocity(velocity);
-		this.state = initState;
 		this.goToNextState();
 	}
 	
@@ -159,6 +159,7 @@ public class Drone {
         
         
         //UPDATE STATE
+        this.state.createNextState();
         this.state.setNextVelocity(fysica.getNewVelocityInWorld(this, time));
         this.state.setNextPosition(fysica.getNewPositionInWorld(this, time));
         

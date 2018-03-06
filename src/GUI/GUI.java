@@ -247,18 +247,18 @@ public class GUI {
 	}
 	
 	public void update() {
-		positie.labelValue.setText("(" + round(dummyGame.drone.getPositionInWorld().x,2) +
+		positie.labelValue.setText("(" + round(dummyGame.drone.getState().getPosition().x,2) +
 
-				", " + round(dummyGame.drone.getPositionInWorld().y,2) + 
-				", " + round(dummyGame.drone.getPositionInWorld().z,2) +
+				", " + round(dummyGame.drone.getState().getPosition().y,2) + 
+				", " + round(dummyGame.drone.getState().getPosition().z,2) +
 				")");
 		hpr.labelValue.setText("(" + round(dummyGame.drone.getHeading(),2) +
 				", " + round(dummyGame.drone.getPitch(),2) + 
 				", " + round(dummyGame.drone.getRoll(),2) + 
 				")");
-		snelheid.labelValue.setText("(" + round(dummyGame.drone.getVelocityInWorld().x,2)+
-				", " + round(dummyGame.drone.getVelocityInWorld().y,2)+ 
-				", " + round(dummyGame.drone.getVelocityInWorld().z,2) + 
+		snelheid.labelValue.setText("(" + round(dummyGame.drone.getState().getVelocity().x,2)+
+				", " + round(dummyGame.drone.getState().getVelocity().y,2)+ 
+				", " + round(dummyGame.drone.getState().getVelocity().z,2) + 
 				")");
 		versnelling.labelValue.setText("(" + round(dummyGame.drone.fysica.accelerationInWorld.x,2) +
 				", " + round(dummyGame.drone.fysica.accelerationInWorld.y,2)+ 
