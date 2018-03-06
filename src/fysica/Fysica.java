@@ -109,12 +109,12 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		}
 	}
 	
-	public Vector3f getTotalForceOnDroneInWorld(Drone drone) {
+	public Vector3f getTotalForceOnDroneInWorld(Drone drone, float time) {
 		System.out.println(" TOTAL FORCE ON DRONE WORLD +++++++++++++++++");
 		DronePart[] partArray = drone.getDroneParts();
 		Vector3f v = new Vector3f(0,0,0);
 		for (DronePart part: partArray) {
-			v = sum(part.getTotalForceInWorld(), v);
+			v = sum(part.getTotalForceInWorld(time), v);
 		}
 		
 		totalForceOnDroneInWorld = v;
@@ -124,8 +124,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 	}
 	
-	public Vector3f getAccelerationInWorld(Drone drone) {
-		Vector3f force = this.getTotalForceOnDroneInWorld(drone);
+	public Vector3f getAccelerationInWorld(Drone drone, float time) {
+		Vector3f force = this.getTotalForceOnDroneInWorld(drone, time);
 		float mass = drone.getTotalMass();
 		Vector3f acceleration = product(1/mass,force);
 		
@@ -134,7 +134,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	}
 	
 	public Vector3f getNewVelocityInWorld(Drone drone, float time) {
-		Vector3f acc = getAccelerationInWorld(drone);
+		Vector3f acc = getAccelerationInWorld(drone, time);
 		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
 		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
 		Vector3f v = sum(droneVelocityInWorld, at);
@@ -165,7 +165,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	}
 	
 	
-	public Vector3f getDroneResultingMomentInWorld(Drone drone){
+	public Vector3f getDroneResultingMomentInWorld(Drone drone, float time){
 		System.out.println(" DRONE RESULTING MOMENT IN WORLD ---------------------------");
 		Vector3f momentVector = new Vector3f(0, 0, 0);
 		DronePart[] partArray = drone.getDroneParts();
@@ -175,7 +175,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		for (DronePart part: partArray) {
 			Vector3f posVector = part.getRelativePosition();
 			Vector3f posVectorInWorld = this.convertToWorld(drone, posVector);
-			Vector3f forceVector = part.getTotalForceInWorld();
+			Vector3f forceVector = part.getTotalForceInWorld(time);
 			
 			Vector3f moment = this.getMoment(posVectorInWorld, forceVector);
 			
@@ -189,14 +189,14 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	
 		
-	public Vector3f getAngularAccelerationInWorld(Drone drone){
+	public Vector3f getAngularAccelerationInWorld(Drone drone, float time){
 		
 		
 		print("--calc angular acc ", 3);
 		
 		Vector3f angularAcceleration = new Vector3f();
 		
-		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone);
+		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone,time);
 		
 		System.out.println("RESULTING MOMENT" + droneResultingMoment);
 		
@@ -234,7 +234,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	public Vector3f getNewAngularVelocityInWorld(Drone drone, float time){
 		
-		Vector3f angularAccelerationInWorld = this.getAngularAccelerationInWorld(drone);
+		Vector3f angularAccelerationInWorld = this.getAngularAccelerationInWorld(drone, time);
 		
 		System.out.println("ANGULAR AC" + angularAccelerationInWorld);
 		
