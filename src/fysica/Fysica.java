@@ -134,9 +134,10 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	}
 	
 	public Vector3f getNewVelocityInWorld(Drone drone, float time) {
+
 		Vector3f acc = getAccelerationInWorld(drone, time);
 		Vector3f at = new Vector3f(acc.getX()*time,acc.getY()*time,acc.getZ()*time);
-		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
+		Vector3f droneVelocityInWorld = drone.getState().getVelocity();
 		Vector3f v = sum(droneVelocityInWorld, at);
 		
 		this.print("vel calculated to:" + v, 11);
@@ -147,8 +148,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	public Vector3f getNewPositionInWorld(Drone drone, float time) {
 		
-		Vector3f droneVelocityInWorld = drone.getVelocityInWorld();
-		Vector3f dronePositionInWorld= drone.getPositionInWorld();
+		Vector3f droneVelocityInWorld = drone.getState().getVelocity();
+		Vector3f dronePositionInWorld= drone.getState().getPosition();
 		Vector3f newPositionInWorld = sum(product(time, droneVelocityInWorld), dronePositionInWorld);
 		
 		return newPositionInWorld;
@@ -200,8 +201,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		System.out.println("RESULTING MOMENT" + droneResultingMoment);
 		
-		Vector3f orientation = drone.getAngularPositionInWorld();
-		Vector3f angularVelocity = drone.getAngularVelocityInWorld();
+		Vector3f angularVelocity = drone.getState().getAngularRotation();
 		
 		Vector3f impulsmoment = getImpulseMoment(drone);
 		Vector3f term = new Vector3f();
@@ -223,7 +223,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	public Vector3f getImpulseMoment(Drone drone){
 		Matrix3f inertia = drone.getIneriaMatrixInWorld();
-		Vector3f angularVelocity = drone.getAngularVelocityInWorld();
+		Vector3f angularVelocity = drone.getState().getAngularRotation();
 		Vector3f impulseMoment = new Vector3f();
 		
 		Matrix3f.transform(inertia, angularVelocity, impulseMoment);
@@ -240,7 +240,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		Vector3f at = new Vector3f(angularAccelerationInWorld.getX()*time,angularAccelerationInWorld.getY()*time,angularAccelerationInWorld.getZ()*time);
 		
-		Vector3f droneAngularRotationInWorld = drone.getAngularVelocityInWorld();
+		Vector3f droneAngularRotationInWorld = drone.getState().getAngularRotation();
 		Vector3f v = sum(droneAngularRotationInWorld, at);
 		
 		print("-- total droneAngularRotationInWorld is: " + droneAngularRotationInWorld, 3);
