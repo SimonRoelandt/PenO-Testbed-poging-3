@@ -96,7 +96,7 @@ public class Wheel extends DronePart {
 			if (this.drone.getYPos()<-this.getRelativePosition().getY())
 				return null; //CRASH
 			else
-				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY())+this.getDampSlope()*Math.abs((D-lastD)/time),0); //afgeleide nog doen
+				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/time),0); //afgeleide nog doen
 		
 	}
 
@@ -164,7 +164,4 @@ public class Wheel extends DronePart {
 	// tijd gebruiken
 	// draaining rond y-as meerekening bij x-as
 
-	
-	
-	
 }

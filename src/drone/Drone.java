@@ -207,9 +207,9 @@ public class Drone {
 		this.fysica.print("HPR: " + newHeading + newPitch + newRoll, 10);
 		
 		//WHEELS TODO NIEUWE AUTOPILOT NODIG
-//		this.frontWheel.update(outputs.getFrontBrakeForce, time);
-//	    this.leftWheel.update(outputs.getLeftBrakeForce, time);
-//	    this.rightWheel.update(outputs.getRightBrakeForce, time);
+		this.frontWheel.update(0.0f, time);
+	    this.leftWheel.update(0.0f, time);
+	    this.rightWheel.update(0.0f, time);
 		
 		
         
