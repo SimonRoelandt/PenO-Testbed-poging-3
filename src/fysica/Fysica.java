@@ -116,12 +116,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		for (DronePart part: partArray) {
 			v = sum(part.getTotalForceInWorld(time), v);
 		}
-		
 		totalForceOnDroneInWorld = v;
+		System.out.println("+++TOTAL FORCE ON DRONE WORLD" + v);
 		return v;
-		
-	
-		
 	}
 	
 	public Vector3f getAccelerationInWorld(Drone drone, float time) {
