@@ -103,22 +103,33 @@ public class Wheel extends DronePart {
 //				return null; //CRASH
 //			else
 		if(isGround()){
-				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/time),0); //afgeleide nog doen
+			System.out.println("isGORUND " + new Vector3f(0,this.getTyreSlope()*(this.drone.getState().getY()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/time),0));
+				return new Vector3f(0,-this.getTyreSlope()*(this.drone.getState().getY()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/time),0); //afgeleide nog doen
 		}
 		else return new Vector3f(0,0,0);
+		
 	}
 
 	public Vector3f getNewWrijvingForce(float time) {
 		if(isGround()){
 			Vector3f normaliseSpeed = null;
 			
+			
 			float x_speed = this.getDrone().getState().getVelocity().getX(); // TODO draaining rond y-as meerekening
+			
+			
 			System.out.println("SPEEEd" + this.getWheelForce());
 			System.out.println(this.getWheelForce().length());
-			float scalar = this.getWheelForce().length()*this.getMaxWrijvingsCoeff()*x_speed;											//richting
+			System.out.println(x_speed + "X_SPEED");
 			
-			this.getDrone().getState().getVelocity().normalise(normaliseSpeed);
-
+			
+			float scalar = this.getWheelForce().length()*this.getMaxWrijvingsCoeff()*x_speed;
+			
+			System.out.println("scalar " + scalar);
+			
+			normaliseSpeed = this.getDrone().getState().getVelocity().normalise(normaliseSpeed); //.normalise(normaliseSpeed);
+			
+			System.out.println(normaliseSpeed);
 			
 			return fysica.product(scalar,normaliseSpeed);
 		}
@@ -132,16 +143,17 @@ public class Wheel extends DronePart {
 			Vector3f wrijving = this.getWrijvingForce();
 			Vector3f wheelforce = this.getWheelForce();
 			
-			Vector3f total = null;
+			Vector3f total = new Vector3f(0,0,0);
 			
 			//TODO WELKE RICHTING GAAT DE BRAKEFORCE UIT
 			// HOEK KAN NOG NEGATIEF ZIJN -> FOUTE KANT
 			float heading = getDrone().getHeading();
 			Vector3f brakeForce = new Vector3f((float) (brake*Math.cos(heading)),0.0f,(float) (brake*Math.sin(heading)));
 			
-			Vector3f.add(brakeForce, wrijving, total);
+			//Vector3f.add(brakeForce, wrijving, total);
 			Vector3f.add(total, wheelforce, total);
 			
+			System.out.println("TOTAL WHEEL FORCE " + total);
 			return total;
 		}
 		else return new Vector3f(0,0,0);

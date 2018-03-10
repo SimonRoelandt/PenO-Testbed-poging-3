@@ -45,22 +45,22 @@ public class Drone {
 	public float maxAOA = (float) (Math.PI /12);
 	
 	
-	private Vector3f positionInWorld = new Vector3f(0,0,0);
-	
-	private Vector3f velocityInWorld = new Vector3f(0,0,0);
-
-
-	private Vector3f angularPositionInWorld = new Vector3f(0,0,0);
-	private Vector3f angularVelocityInWorld = new Vector3f(0,0,0);
+//	private Vector3f positionInWorld = new Vector3f(0,0,0);
+//	
+//	private Vector3f velocityInWorld = new Vector3f(0,0,0);
+//
+//
+//	private Vector3f angularPositionInWorld = new Vector3f(0,0,0);
+//	private Vector3f angularVelocityInWorld = new Vector3f(0,0,0);
 	
 
 	private static float wingLiftSlope = 10f;
 	private static float horStabLiftSlope = 5f;
 	private static float verStabLiftSlope = 5f;
 	
-	private float xPos;
-	private float yPos;
-	private float zPos;
+//	private float xPos;
+//	private float yPos;
+//	private float zPos;
 	
 	private float heading;
 	private float pitch;
@@ -249,6 +249,18 @@ public class Drone {
 		return this.engine;
 	}
 	
+	public Wheel getFrontWheel(){
+		return this.frontWheel;
+	}
+	
+	public Wheel getLeftWheel(){
+		return this.leftWheel;
+	}
+	
+	public Wheel getRightWheel(){
+		return this.rightWheel;
+	}
+	
 	//
 	public float getThrust() {
 		return this.getEngine().getThrustScalar();
@@ -263,46 +275,46 @@ public class Drone {
 	
 	//POSITION IN WORLD ---------------------------
 	
-	public Vector3f getPositionInWorld() {
-		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
-		return v;
-	}
+//	public Vector3f getPositionInWorld() {
+//		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
+//		return v;
+//	}
 	
-	public void setPositionInWorld(Vector3f pos) {
-		this.xPos = pos.getX();
-		this.yPos = pos.getY();
-		this.zPos = pos.getZ();
-	}
-	
-	public void setPositionInWorld(float x, float y, float z){
-		this.xPos = x;
-		this.yPos = y;
-		this.zPos = z;
-	}
-	
-	public void setXPos(float x) {
-		this.xPos = x;
-	}
-	
-	public float getXPos() {
-		return this.xPos;
-	}
-	
-	public void setYPos(float y) {
-		this.yPos = y;
-	}
-	
-	public float getYPos() {
-		return this.yPos;
-	}
-	
-	public void setZPos(float z) {
-		this.zPos = z;
-	}
-	
-	public float getZPos() {
-		return this.zPos;
-	}
+//	public void setPositionInWorld(Vector3f pos) {
+//		this.xPos = pos.getX();
+//		this.yPos = pos.getY();
+//		this.zPos = pos.getZ();
+//	}
+//	
+//	public void setPositionInWorld(float x, float y, float z){
+//		this.xPos = x;
+//		this.yPos = y;
+//		this.zPos = z;
+//	}
+//	
+//	public void setXPos(float x) {
+//		this.xPos = x;
+//	}
+//	
+//	public float getXPos() {
+//		return this.xPos;
+//	}
+//	
+//	public void setYPos(float y) {
+//		this.yPos = y;
+//	}
+//	
+//	public float getYPos() {
+//		return this.yPos;
+//	}
+//	
+//	public void setZPos(float z) {
+//		this.zPos = z;
+//	}
+//	
+//	public float getZPos() {
+//		return this.zPos;
+//	}
 	
 	
 	//VELOCITY IN WORLD ---------------------------------------------------
@@ -373,7 +385,7 @@ public class Drone {
 	}
 	
 	public DronePart[] getDroneParts() {
-		DronePart[] droneParts = {getLeftWing(), getRightWing(), getHorStabilizator(), getVerStabilizator(), getEngine()};
+		DronePart[] droneParts = {getLeftWing(), getRightWing(), getHorStabilizator(), getVerStabilizator(), getEngine(),getFrontWheel(),getLeftWheel(),getRightWheel()};
 		return droneParts;
 	}
 		

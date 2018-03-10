@@ -57,7 +57,7 @@ public class DummyGame implements IGameLogic {
     
     private final float cubeScale = 5f;
     
-    private final Vector3f droneBeginPos = new Vector3f(0,20,0);
+    private final Vector3f droneBeginPos = new Vector3f(0,3,0);
     
     private Balk balk;
     
@@ -119,7 +119,7 @@ public class DummyGame implements IGameLogic {
         
         //Drone Item
         
-        Balk droneVisual = new Balk(drone.getXPos()-0.5f, drone.getYPos()-0.5f, drone.getZPos()-0.5f, 1f, 1f, 1f, Color.black);
+        Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black);
         //Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
         Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
         GameItem droneItem = new GameItem(meshDrone,false);
@@ -219,7 +219,7 @@ public class DummyGame implements IGameLogic {
     	        							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
     	        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeightAutopilot);
     	        //Maak eerste input aan voor autopilot
-    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getTot());
+    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getState().getX(), drone.getState().getY(), drone.getState().getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getTot());
     	        //Start de simulatie in autopilot
     	        AutopilotOutputs outputs = comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
     	        //Update de drone
@@ -230,7 +230,7 @@ public class DummyGame implements IGameLogic {
 	        //Roep een timePassed op in Autopilot
 
 	        float time = timer.getTot();
-	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getXPos(), drone.getYPos(), drone.getZPos(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
+	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getState().getX(), drone.getState().getY(), drone.getState().getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
 	        
 	        System.out.println("TIME" + time);
 	        
@@ -258,21 +258,21 @@ public class DummyGame implements IGameLogic {
 	        //System.out.println("Pos: " + drone.getPos());
 	        //System.out.println("Vel: " + drone.getVelocity());
 	        //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
-	        droneItem.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
-	        System.out.println("positie " + drone.getXPos() + drone.getYPos() + drone.getZPos());
+	        droneItem.setPosition(drone.getState().getX(), drone.getState().getY(), drone.getState().getZ());
+	        System.out.println("positie " + drone.getState().getX() + drone.getState().getY() + drone.getState().getZ());
 	        droneItem.setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
 	        
 	        //meer impressionant:
 	        //camera.setPosition(drone.getXPos(), drone.getYPos()+1f, drone.getZPos()+0.4f);
 	        
 	        //volgens opgave:
-	        camera.setPosition(drone.getXPos(), drone.getYPos()+1, drone.getZPos()+2);
+	        camera.setPosition(drone.getState().getX(), drone.getState().getY()+1, drone.getState().getZ()+2);
 	        camera.setRotation(0,0,0);
 	        
 	        //cameraSide.setPosition(cameraSide.getPosition().x, cameraSide.getPosition().y, drone.getZPos());
 	        //cameraTop.setPosition(cameraTop.getPosition().x, cameraTop.getPosition().y, drone.getZPos());
 	        
-	        cameraPlane.setPosition(drone.getXPos(), drone.getYPos(), drone.getZPos());
+	        cameraPlane.setPosition(drone.getState().getX(), drone.getState().getY(), drone.getState().getZ());
 	        cameraPlane.setRotation(0f, 0f, 0f);
 	        
 	       // System.out.println(drone.getZPos() - gameItems[0].getPosition().z);
@@ -283,7 +283,7 @@ public class DummyGame implements IGameLogic {
 	        boolean end = true;
 	        for(int i = 0 ; i < gameItems.size(); i++){
 	        	if(gameItems.get(i) != null && gameItems.get(i).getRenderOnPlaneView()){
-			        Vector3f.sub(drone.getPositionInWorld(), gameItems.get(i).getPosition(), afstand);
+			        Vector3f.sub(drone.getState().getPosition(), gameItems.get(i).getPosition(), afstand);
 			        if (afstand.length()<4f) {
 			        	//System.out.println(timer.getTot() + "end");
 			       	    gameItems.remove(i);

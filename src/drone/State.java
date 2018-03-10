@@ -19,6 +19,19 @@ public class State {
 		this.position = position;
 	}
 	
+	public float getX(){
+		return getPosition().getX();
+	}
+	
+	public float getY(){
+		return getPosition().getY();
+	}
+	
+	public float getZ(){
+		return getPosition().getZ();
+	}
+	
+	
 	//VELOCITY
 	public Vector3f getVelocity() {
 		return this.velocity;
