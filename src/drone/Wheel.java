@@ -103,7 +103,7 @@ public class Wheel extends DronePart {
 //				return null; //CRASH
 //			else
 		if(isGround()){
-				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/1),0); //afgeleide nog doen
+				return new Vector3f(0,this.getTyreSlope()*(this.drone.getYPos()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/time),0); //afgeleide nog doen
 		}
 		else return new Vector3f(0,0,0);
 	}
