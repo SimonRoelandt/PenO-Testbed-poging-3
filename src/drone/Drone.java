@@ -29,8 +29,8 @@ public class Drone {
 	public float rearWheelX = 1.24f;
 	public float wheelRadius = 0.2f;
 	
-	public float tyreSlope = 5000;
-	public float dampSlope = 50;
+	public float tyreSlope = 108061.88718204757297602046566436f;
+	public float dampSlope = 5000f;
 	public float maxWrijving = 2486;
 	public float maxRem = 2500;
 	
@@ -113,8 +113,8 @@ public class Drone {
 		System.out.println("======================== UPDATE DRONE ==================================");
 		System.out.println("========================================================================");
 		
-        //float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
-        float scaledThrust = 0;
+        float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
+        //float scaledThrust = 0;
         
         //OM TE TESTEN LATER WEGDOEN:
         
@@ -129,14 +129,21 @@ public class Drone {
 
         setThrust(scaledThrust);
         
-        this.getLeftWing().updateInclinationAngle(this.getLeftWingInclination());
-        this.getRightWing().updateInclinationAngle(this.getRightWingInclination());
-        this.getHorStabilizator().updateInclinationAngle(this.getHorStabInclination());        
-        this.getVerStabilizator().updateInclinationAngle(this.getVerStabInclination());
+        this.getLeftWing().updateInclinationAngle(0.0f);
+        this.getRightWing().updateInclinationAngle(0.0f);
+        this.getHorStabilizator().updateInclinationAngle(0.0f);        
+        this.getVerStabilizator().updateInclinationAngle(0.0f);
         this.getEngine().setThrust(0f);
 		
-        
- 
+//        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
+//        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
+//        this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
+//        this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
+        this.getEngine().setThrust(scaledThrust);
+
+		this.frontWheel.update(700, time);
+	    this.leftWheel.update(700, time);
+	    this.rightWheel.update(700, time);
  
         // TOT HIER
         System.out.println("thrust is " + scaledThrust);
@@ -212,14 +219,7 @@ public class Drone {
 		
 		
 		this.fysica.print("HPR: " + newHeading + newPitch + newRoll, 10);
-		
 
-		//WHEELS TODO NIEUWE AUTOPILOT NODIG
-		this.frontWheel.update(0.0f, time);
-	    this.leftWheel.update(0.0f, time);
-	    this.rightWheel.update(0.0f, time);
-		
-	    
         this.state = newState;
 
 	}
