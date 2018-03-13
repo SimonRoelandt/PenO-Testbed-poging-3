@@ -1,4 +1,4 @@
-package drone;
+ package drone;
 
 import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Vector3f;
@@ -32,6 +32,7 @@ public class Drone {
 	public float tyreSlope = 50000;
 	public float dampSlope = 5000;
 	public float maxWrijving = 2486;
+	public float maxRem = 2500;
 	
 	//Waarden van de drone
 	public float wingX = 4.2f;

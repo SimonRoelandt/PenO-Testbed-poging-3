@@ -9,8 +9,8 @@ public class Wheel extends DronePart {
 	private float dampslope;
 	private float BrakeForce;
 	private float maxWrijving;
-	private float D;
-	private float lastD;
+	private float D = 0;
+	private float lastD = 0;
 	private Vector3f wheelForce;
 	private Vector3f wrijvingForce = new Vector3f(0.0f,0.0f,0.0f);
 
@@ -22,7 +22,7 @@ public class Wheel extends DronePart {
 		setRelativePosition(relativePosition);
 		setMaxWrijvingsCoeff(maxWrijving);
 		setBrakeForce(0); // standaard in de lucht
-		setWheelForce(new Vector3f(1.0f,0.0f,0.0f));
+		setWheelForce(new Vector3f(0.0f,0.0f,0.0f));
 		setWrijvingForce(new Vector3f(0.0f,0.0f,0.0f));
 		setD(0);
 	}
@@ -32,7 +32,7 @@ public class Wheel extends DronePart {
 		setLastD(getD());
 		setD(calcNewD());
 		setWheelForce(getNewWheelForce(time));
-		setWrijvingForce(getNewWrijvingForce(time));
+		//setWrijvingForce(getNewWrijvingForce(time));
 	}
 	
 	private void setD(float D) {
@@ -91,8 +91,10 @@ public class Wheel extends DronePart {
 	
 	public float calcNewD(){
 		if(isGround()){
-			float gravForce = getDrone().getGravity()*getDrone().getTotalMass();
-			return - (gravForce / getDampSlope());
+//			return (this.drone.getState().getY()+this.getRelativePosition().getY());
+			return getAbsolutePositionInWorld().getY() - getTyreRadius();
+//			float gravForce = getDrone().getGravity()*getDrone().getTotalMass();
+//			return - (gravForce / getDampSlope());
 		}
 		else return 0.0f;
 	}
@@ -103,7 +105,10 @@ public class Wheel extends DronePart {
 //				return null; //CRASH
 //			else
 		if(isGround()){
-			return new Vector3f(0,this.getTyreSlope()*(this.drone.getState().getY()+this.getRelativePosition().getY()) + this.getDampSlope()*Math.abs((D-lastD)/time),0); //afgeleide nog doen
+			if(time == 0.0) return new Vector3f(0,Math.abs(this.getTyreSlope()*D),0);
+			float force = Math.abs((this.getTyreSlope()*D) 
+						+ this.getDampSlope()*Math.abs((D-lastD)/time));
+			return new Vector3f(0,force,0); //afgeleide nog doen
 		}
 		else return new Vector3f(0,0,0);
 		
@@ -152,7 +157,7 @@ public class Wheel extends DronePart {
 			//Vector3f.add(brakeForce, wrijving, total);
 			Vector3f.add(total, wheelforce, total);
 			
-			System.out.println("TOTAL WHEEL FORCE " + total);
+			System.out.println("TOTAL WHEEL FORCE " + wheelforce);
 			return total;
 		}
 		else return new Vector3f(0,0,0);

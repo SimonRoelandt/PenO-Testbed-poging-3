@@ -57,7 +57,7 @@ public class DummyGame implements IGameLogic {
     
     private final float cubeScale = 5f;
     
-    private final Vector3f droneBeginPos = new Vector3f(0,3,0);
+    private final Vector3f droneBeginPos = new Vector3f(0,1.2f,0);
     
     private Balk balk;
     
@@ -217,7 +217,9 @@ public class DummyGame implements IGameLogic {
     	        Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
     	        							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
     	        							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
-    	        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeightAutopilot);
+    	        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeight, "", drone.wheelY,
+    	        							drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
+    	        							drone.maxRem, drone.maxWrijving);
     	        //Maak eerste input aan voor autopilot
     	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getState().getX(), drone.getState().getY(), drone.getState().getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getTot());
     	        //Start de simulatie in autopilot
