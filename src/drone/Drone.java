@@ -141,9 +141,9 @@ public class Drone {
 //        this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
         this.getEngine().setThrust(scaledThrust);
 
-		this.frontWheel.update(700, time);
-	    this.leftWheel.update(700, time);
-	    this.rightWheel.update(700, time);
+		this.frontWheel.update(2000, time);
+	    this.leftWheel.update(2000, time);
+	    this.rightWheel.update(2000, time);
  
         // TOT HIER
         System.out.println("thrust is " + scaledThrust);

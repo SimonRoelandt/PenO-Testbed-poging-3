@@ -73,7 +73,7 @@ public class GameEngine implements Runnable {
             	//update(0.01666f);
                 input();
             
-                if(render == 6){
+                if(render == 2){
                 	render();
                 	render = 0;
                 }
