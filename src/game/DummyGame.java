@@ -243,8 +243,8 @@ public class DummyGame implements IGameLogic {
 	        
 	        
 	        
-	        drone.update(outputs,timer.getElapsedTime());
-	        
+	        //drone.update(outputs,timer.getElapsedTime());
+	        drone.update(outputs, interval);
 	        
 	        
 	        

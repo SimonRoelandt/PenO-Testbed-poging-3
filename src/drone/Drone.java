@@ -29,8 +29,8 @@ public class Drone {
 	public float rearWheelX = 1.24f;
 	public float wheelRadius = 0.2f;
 	
-	public float tyreSlope = 50000;
-	public float dampSlope = 5000;
+	public float tyreSlope = 5000;
+	public float dampSlope = 50;
 	public float maxWrijving = 2486;
 	public float maxRem = 2500;
 	
@@ -407,10 +407,10 @@ public class Drone {
 		
 		//TODO getters 0
 		
-		return this.pitch;
+		//return this.pitch;
 		
 		
-		//return 0;
+		return 0;
 	}
 	
 	public void setRoll(float roll) {
@@ -420,10 +420,10 @@ public class Drone {
 	public float getRoll() {
 		
 		
-		//return this.roll;
+		return this.roll;
 		
 		
-		return 0;
+		//return 0;
 	}
 	
 	public void setHeadingVel(float vel) {

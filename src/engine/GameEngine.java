@@ -68,7 +68,8 @@ public class GameEngine implements Runnable {
             input();
 
             while (accumulator >= interval) {
-                update(interval);
+                //update(interval);
+            	update(0.05f);
                 input();
                 render();
                 accumulator -= interval;
