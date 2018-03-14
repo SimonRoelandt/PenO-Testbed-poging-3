@@ -97,7 +97,7 @@ public class OBJLoader {
 		}
 		
 		
-		return new Mesh(verticesArray, colourArray, indicesArray);
+		return new Mesh(verticesArray, colourArray, indicesArray, new float[]{}, null);
 		
 	}
 	

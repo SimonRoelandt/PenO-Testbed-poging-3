@@ -32,6 +32,7 @@ import graph.ProjectionMatrix;
 public class Renderer {
 
     private ShaderProgram shaderProgram;
+    private ShaderProgram shaderProgramTexture;
     private int renderbuffer;
     private int framebuffer;
     private int depthbuffer;
@@ -77,7 +78,14 @@ public class Renderer {
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Utils.loadResource("/vertex.vs"));
         shaderProgram.createFragmentShader(Utils.loadResource("/fragment.fs"));
-        shaderProgram.link();
+        
+        shaderProgramTexture = new ShaderProgram();
+        shaderProgramTexture.createVertexShader(Utils.loadResource("/vertexText.vs"));
+        shaderProgramTexture.createFragmentShader(Utils.loadResource("/fragmentText.fs"));
+        
+        
+        
+        
         
         /*//create projectionmatrix
         float aspectRatio = (float) window.getWidth() / window.getHeight();
@@ -91,9 +99,14 @@ public class Renderer {
 		projectionMatrix.m33 = 0.0f;*/
         //System.out.println(projectionMatrix);
         
+        shaderProgram.link();
+        shaderProgramTexture.link();
+        
         shaderProgram.createUniform("projectionMatrix");
         shaderProgram.createUniform("modelViewMatrix");
-   
+        shaderProgramTexture.createUniform("projectionMatrix");
+        shaderProgramTexture.createUniform("modelViewMatrix");
+        shaderProgramTexture.createUniform("texture_sampler");
         
         //create the framebuffer
         this.framebuffer = glGenFramebuffers();
@@ -212,8 +225,11 @@ public class Renderer {
         //update projectionMatrix
         Matrix4f projectionMatrix = transformation.getProjectionMatrix(fov, window.getWidth(), window.getHeight(), z_near, z_far);
         //projectionMatrix = transformation.getProjectionMatrixOrthogonal(window.getWidth(), window.getHeight(), z_near, z_far);
+        shaderProgram.bind();
         shaderProgram.setUniform("projectionMatrix",projectionMatrix);
-
+        shaderProgramTexture.bind();
+        shaderProgramTexture.setUniform("projectionMatrix",projectionMatrix);
+        shaderProgramTexture.setUniform("texture_sampler", 0);
         
         // Update view Matrix
         Matrix4f viewMatrix = transformation.getViewMatrix(camera);
@@ -226,8 +242,19 @@ public class Renderer {
         //CHASE
         for(GameItem gameItem : gameItems) {
         	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+        	shaderProgram.bind();
         	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-        	gameItem.getMesh().render(imageWidth, imageHeight, window.getWidth(), window.getHeight());
+        	shaderProgramTexture.bind();
+        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+        	
+        	if (gameItem.texture) {
+        		shaderProgramTexture.bind();
+        		gameItem.getMesh().renderTex(imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+        	}
+        	else {
+        		shaderProgram.bind();
+        		gameItem.getMesh().render(imageWidth, imageHeight, window.getWidth(), window.getHeight());
+        	}
         }
         
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferFree);
@@ -237,8 +264,21 @@ public class Renderer {
         viewMatrix = transformation.getViewMatrix(cameraFree);
         for(GameItem gameItem : gameItems) {
         	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+        	shaderProgram.bind();
         	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-        	gameItem.getMesh().renderFree(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight());
+        	shaderProgramTexture.bind();
+        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+        
+        	if (gameItem.texture) {
+        		shaderProgramTexture.bind();
+        		gameItem.getMesh().renderFreeTex(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+        	}
+        	else {
+        		shaderProgram.bind();
+        		gameItem.getMesh().renderFree(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight());
+        	}
+        	
+        	
         }
         
         
@@ -251,8 +291,20 @@ public class Renderer {
         for(GameItem gameItem : gameItems) {
         	if(gameItem.getRenderOnPlaneView()){
         		Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+        		shaderProgram.bind();
             	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            	gameItem.getMesh().renderCameraPlane(framebuffer, imageWidthAutopilot, imageHeightAutopilot, window.getWidth(), window.getHeight());
+            	shaderProgramTexture.bind();
+            	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+
+            	if (gameItem.texture) {
+            		shaderProgramTexture.bind();
+            		gameItem.getMesh().renderCameraPlaneTex(framebuffer, imageWidthAutopilot, imageHeightAutopilot, window.getWidth(), window.getHeight(), gameItem.textureId);
+            	}
+            	else {
+            		shaderProgram.bind();
+            		gameItem.getMesh().renderCameraPlane(framebuffer, imageWidthAutopilot, imageHeightAutopilot, window.getWidth(), window.getHeight());
+            	}
+            	
         	}
         } 
         
@@ -265,7 +317,10 @@ public class Renderer {
        	
        	
        	projectionMatrix = transformation.getProjectionMatrixOrthogonal(120,120, z_near, z_far);
+       	shaderProgram.bind();
        	shaderProgram.setUniform("projectionMatrix",projectionMatrix);
+       	shaderProgramTexture.bind();
+       	shaderProgramTexture.setUniform("projectionMatrix", projectionMatrix);
        	// orthogonale projectiematrix werkt nog niet
        	
        	
@@ -277,8 +332,21 @@ public class Renderer {
         viewMatrix = transformation.getViewMatrix(cameraSide);
         for(GameItem gameItem : gameItems) {
         	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+        	shaderProgram.bind();
             shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            gameItem.getMesh().renderCameraSide(framebufferSide, imageWidth, imageHeight, window.getWidth(), window.getHeight());	
+            shaderProgramTexture.bind();
+            shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+
+            if (gameItem.texture) {
+        		shaderProgramTexture.bind();
+        		gameItem.getMesh().renderCameraSideTex(framebufferSide, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);	        	
+        		}
+        	else {
+        		shaderProgram.bind();
+        		gameItem.getMesh().renderCameraSide(framebufferSide, imageWidth, imageHeight, window.getWidth(), window.getHeight());	        	
+        		}
+            
+        	
         } 
         
         
@@ -290,8 +358,19 @@ public class Renderer {
         viewMatrix = transformation.getViewMatrix(cameraTop);
         for(GameItem gameItem : gameItems) {
         	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+        	shaderProgram.bind();
             shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            gameItem.getMesh().renderCameraTop(framebufferTop, imageWidth, imageHeight, window.getWidth(), window.getHeight());
+            shaderProgramTexture.bind();
+            shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+
+            if (gameItem.texture) {
+        		shaderProgramTexture.bind();
+        		gameItem.getMesh().renderCameraTopTex(framebufferTop, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+            }
+        	else {
+        		shaderProgram.bind();
+        		gameItem.getMesh().renderCameraTop(framebufferTop, imageWidth, imageHeight, window.getWidth(), window.getHeight());            
+        	}
         } 
         //glViewport(0, 0, window.getWidth(), window.getHeight());
         
@@ -417,7 +496,7 @@ public class Renderer {
         
         */
         shaderProgram.unbind();
-
+        shaderProgramTexture.unbind();
     }
 
     public byte[] getPixelsarray() {
@@ -427,6 +506,7 @@ public class Renderer {
     public void cleanup() {
         if (shaderProgram != null) {
             shaderProgram.cleanup();
+            shaderProgramTexture.cleanup();
             glDeleteFramebuffers(framebuffer);
             glDeleteRenderbuffers(renderbuffer);
             glDeleteRenderbuffers(depthbuffer);

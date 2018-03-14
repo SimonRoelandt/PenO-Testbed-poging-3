@@ -11,13 +11,16 @@ public class GameItem {
 	private float scale;
 	private final Vector3f rotation;
 	private boolean renderOnPlaneView;
+	public boolean texture;
+	public int textureId;
 	
-	public GameItem(Mesh mesh,boolean render) {
+	public GameItem(Mesh mesh,boolean render, boolean texture) {
 		this.mesh = mesh;
 		position = new Vector3f(0,0,0);
 		scale = 1;
 		rotation = new Vector3f(0,0,0);
 		this.renderOnPlaneView = render;
+		this.texture = texture;
 	}
 	
 	public boolean getRenderOnPlaneView(){
@@ -54,5 +57,9 @@ public class GameItem {
 	
 	public Mesh getMesh() {
 		return mesh;
+	}
+	
+	public void setId(int id) {
+		this.textureId = id;
 	}
 }
