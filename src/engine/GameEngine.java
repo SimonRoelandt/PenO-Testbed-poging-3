@@ -4,9 +4,9 @@ import game.Renderer;
 
 public class GameEngine implements Runnable {
 
-    public static final int TARGET_FPS = 75;
+    public static final int TARGET_FPS = 80;
 
-    public static final int TARGET_UPS = 200;
+    public static final int TARGET_UPS = 120;
 
     private final Window window;
 
@@ -66,12 +66,20 @@ public class GameEngine implements Runnable {
             accumulator += elapsedTime;
 
             input();
-
+            
+            int render = 0;
             while (accumulator >= interval) {
-                //update(interval);
-            	update(0.05f);
+                update(interval);
+            	//update(0.01666f);
                 input();
-                render();
+            
+                if(render == 2){
+                	render();
+                	render = 0;
+                }
+                else render ++;
+                
+                
                 accumulator -= interval;
             }
 

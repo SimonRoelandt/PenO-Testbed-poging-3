@@ -123,7 +123,7 @@ public class DummyGame implements IGameLogic {
         Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black);
         //Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
         Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
-        GameItem droneItem = new GameItem(meshDrone,false);
+        GameItem droneItem = new GameItem(meshDrone,false, false);
         droneItem.setScale(0.5f);
         droneItem.setRotation(0f, 0f, 0f);
         droneItem.setPosition(droneBeginPos.x, droneBeginPos.y-1, droneBeginPos.z);
@@ -265,7 +265,7 @@ public class DummyGame implements IGameLogic {
 	        //System.out.println("Pos: " + drone.getPos());
 	        //System.out.println("Vel: " + drone.getVelocity());
 	        //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
-	        droneItem.setPosition(drone.getState().getX(), drone.getState().getY(), drone.getState().getZ());
+	        droneItem.setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
 	        System.out.println("positie " + drone.getState().getX() + drone.getState().getY() + drone.getState().getZ());
 	        droneItem.setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
 	        

@@ -30,7 +30,9 @@ public class Wheel extends DronePart {
 	public void update(float brakeForce, float time){
 		setBrakeForce(brakeForce);
 		setLastD(getD());
+		System.out.println("OLD D: " + getD());
 		setD(calcNewD());
+		System.out.println("NEW D: " + getD());
 		setWheelForce(getNewWheelForce(time));
 		//setWrijvingForce(getNewWrijvingForce(time));
 	}
@@ -105,13 +107,12 @@ public class Wheel extends DronePart {
 //				return null; //CRASH
 //			else
 		if(isGround()){
-			if(time == 0.0) return new Vector3f(0,Math.abs(this.getTyreSlope()*D),0);
+			if(time == 0.0) return new Vector3f(0,0,0);
 			float force = Math.abs((this.getTyreSlope()*D) 
-						+ this.getDampSlope()*Math.abs((D-lastD)/time));
+						+ this.getDampSlope()*(D-lastD)/time);
 			return new Vector3f(0,force,0); //afgeleide nog doen
 		}
 		else return new Vector3f(0,0,0);
-		
 	}
 
 	public Vector3f getNewWrijvingForce(float time) {
@@ -119,7 +120,7 @@ public class Wheel extends DronePart {
 			Vector3f normaliseSpeed = null;
 			
 			
-			float x_speed = this.getDrone().getState().getVelocity().getX(); // TODO draaining rond y-as meerekening
+			float x_speed = this.getDrone().getState().getVelocity().length(); // TODO draaining rond y-as meerekening
 			
 			
 			System.out.println("SPEEEd" + this.getWheelForce());
@@ -129,13 +130,16 @@ public class Wheel extends DronePart {
 			
 			float scalar = this.getWheelForce().length()*this.getMaxWrijvingsCoeff()*x_speed;
 			
-			System.out.println("scalar " + scalar);
+//			System.out.println("scalar " + scalar);
+//			
+//			normaliseSpeed = this.getDrone().getState().getVelocity().normalise(normaliseSpeed); //.normalise(normaliseSpeed);
+//			
+//			System.out.println(normaliseSpeed);
+//			
+//			return fysica.product(scalar,normaliseSpeed);
 			
-			normaliseSpeed = this.getDrone().getState().getVelocity().normalise(normaliseSpeed); //.normalise(normaliseSpeed);
-			
-			System.out.println(normaliseSpeed);
-			
-			return fysica.product(scalar,normaliseSpeed);
+			float heading = getDrone().getHeading();
+			return new Vector3f((float) (scalar*Math.sin(heading)),0.0f,(float) (scalar*Math.cos(heading)));
 		}
 		else return new Vector3f(0,0,0);
 	}
@@ -152,9 +156,11 @@ public class Wheel extends DronePart {
 			//TODO WELKE RICHTING GAAT DE BRAKEFORCE UIT
 			// HOEK KAN NOG NEGATIEF ZIJN -> FOUTE KANT
 			float heading = getDrone().getHeading();
-			Vector3f brakeForce = new Vector3f((float) (brake*Math.cos(heading)),0.0f,(float) (brake*Math.sin(heading)));
+			Vector3f brakeForce = new Vector3f((float) (brake*Math.sin(heading)),0.0f,(float) (brake*Math.cos(heading)));
 			
-			//Vector3f.add(brakeForce, wrijving, total);
+			System.out.println("BRAKEFORCE: " +brakeForce);
+			
+			Vector3f.add(brakeForce, wrijving, total);
 			Vector3f.add(total, wheelforce, total);
 			
 			System.out.println("TOTAL WHEEL FORCE " + wheelforce);
