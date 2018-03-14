@@ -25,6 +25,7 @@ import engine.Timer;
 import engine.Window;
 import graph.Camera;
 import graph.Mesh;
+import graph.Texture;
 import interfaces.*;
 import autopilotLibrary.CommunicatieTestbed;
 
@@ -57,7 +58,7 @@ public class DummyGame implements IGameLogic {
     
     private final float cubeScale = 5f;
     
-    private final Vector3f droneBeginPos = new Vector3f(0,1.2f,0);
+    private final Vector3f droneBeginPos = new Vector3f(0,15f,0);
     
     private Balk balk;
     
@@ -90,7 +91,7 @@ public class DummyGame implements IGameLogic {
         camera.setPosition(0, 1, 2);
         camera.setRotation(0,0,0);
         cameraFree = new Camera();
-        cameraFree.setPosition(0, 1, 20);
+        cameraFree.setPosition(0, 1, 5);
         cameraSide = new Camera();
         cameraSide.setPosition(30, 30, -50);
         cameraSide.setRotation(0, -90f, 0);
@@ -123,9 +124,9 @@ public class DummyGame implements IGameLogic {
         //Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
         Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
         GameItem droneItem = new GameItem(meshDrone,false);
-        droneItem.setScale(0.2f);
+        droneItem.setScale(0.5f);
         droneItem.setRotation(0f, 0f, 0f);
-        droneItem.setPosition(droneBeginPos.x, droneBeginPos.y, droneBeginPos.z);
+        droneItem.setPosition(droneBeginPos.x, droneBeginPos.y-1, droneBeginPos.z);
         this.droneItem = droneItem;
         
        
@@ -133,7 +134,8 @@ public class DummyGame implements IGameLogic {
         
         //Kubussen
         balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, Color.red);
-        mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
+        Texture balkTexture = null;
+        mesh = new Mesh(balk.positions(), balk.colours(), balk.indices(), new float[]{}, balkTexture);
         createMesh(Color.red);
         createMesh(Color.green);
         createMesh(Color.blue);
@@ -143,10 +145,10 @@ public class DummyGame implements IGameLogic {
 
         //--------------------------overbodig vanaf hier
         
-        GameItem gameItem = new GameItem(mesh,true);
-        GameItem gameItem2 = new GameItem(mesh,true);
-        GameItem gameItem3 = new GameItem(mesh,true);
-        GameItem gameItem4 = new GameItem(mesh,true);
+        GameItem gameItem = new GameItem(mesh,true, false);
+        GameItem gameItem2 = new GameItem(mesh,true, false);
+        GameItem gameItem3 = new GameItem(mesh,true, false);
+        GameItem gameItem4 = new GameItem(mesh,true, false);
         
         gameItem4.setPosition(-10, 0, 0);
         gameItem4.setRotation(-60f, 20f, 40f);
@@ -170,9 +172,12 @@ public class DummyGame implements IGameLogic {
       
        
        //wereld
+
        Ground ground = new Ground();
-       Mesh groundMesh = new Mesh(ground.vertices(), ground.colours(), ground.indices());
-       GameItem groundItem = new GameItem(groundMesh, false);
+       Mesh groundMesh = new Mesh(ground.vertices(), ground.colours(), ground.indices(), ground.textCoords(), ground.texture);
+       GameItem groundItem = new GameItem(groundMesh, false, true);
+       groundItem.setId(ground.texture.id);
+       //System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ                   "  +  + "          QQQQQQQQQQQQQQQQQQQQQQQ");
        gameItems.add(groundItem);
     }
 
@@ -316,7 +321,7 @@ public class DummyGame implements IGameLogic {
     	//Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
         
         for(int i=0;i<n;i++){
-        	GameItem gameItem = new GameItem(randomMesh(),true);
+        	GameItem gameItem = new GameItem(randomMesh(),true, false);
         	
         	float z = i * -40f - 30;
         	float x = rand.nextInt(20) -10;
@@ -339,7 +344,7 @@ public class DummyGame implements IGameLogic {
     }
     
     public void addGameItemAtPos(float xPos, float yPos, float zPos) {
-    	GameItem gameItem = new GameItem(randomMesh(), true);
+    	GameItem gameItem = new GameItem(randomMesh(), true, false);
     	gameItem.setPosition(xPos, yPos, zPos);
     	gameItem.setScale(cubeScale);
     	this.gameItems.add(gameItem);
@@ -351,7 +356,7 @@ public class DummyGame implements IGameLogic {
     	CubeLoader cl = new CubeLoader();
     	cl.generatePositions(file);
     	for (int i = 0; i < cl.xpos.size(); i++) {
-    		GameItem gameItem = new GameItem(randomMesh(), true);
+    		GameItem gameItem = new GameItem(randomMesh(), true, false);
     		gameItem.setPosition(cl.xpos.get(i), cl.ypos.get(i), cl.zpos.get(i));
     		gameItem.setScale(cubeScale);
     		addGameItem(gameItem);
@@ -372,7 +377,7 @@ public class DummyGame implements IGameLogic {
     
     public void createMesh(Color color) {
     	Balk createbalk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, color);
-    	meshList.add(new Mesh(createbalk.positions(), createbalk.colours(), createbalk.indices()));	
+    	meshList.add(new Mesh(createbalk.positions(), createbalk.colours(), createbalk.indices(),  new float[]{} , null));	
     }
     
     public List<GameItem> getGameItems() {
