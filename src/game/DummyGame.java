@@ -99,8 +99,8 @@ public class DummyGame implements IGameLogic {
         cameraPlane = new Camera();
         cameraPlane.setPosition(0, 0, 0);
         cameraTop = new Camera();
-        cameraTop.setPosition(-20, 300, -50);
-        cameraTop.setRotation(90f, -90f, 0);
+        cameraTop.setPosition(20, 300, -50);
+        cameraTop.setRotation(-90f, -90f, 0);
         timer = new Timer();
         drone = new Drone(droneBeginPos.x, droneBeginPos.y, droneBeginPos.z, new Vector3f(0,0,0));
         gui = new GUI(this);
@@ -276,8 +276,11 @@ public class DummyGame implements IGameLogic {
 	        camera.setPosition(drone.getState().getX(), drone.getState().getY()+1, drone.getState().getZ()+2);
 	        camera.setRotation(0,0,0);
 	        
-	        //cameraSide.setPosition(cameraSide.getPosition().x, cameraSide.getPosition().y, drone.getZPos());
-	        //cameraTop.setPosition(cameraTop.getPosition().x, cameraTop.getPosition().y, drone.getZPos());
+	        cameraSide.setPosition(cameraSide.getPosition().x, cameraSide.getPosition().y,-50 + drone.getState().getZ());
+	        cameraTop.setPosition(cameraTop.getPosition().x, cameraTop.getPosition().y, -50 + drone.getState().getZ());
+	        
+	        //cameraTop.movePosition(drone.getState().getX(),drone.getState().getY(),drone.getState().getZ());
+	        
 	        
 	        cameraPlane.setPosition(drone.getState().getX(), drone.getState().getY(), drone.getState().getZ());
 	        cameraPlane.setRotation(0f, 0f, 0f);
