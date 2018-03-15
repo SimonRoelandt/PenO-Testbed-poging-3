@@ -276,8 +276,8 @@ public class DummyGame implements IGameLogic {
 	        camera.setPosition(drone.getState().getX(), drone.getState().getY()+1, drone.getState().getZ()+2);
 	        camera.setRotation(0,0,0);
 	        
-	        cameraSide.setPosition(cameraSide.getPosition().x, cameraSide.getPosition().y,-50 + drone.getState().getZ());
-	        cameraTop.setPosition(cameraTop.getPosition().x, cameraTop.getPosition().y, -50 + drone.getState().getZ());
+	        cameraSide.setPosition(30 + drone.getState().getX(), cameraSide.getPosition().y,-50 + drone.getState().getZ());
+	        cameraTop.setPosition(20  + drone.getState().getX(), cameraTop.getPosition().y, -50 + drone.getState().getZ());
 	        
 	        //cameraTop.movePosition(drone.getState().getX(),drone.getState().getY(),drone.getState().getZ());
 	        
