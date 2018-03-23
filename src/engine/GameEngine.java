@@ -4,9 +4,9 @@ import game.Renderer;
 
 public class GameEngine implements Runnable {
 
-    public static final int TARGET_FPS = 80;
+    public static final int TARGET_FPS = 60;
 
-    public static final int TARGET_UPS = 160;
+    public static final int TARGET_UPS = 120;
 
     private final Window window;
 

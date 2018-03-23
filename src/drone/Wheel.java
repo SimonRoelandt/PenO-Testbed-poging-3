@@ -13,8 +13,10 @@ public class Wheel extends DronePart {
 	private float lastD = 0;
 	private Vector3f wheelForce;
 	private Vector3f wrijvingForce = new Vector3f(0.0f,0.0f,0.0f);
+	private boolean front;
 
-	public Wheel(float tyreRadius, float tyreSlope , float dampSlope,  float maxWrijving, Vector3f relativePosition, Drone drone) {		
+	public Wheel(boolean front, float tyreRadius, float tyreSlope , float dampSlope,  float maxWrijving, Vector3f relativePosition, Drone drone) {		
+		setFront(front);
 		setTyreRadius(tyreRadius);
 		setDampslope(dampSlope);
 		setTyreslope(tyreSlope);
@@ -116,6 +118,9 @@ public class Wheel extends DronePart {
 	}
 
 	public Vector3f getNewWrijvingForce(float time) {
+		if(isFront()){
+			return new Vector3f(0,0,0);
+		}
 		if(isGround()){
 			Vector3f normaliseSpeed = null;
 			
@@ -191,6 +196,14 @@ public class Wheel extends DronePart {
 
 	public void setWrijvingForce(Vector3f wrijvingForce) {
 		this.wrijvingForce = wrijvingForce;
+	}
+
+	public boolean isFront() {
+		return front;
+	}
+
+	public void setFront(boolean front) {
+		this.front = front;
 	}
 	
 	// TO DO 

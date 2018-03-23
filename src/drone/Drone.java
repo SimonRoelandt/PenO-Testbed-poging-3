@@ -29,8 +29,10 @@ public class Drone {
 	public float rearWheelX = 1.24f;
 	public float wheelRadius = 0.2f;
 	
-	public float tyreSlope = 108061.88718204757297602046566436f;
+	public float tyreSlope = 50000f;
 	public float dampSlope = 5000f;
+	
+	
 	public float maxWrijving = 2486;
 	public float maxRem = 2500;
 	
@@ -86,9 +88,9 @@ public class Drone {
 		this.horStabilization = new Airfoil(0, tailMass/2, false, horStabLiftSlope, new Vector3f(0,0,tailSize),this);
 		this.verStabilization = new Airfoil(0, tailMass/2, true, verStabLiftSlope,  new Vector3f(0,0,tailSize),this);
 		
-		this.frontWheel = new Wheel(wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(0, wheelY, frontWheelZ),this);
-		this.leftWheel = new Wheel(wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(-rearWheelX, wheelY, rearWheelZ),this);
-		this.rightWheel = new Wheel(wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(rearWheelX, wheelY, rearWheelZ),this);
+		this.frontWheel = new Wheel(true,wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(0, wheelY, frontWheelZ),this);
+		this.leftWheel = new Wheel(false,wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(-rearWheelX, wheelY, rearWheelZ),this);
+		this.rightWheel = new Wheel(false,wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(rearWheelX, wheelY, rearWheelZ),this);
 		
 		
 		Vector3f engineRelLocation= this.getEngineLocation();
@@ -127,21 +129,21 @@ public class Drone {
 		+ ", hor:" +  outputs.getHorStabInclination()
 		+ ", ver:" +  outputs.getVerStabInclination(), 10);
 
-        setThrust(scaledThrust);
+        //setThrust(scaledThrust);
         
-        this.getLeftWing().updateInclinationAngle(0.0f);
-        this.getRightWing().updateInclinationAngle(0.0f);
-        this.getHorStabilizator().updateInclinationAngle(0.0f);        
-        this.getVerStabilizator().updateInclinationAngle(0.0f);
-        this.getEngine().setThrust(0f);
+//        this.getLeftWing().updateInclinationAngle(0.0f);
+//        this.getRightWing().updateInclinationAngle(0.0f);
+//        this.getHorStabilizator().updateInclinationAngle(0.0f);        
+//        this.getVerStabilizator().updateInclinationAngle(0.0f);
+//        this.getEngine().setThrust(0f);
 		
-//        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
-//        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
-//        this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
-//        this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
+        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
+        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
+        this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
+        this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
         this.getEngine().setThrust(scaledThrust);
 
-		this.frontWheel.update(0000, time);
+		this.frontWheel.update(2000, time);
 	    this.leftWheel.update(2000, time);
 	    this.rightWheel.update(2000, time);
  
@@ -407,10 +409,10 @@ public class Drone {
 		
 		//TODO getters 0
 		
-		//return this.pitch;
+		return this.pitch;
 		
 		
-		return 0;
+		//return 0;
 	}
 	
 	public void setRoll(float roll) {

@@ -203,6 +203,7 @@ public class DummyGame implements IGameLogic {
 
     @Override
     public void update(float interval, MouseInput mouseInput) {
+    	totTime += interval;
 	    gui.update();
 	    // Update camera positie
 	    cameraFree.movePosition(cameraInc.x * CAMERA_POS_STEP,
@@ -217,7 +218,7 @@ public class DummyGame implements IGameLogic {
     	if (startSimulation && simulationEnded == false) {
 	    	
     		if(sendConfig == true){
-    			timer.init();
+    			//timer.init();
     			//Maak config file aan voor de autopilot
     	        Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
     	        							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
@@ -226,7 +227,7 @@ public class DummyGame implements IGameLogic {
     	        							drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
     	        							drone.maxRem, drone.maxWrijving);
     	        //Maak eerste input aan voor autopilot
-    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getState().getX(), drone.getState().getY(), drone.getState().getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), timer.getTot());
+    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getState().getX(), drone.getState().getY(), drone.getState().getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), totTime());
     	        //Start de simulatie in autopilot
     	        AutopilotOutputs outputs = comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
     	        //Update de drone
@@ -236,10 +237,10 @@ public class DummyGame implements IGameLogic {
     		
 	        //Roep een timePassed op in Autopilot
 
-	        float time = timer.getTot();
+	        float time = totTime();
 	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getState().getX(), drone.getState().getY(), drone.getState().getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
 	        
-	        System.out.println("TIME" + time);
+	        //System.out.println("TIME" + time);
 	        
 	        //Update de drone
 	        //System.out.println("LASTLOOPTIME" + timer.getElapsedTime());
@@ -390,6 +391,10 @@ public class DummyGame implements IGameLogic {
     public void render(Window window) throws Exception {
         renderer.render(window, camera, cameraFree, cameraPlane, cameraSide, cameraTop, gameItems);
     }
+    
+    public float totTime(){
+    	return totTime;
+    }
 
 
     @Override
@@ -400,4 +405,6 @@ public class DummyGame implements IGameLogic {
         }
         comm.simulationEnded();
     }
+    
+    private float totTime = 0;
 }
