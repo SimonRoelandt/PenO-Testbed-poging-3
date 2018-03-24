@@ -104,7 +104,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
 	public void print(Object obj, int priority){
-		if(priority >= 10){
+		if(priority >= 20){
 			System.out.println("PRINTLOG: "+ obj);
 		}
 	}
@@ -164,7 +164,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	
 	public Vector3f getDroneResultingMomentInWorld(Drone drone, float time){
-		System.out.println(" DRONE RESULTING MOMENT IN WORLD ---------------------------");
+		System.out.println(" ---->  DRONE RESULTING MOMENT IN WORLD ---------------------------");
 		Vector3f momentVector = new Vector3f(0, 0, 0);
 		DronePart[] partArray = drone.getDroneParts();
 		
@@ -177,13 +177,13 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 			
 			Vector3f moment = this.getMoment(posVectorInWorld, forceVector);
 			
-			print("calc moment: " + posVectorInWorld + " " + forceVector +" resulted in " + moment, 3);
-			momentVector = sum(momentVector, moment);
+			//print("calc moment: " + posVectorInWorld + " " + forceVector +" resulted in " + moment, 3);
+			momentVector = new Vector3f(0,0,0); // sum(momentVector, moment);
 		}
 		
-		print("---Resulting Moment: " + momentVector, 3);		
+		print("---RESULTING MOMENT IS: " + momentVector, 30);		
 		return momentVector;
-	}
+			}
 	
 	
 		
@@ -196,7 +196,6 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		Vector3f droneResultingMoment = this.getDroneResultingMomentInWorld(drone,time);
 		
-		System.out.println("RESULTING MOMENT" + droneResultingMoment);
 		
 		Vector3f angularVelocity = drone.getState().getAngularRotation();
 		
@@ -213,7 +212,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		print("moment is " + droneResultingMoment, 3);
 		print("imoi is " + inverseMomentOfInertia, 3);
-		print("ang acc is " + angularAcceleration, 3);
+		print("RESULTING ANG ACC IS" + angularAcceleration, 30);
 	
 		return angularAcceleration; 	
 	}
@@ -242,7 +241,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		print("-- total droneAngularRotationInWorld is: " + droneAngularRotationInWorld, 3);
 		print("-- total at is: " + at, 3);
-		print("-- total ang vel is: " + v, 3);
+		print("RESULTING ANG VEL IS: " + v, 30);
 		
 		newAngularVelocityInWorld = v;
 		return v;
@@ -252,9 +251,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	private float[] getHPRVelocity(Drone drone, float time){
 		//TODO controleren
 		Vector3f angularVelocityInWorld = this.newAngularVelocityInWorld;
-		
-		System.out.println("ANGULARVELOCITY" + angularVelocityInWorld);
-		
+				
 		float wx = angularVelocityInWorld.getX();
 		float wy = angularVelocityInWorld.getY();
 		float wz = angularVelocityInWorld.getZ();
@@ -278,6 +275,11 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		float rollRate = wz*cosh/cosp + wx*sinh/cosp;
 		
 		float[] rates = new float[] {headingRate, pitchRate, rollRate};
+
+		
+		print("RESULTING HPR Rate IS: " + rates[0] + " " + rates[1] + " " + rates[2] , 30);
+
+		
 		return rates;
 	}
 	

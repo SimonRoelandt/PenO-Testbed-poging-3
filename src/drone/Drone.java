@@ -193,9 +193,13 @@ public class Drone {
 		//HEADING
 		
 		float newHeading = this.getHeading() + (this.getHeadingVel() * time);
+		this.fysica.print("-- NEW HEADING IS:" + newHeading, 30);
+
 		this.setHeading(newHeading);
 		
 		float newHeadingRate = fysica.getNewHeadingRate(this, time);
+		this.fysica.print("-- NEW HEADING rate IS:" + newHeadingRate, 30);
+
 		this.setHeadingVel(newHeadingRate);
 		
 		
@@ -203,13 +207,13 @@ public class Drone {
 		
 		float newPitch = this.getPitch() + this.getPitchVel() * time;
 		this.setPitch(newPitch);
+		this.fysica.print("-- NEW PITCH IS:" + newPitch, 30);
+
 		
 		float newPitchRate = fysica.getNewPitchRate(this, time);
+		this.fysica.print("-- NEW PITCHRATE IS:" + newPitchRate, 30);
+
 		this.setPitchVel(newPitchRate);
-		
-		System.out.println("PITCH AND PITCHRATE");
-		System.out.println(fysica.getNewPitchRate(this, time));
-		System.out.println(this.getPitchVel());
 		
 		//ROLL
 		
