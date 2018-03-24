@@ -14,8 +14,6 @@ public class State {
 	}
 	
 	public void setPosition(Vector3f position) {
-		this.nextState = new State();
-
 		this.position = position;
 	}
 	
@@ -50,6 +48,53 @@ public class State {
 		this.angularOrientation = angularOrientation;
 	}
 	
+	//ANGULAR HPR
+	
+	public Vector3f getHPR() {
+		return this.hpr;
+	}
+	
+	public void setHPR(Vector3f hpr) {
+		this.hpr = hpr;
+	}
+	
+	public float getHeading(){
+		return getHPR().getX();
+	}
+	
+	public float getPitch(){
+		return getHPR().getY();
+	}
+	
+	public float getRoll(){
+		return getHPR().getZ();
+	}
+	
+	
+	//ANGULAR HPR rates
+	
+		public Vector3f getHPRrates() {
+			return this.hprRates;
+		}
+		
+		public void setHPRrates(Vector3f hprRates) {
+			this.hprRates = hprRates;
+		}
+		
+		public float getHeadingRate(){
+			return getHPRrates().getX();
+		}
+		
+		public float getPitchRate(){
+			return getHPRrates().getY();
+		}
+		
+		public float getRollRate(){
+			return getHPRrates().getZ();
+		}
+	
+	
+	
 	//ANGULAR ROTATION
 	public Vector3f getAngularRotation() {
 		return new Vector3f();
@@ -63,13 +108,13 @@ public class State {
 	
 	
 	private Vector3f position;
+	private Vector3f hpr = new Vector3f(0,0,0);
+	private Vector3f hprRates = new Vector3f(0,0,0);;
+
 	private Vector3f velocity;
 	
 	private Vector3f angularOrientation;
-	private Vector3f angularRotation;
-
-	private State nextState;
-	
+	private Vector3f angularRotation;	
 	
 
 }

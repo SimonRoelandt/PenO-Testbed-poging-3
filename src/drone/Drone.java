@@ -174,58 +174,39 @@ public class Drone {
         newState.setPosition(fysica.getNewPositionInWorld(this, time));
         
         newState.setAngularRotation(fysica.getNewAngularVelocityInWorld(this, time));
-      //  this.state.setNextAngularOrienation(fysica.get);
         
-       /* this.fysica.print("updating new pos and vel --- ", 12);
-        //UPDATE POSITION AND VELOCITY IN WORLD
-		Vector3f p = fysica.getNewPositionInWorld(this, time);
-		
-		
-		Vector3f v = fysica.getNewVelocityInWorld(this, time);
-		
-		
-        this.fysica.print("stop updating new pos and vel", 12);
-*/
         
-        //UPDATE HEAD PITCH ROLL POSITION AND RATE 
-		//this.setAngularVelocityInWorld(fysica.getNewAngularVelocityInWorld(this, time));
-		
-		//HEADING
-		
-		float newHeading = this.getHeading() + (this.getHeadingVel() * time);
+        float newHeading = this.getHeading() + (this.getHeadingVel() * time);
 		this.fysica.print("-- NEW HEADING IS:" + newHeading, 30);
-
-		this.setHeading(newHeading);
-		
-		float newHeadingRate = fysica.getNewHeadingRate(this, time);
-		this.fysica.print("-- NEW HEADING rate IS:" + newHeadingRate, 30);
-
-		this.setHeadingVel(newHeadingRate);
-		
-		
-		//PITCH
 		
 		float newPitch = this.getPitch() + this.getPitchVel() * time;
 		this.setPitch(newPitch);
 		this.fysica.print("-- NEW PITCH IS:" + newPitch, 30);
-
-		
-		float newPitchRate = fysica.getNewPitchRate(this, time);
-		this.fysica.print("-- NEW PITCHRATE IS:" + newPitchRate, 30);
-
-		this.setPitchVel(newPitchRate);
-		
-		//ROLL
 		
 		float newRoll = this.getRoll() + this.getRollVel() * time;
 		this.setRoll(newRoll);
+		this.fysica.print("-- NEW ROLL IS:" + newRoll, 30);
+		
+		
+		//UPDATE STATE->HPR
+        Vector3f hpr = new Vector3f(newHeading, newPitch, newRoll);
+        newState.setHPR(hpr);
+		this.fysica.print("-- NEW STATE HPR IS:" + newState.getHPR(), 30);
+		
+		
+		//UPDATE STATE->HPRRATES
+		
+		float newHeadingRate = fysica.getNewHeadingRate(this, time);
+		this.fysica.print("-- NEW HEADING rate IS:" + newHeadingRate, 30);
+		
+		float newPitchRate = fysica.getNewPitchRate(this, time);
+		this.fysica.print("-- NEW PITCHRATE IS:" + newPitchRate, 30);
 		
 		float newRollRate = fysica.getNewRollRate(this, time);
-		this.setRollVel(newRollRate);
+		this.fysica.print("-- NEW ROLLRate IS:" + newRollRate, 30);
 		
-		
-		this.fysica.print("HPR: " + newHeading + newPitch + newRoll, 10);
-
+		Vector3f hprRates = new Vector3f(newHeadingRate, newRollRate, newPitchRate);
+		newState.setHPRrates(hprRates);
         this.state = newState;
 
 	}
@@ -401,7 +382,7 @@ public class Drone {
 	}
 
 	public float getHeading() {
-		return this.heading;
+		return this.getState().getHeading();
 	}
 	
 	public void setPitch(float pitch) {
@@ -413,7 +394,7 @@ public class Drone {
 		
 		//TODO getters 0
 		
-		return this.pitch;
+		return this.getState().getPitch();
 		
 		
 		//return 0;
@@ -426,7 +407,7 @@ public class Drone {
 	public float getRoll() {
 		
 		
-		return this.roll;
+		return this.getState().getRoll();
 		
 		
 		//return 0;
@@ -439,7 +420,7 @@ public class Drone {
 	public float getHeadingVel() {
 		
 		
-		return this.headingVel;
+		return this.getState().getHeadingRate();
 		
 		
 		//return 0;
@@ -452,7 +433,7 @@ public class Drone {
 	}
 	
 	public float getPitchVel() {
-		return this.pitchVel;
+		return this.getState().getPitchRate();
 	}
 	
 	public void setRollVel(float vel) {
@@ -460,7 +441,7 @@ public class Drone {
 	}
 	
 	public float getRollVel() {
-		return this.rollVel;
+		return this.getState().getRollRate();
 	}
 	
 	//Getters van alle finals
