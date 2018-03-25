@@ -129,13 +129,7 @@ public class Drone {
 		+ ", hor:" +  outputs.getHorStabInclination()
 		+ ", ver:" +  outputs.getVerStabInclination(), 10);
 
-        //setThrust(scaledThrust);
-        
-//        this.getLeftWing().updateInclinationAngle(0.0f);
-//        this.getRightWing().updateInclinationAngle(0.0f);
-//        this.getHorStabilizator().updateInclinationAngle(0.0f);        
-//        this.getVerStabilizator().updateInclinationAngle(0.0f);
-//        this.getEngine().setThrust(0f);
+ 
 		
         this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
@@ -146,25 +140,7 @@ public class Drone {
 		this.frontWheel.update(2000, time);
 	    this.leftWheel.update(2000, time);
 	    this.rightWheel.update(2000, time);
- 
-        // TOT HIER
-        System.out.println("thrust is " + scaledThrust);
-        
-        this.fysica.print("resulting force is:" + 
-        		this.fysica.totalForceOnDroneInWorld, 10);
-        
-        this.fysica.print("resulting acceleration is:" + 
-        		this.fysica.accelerationInWorld, 10);
-        
-        this.fysica.print("old speed is:" + 
-        		this.getState().getVelocity(), 10);
-        
-        this.fysica.print("a*t is:" + 
-        		this.fysica.product(time, this.fysica.accelerationInWorld), 10);
-       
-        this.fysica.print("resulting speed is:" + 
-        		this.fysica.newVelocityInWorld, 10);
-        
+
         
         //UPDATE STATE
       
@@ -181,31 +157,34 @@ public class Drone {
 		
 		float newPitch = this.getPitch() + this.getPitchVel() * time;
 		this.setPitch(newPitch);
-		this.fysica.print("-- NEW PITCH IS:" + newPitch, 30);
+		this.fysica.print("-- NEW PITCH IS:" + time + " . " + this.getPitchVel()  + " = " + newPitch, 30);
 		
 		float newRoll = this.getRoll() + this.getRollVel() * time;
 		this.setRoll(newRoll);
-		this.fysica.print("-- NEW ROLL IS:" + newRoll, 30);
+		this.fysica.print("-- NEW ROLL IS:" + time + " . " + this.getRollVel() +  " = " + newRoll, 30);
 		
 		
+		newHeading = this.fysica.clean(newHeading);
+		newPitch = this.fysica.clean(newPitch);
+		newRoll = this.fysica.clean(newRoll);
+
 		//UPDATE STATE->HPR
         Vector3f hpr = new Vector3f(newHeading, newPitch, newRoll);
         newState.setHPR(hpr);
-		this.fysica.print("-- NEW STATE HPR IS:" + newState.getHPR(), 30);
 		
 		
 		//UPDATE STATE->HPRRATES
 		
 		float newHeadingRate = fysica.getNewHeadingRate(this, time);
-		this.fysica.print("-- NEW HEADING rate IS:" + newHeadingRate, 30);
+		this.fysica.print("-- NEW HEADINGRATE IS:" + newHeadingRate, 30);
 		
 		float newPitchRate = fysica.getNewPitchRate(this, time);
 		this.fysica.print("-- NEW PITCHRATE IS:" + newPitchRate, 30);
 		
 		float newRollRate = fysica.getNewRollRate(this, time);
-		this.fysica.print("-- NEW ROLLRate IS:" + newRollRate, 30);
+		this.fysica.print("-- NEW ROLLRATE IS:" + newRollRate, 30);
 		
-		Vector3f hprRates = new Vector3f(newHeadingRate, newRollRate, newPitchRate);
+		Vector3f hprRates = new Vector3f(newHeadingRate, newPitchRate, newRollRate);
 		newState.setHPRrates(hprRates);
         this.state = newState;
 
@@ -387,7 +366,6 @@ public class Drone {
 	
 	public void setPitch(float pitch) {
 		this.pitch = fysica.clean(pitch);
-		System.out.println("PITCH LOL NEGATIEF MAAR NAAR BOVEN" + pitch);
 	}
 
 	public float getPitch() {

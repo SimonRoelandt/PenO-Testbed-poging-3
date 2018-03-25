@@ -50,6 +50,12 @@ public class GameItem {
 	}
 	
 	public void setRotation(float x, float y, float z) {
+		
+		x = (float) x*180/ (float) Math.PI;
+		y = (float) y*180/ (float) Math.PI;
+		z = (float) z*180/ (float) Math.PI;
+
+		
 		this.rotation.x = x;
 		this.rotation.y = y;
 		this.rotation.z = z;
