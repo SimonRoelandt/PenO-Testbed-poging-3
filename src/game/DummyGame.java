@@ -31,6 +31,8 @@ import autopilotLibrary.CommunicatieTestbed;
 
 
 public class DummyGame implements IGameLogic {
+	
+	
 
 	private static final float MOUSE_SENSITIVITY = 0.01f;
 	
@@ -58,7 +60,18 @@ public class DummyGame implements IGameLogic {
     
     private final float cubeScale = 5f;
     
-    private final Vector3f droneBeginPos = new Vector3f(0,15f,0);
+    
+    //INITIAL SETUPS
+    
+    private final Vector3f droneBeginPosinAir = new Vector3f(0,35,-550);
+    private final Vector3f droneBeginVelinAir = new Vector3f(0,7,-66);
+    
+    private final Vector3f droneBeginPosonGround = new Vector3f(0,1.33f,0);
+    private final Vector3f droneBeginVelonGround = new Vector3f(0,0,-10);
+
+    
+    private final Vector3f droneBeginPos = droneBeginPosonGround;
+    private final Vector3f droneBeginVel = droneBeginVelonGround;
     
     private Balk balk;
     
@@ -102,7 +115,7 @@ public class DummyGame implements IGameLogic {
         cameraTop.setPosition(20, 300, -50);
         cameraTop.setRotation(-90f, -90f, 0);
         timer = new Timer();
-        drone = new Drone(droneBeginPos.x, droneBeginPos.y, droneBeginPos.z, new Vector3f(0,0,0));
+        drone = new Drone(droneBeginPos.x, droneBeginPos.y, droneBeginPos.z, droneBeginVel);
         gui = new GUI(this);
     }
 

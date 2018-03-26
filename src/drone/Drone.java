@@ -59,7 +59,7 @@ public class Drone {
 
 	private static float wingLiftSlope = 10f;
 	private static float horStabLiftSlope = 5f;
-	private static float verStabLiftSlope = 5f;
+	private static float verStabLiftSlope = 0f;
 	
 //	private float xPos;
 //	private float yPos;
@@ -112,41 +112,52 @@ public class Drone {
 	public void update(AutopilotOutputs outputs,float time){
 		
 		System.out.println("========================================================================");
-		System.out.println("======================== UPDATE DRONE ==================================");
+		System.out.println("======================== - UPDATE DRONE - ==================================");
 		System.out.println("========================================================================");
 		
         float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
-        //float scaledThrust = 0;
         
         //OM TE TESTEN LATER WEGDOEN:
         
 		this.fysica.print("UPDATE with time= " +time, 10);
 		this.fysica.print("Autopilot outputs are: " 
-		+ ", scaled thrust:" + scaledThrust
-		+ ", thrust:" +  outputs.getThrust()
-		+ ", leftwing:" +  outputs.getLeftWingInclination()
-		+ ", rightwing:" +  outputs.getRightWingInclination()
-		+ ", hor:" +  outputs.getHorStabInclination()
-		+ ", ver:" +  outputs.getVerStabInclination(), 10);
+		+ "\n scaled thrust:" + scaledThrust
+		+ "\n thrust:" +  outputs.getThrust()
+		+ "\n leftwing:" +  outputs.getLeftWingInclination()
+		+ "\n rightwing:" +  outputs.getRightWingInclination()
+		+ "\n hor:" +  outputs.getHorStabInclination()
+		+ "\n ver:" +  outputs.getVerStabInclination()
+		+ "\n FRONT BRAKE FORECE: " + outputs.getFrontBrakeForce() 
+		+ "\n LEFT BRAKE FORECE: " + outputs.getLeftBrakeForce() 
+		+ "\n RIGHT BRAKE FORECE: " + outputs.getRightBrakeForce(), 
+		
+		40);
 
  
-		
         this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
         this.getEngine().setThrust(scaledThrust);
 
-		this.frontWheel.update(2000, time);
-	    this.leftWheel.update(2000, time);
-	    this.rightWheel.update(2000, time);
+        
+        this.frontWheel.update(outputs.getFrontBrakeForce(), time);
+	    this.leftWheel.update(outputs.getLeftBrakeForce(), time);
+	    this.rightWheel.update(outputs.getRightBrakeForce(), time);
+	    
 
         
         //UPDATE STATE
       
         State newState = new State();
         
+        Vector3f newVelocity = fysica.getNewVelocityInWorld(this, time);
+ 
+        if(newVelocity.getZ()>0) {
+        	newVelocity = new Vector3f(0,0,0);
+        }
         newState.setVelocity(fysica.getNewVelocityInWorld(this, time));
+        
         newState.setPosition(fysica.getNewPositionInWorld(this, time));
         
         newState.setAngularRotation(fysica.getNewAngularVelocityInWorld(this, time));
@@ -352,7 +363,11 @@ public class Drone {
 	}
 	
 	public DronePart[] getDroneParts() {
-		DronePart[] droneParts = {getLeftWing(), getRightWing(), getHorStabilizator(), getVerStabilizator(), getEngine(),getFrontWheel(),getLeftWheel(),getRightWheel()};
+		DronePart[] droneParts = {
+				getLeftWing(), 
+				getRightWing(), 
+				getHorStabilizator(), 
+				getVerStabilizator(), getEngine(),getFrontWheel(),getLeftWheel(),getRightWheel()};
 		return droneParts;
 	}
 		

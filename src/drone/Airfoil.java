@@ -30,7 +30,8 @@ public class Airfoil extends DronePart {
 		
 		float angleOfAttack = getAngleOfAttack();
 		
-		float speedSquared = projectedAirspeed.lengthSquared();
+		float speedSquared = Math.min(10e22f, projectedAirspeed.lengthSquared());
+		speedSquared = projectedAirspeed.lengthSquared(); 
 		
 		/*Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared), 
 				fysica.product(this.getLiftSlope(),normal));*/
@@ -41,7 +42,7 @@ public class Airfoil extends DronePart {
 
 		Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared * this.getLiftSlope()), 
 				normal);
-		
+				
 		return liftForce;
 	}
 	

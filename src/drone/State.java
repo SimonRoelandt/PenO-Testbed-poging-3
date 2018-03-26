@@ -10,9 +10,7 @@ public class State {
 	
 	//POSITION
 	public Vector3f getPosition() {
-		return new  Vector3f(0,20,0);
-
-		//return this.position;
+		return this.position;
 	}
 	
 	public void setPosition(Vector3f position) {
@@ -76,7 +74,7 @@ public class State {
 	//ANGULAR HPR rates
 	
 		public Vector3f getHPRrates() {
-			return this.hprRates;
+			return  this.hprRates;
 		}
 		
 		public void setHPRrates(Vector3f hprRates) {

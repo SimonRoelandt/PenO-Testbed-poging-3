@@ -104,18 +104,23 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
 	public void print(Object obj, int priority){
-		if(priority >= 20){
+		if(priority >= 40){
 			System.out.println("PRINTLOG: "+ obj);
 		}
 	}
 	
 	public Vector3f getTotalForceOnDroneInWorld(Drone drone, float time) {
+		print("TOTAL FORCE CALC ", 50);
+		
 		DronePart[] partArray = drone.getDroneParts();
 		Vector3f v = new Vector3f(0,0,0);
 		for (DronePart part: partArray) {
+			print("TOTAL FORCE of dronepart at  " + part.getRelativePosition() +" is " + part.getTotalForceInWorld(time), 50);
 			v = sum(part.getTotalForceInWorld(time), v);
 		}
 		totalForceOnDroneInWorld = v;
+		print("TOTAL FORCE is " + v, 50);
+
 		return v;
 	}
 	
@@ -125,6 +130,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f acceleration = product(1/mass,force);
 		
 		accelerationInWorld = acceleration;
+		print("ACC is " + acceleration, 50);
+
 		return acceleration;
 	}
 	
@@ -135,6 +142,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f droneVelocityInWorld = drone.getState().getVelocity();
 		Vector3f v = sum(droneVelocityInWorld, at);		
 		newVelocityInWorld = v;
+		print("VEL is " + newVelocityInWorld, 50);
+
 		return v;
 	}
 	
@@ -161,23 +170,28 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	public Vector3f getDroneResultingMomentInWorld(Drone drone, float time){
 		Vector3f momentVector = new Vector3f(0, 0, 0);
 		DronePart[] partArray = drone.getDroneParts();		
+		print("START RESULTNG MOMENT CALC: " + momentVector, 40);		
+
 		for (DronePart part: partArray) {
 			Vector3f posVector = part.getRelativePosition();
 			Vector3f posVectorInWorld = this.convertToWorld(drone, posVector);
 			Vector3f forceVector = part.getTotalForceInWorld(time);
 			
 			Vector3f moment = this.getMoment(posVectorInWorld, forceVector);
+			print(" MOMENT of dronepart at "+ posVector + " IS: " + moment, 40);		
+
 			
 			 momentVector = sum(momentVector, moment);
 		}
-		
-		momentVector = new Vector3f(-100000,0,0);
-		
-		print("RESULTING MOMENT IS: " + momentVector, 30);		
+				
+		print("RESULTING MOMENT IS: " + momentVector, 40);		
 		return momentVector;
 	
 	}
 	
+	public Vector3f zeroVec() {
+		return new Vector3f(0,0,0);
+	}
 	
 		
 	public Vector3f getAngularAccelerationInWorld(Drone drone, float time){
