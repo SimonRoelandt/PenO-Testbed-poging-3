@@ -98,9 +98,9 @@ public class DummyGame implements IGameLogic {
     private Ground ground;
     
     //TODO
-    private float xRenderDistance = 1500;
+    private float xRenderDistance = 5000;
     
-    private float zRenderDistance = 1500;
+    private float zRenderDistance = 5000;
     
     private float groundPieceWidth;
     
@@ -400,8 +400,6 @@ public class DummyGame implements IGameLogic {
     }
     
     public void readCubesFromFile(File file) {
-    	gameItems.clear();
-    	gameItems.add(droneItem);
     	CubeLoader cl = new CubeLoader();
     	cl.generatePositions(file);
     	for (int i = 0; i < cl.xpos.size(); i++) {

@@ -13,7 +13,7 @@ public class Ground {
 	
 	private float width;
 	private float lenght;
-	private float widthPiece = 75;
+	private float widthPiece = 200;
 	private float xMaxCoordinate;
 	private float zMaxCoordinate;
 	private float xMinCoordinate;
