@@ -31,9 +31,8 @@ import autopilotLibrary.CommunicatieTestbed;
 
 
 public class DummyGame implements IGameLogic {
-	
-	
 
+	
 	private static final float MOUSE_SENSITIVITY = 0.01f;
 	
     public final Renderer renderer;
@@ -59,9 +58,9 @@ public class DummyGame implements IGameLogic {
     private GameItem droneItem;
     
     private final float cubeScale = 5f;
-    
-    
-    //INITIAL SETUPS
+
+ 
+        //INITIAL SETUPS
     
     private final Vector3f droneBeginPosinAir = new Vector3f(0,35,-550);
     private final Vector3f droneBeginVelinAir = new Vector3f(0,7,-66);
@@ -73,8 +72,9 @@ public class DummyGame implements IGameLogic {
     private final Vector3f droneBeginPos = droneBeginPosonGround;
     private final Vector3f droneBeginVel = droneBeginVelonGround;
     
+
     private Balk balk;
-    
+
     private Mesh mesh;
     
     private Vector3f afstand = new Vector3f();
@@ -94,6 +94,23 @@ public class DummyGame implements IGameLogic {
     public boolean simulationEnded = false;
     
     public boolean sendConfig = false;
+    
+    private Ground ground;
+    
+    //TODO
+    private float xRenderDistance = 1500;
+    
+    private float zRenderDistance = 1500;
+    
+    private float groundPieceWidth;
+    
+    private float xMaxCoordinate;
+    
+    private float zMaxCoordinate;
+    
+    private float xMinCoordinate;
+    
+    private float zMinCoordinate;
     
     
 
@@ -133,7 +150,7 @@ public class DummyGame implements IGameLogic {
         
         //Drone Item
         
-        Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black);
+        Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black, false);
         //Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
         Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
         GameItem droneItem = new GameItem(meshDrone,false, false);
@@ -146,7 +163,7 @@ public class DummyGame implements IGameLogic {
        
         
         //Kubussen
-        balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, Color.red);
+        balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, Color.red, false);
         Texture balkTexture = null;
         mesh = new Mesh(balk.positions(), balk.colours(), balk.indices(), new float[]{}, balkTexture);
         createMesh(Color.red);
@@ -186,12 +203,27 @@ public class DummyGame implements IGameLogic {
        
        //wereld
 
+       /*
        Ground ground = new Ground();
        Mesh groundMesh = new Mesh(ground.vertices(), ground.colours(), ground.indices(), ground.textCoords(), ground.texture);
        GameItem groundItem = new GameItem(groundMesh, false, true);
        groundItem.setId(ground.texture.id);
        //System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ                   "  +  + "          QQQQQQQQQQQQQQQQQQQQQQQ");
        gameItems.add(groundItem);
+       */
+       
+       //TODO
+       ground = new Ground();
+       ground.generateStart(2*xRenderDistance, 2*zRenderDistance);
+       gameItems.addAll(ground.getListGroundItems());
+       groundPieceWidth = ground.getWidthPiece();
+       xMaxCoordinate = xRenderDistance - groundPieceWidth/2;
+       zMaxCoordinate = zRenderDistance - groundPieceWidth/2;
+       xMinCoordinate = -xRenderDistance + groundPieceWidth/2;
+       zMinCoordinate = -zRenderDistance + groundPieceWidth/2;
+       
+       //gameItems.add(ground.getGroundGameItem());
+       
     }
 
     @Override
@@ -393,7 +425,7 @@ public class DummyGame implements IGameLogic {
     }
     
     public void createMesh(Color color) {
-    	Balk createbalk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, color);
+    	Balk createbalk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, color, false);
     	meshList.add(new Mesh(createbalk.positions(), createbalk.colours(), createbalk.indices(),  new float[]{} , null));	
     }
     

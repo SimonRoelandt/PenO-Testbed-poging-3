@@ -19,7 +19,7 @@ public class Balk {
 	private Color color; 
 	
 
-	public Balk(float xpos, float ypos, float zpos, float length, float width, float heigth, Color color ) {
+	public Balk(float xpos, float ypos, float zpos, float length, float heigth, float width, Color color, boolean texture) {
 	this.xpos = xpos;
 	this.ypos = ypos;
 	this.zpos = zpos;
@@ -28,8 +28,8 @@ public class Balk {
 	this.heigth = heigth;
 	this.color = color;
 	
-	getAllColorFaces(color);
-	
+	if (!texture)
+		getAllColorFaces(color);
 	}
 	
 	public void getAllColorFaces(Color color) {
@@ -154,5 +154,41 @@ public class Balk {
 		};
 		
 		return indices;
+	}
+	
+	public float[] textCoords() {
+		float[] textCoords = new float[] {
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				
+		};
+		return textCoords;
 	}
 }
