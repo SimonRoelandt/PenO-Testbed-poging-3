@@ -4,6 +4,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import drone.Drone;
 import drone.DronePart;
+import drone.Wheel;
+
 import org.lwjgl.util.vector.Matrix3f;
 
 public class Fysica {
@@ -118,9 +120,19 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 			print("TOTAL FORCE of dronepart at  " + part.getRelativePosition() +" is " + part.getTotalForceInWorld(time), 50);
 			v = sum(part.getTotalForceInWorld(time), v);
 		}
+		
+		Vector3f prevV = v;
+		
+		v = sum(drone.getFrontWheel().getDronePartForce(prevV),v);
+		v = sum(drone.getLeftWheel().getDronePartForce(prevV),v);
+		v = sum(drone.getRightWheel().getDronePartForce(prevV),v);
+		
+		drone.getFrontWheel().setPrevWheelForce(drone.getFrontWheel().getDronePartForce(prevV));
+		drone.getLeftWheel().setPrevWheelForce(drone.getLeftWheel().getDronePartForce(prevV));
+		drone.getRightWheel().setPrevWheelForce(drone.getRightWheel().getDronePartForce(prevV));
+		
 		totalForceOnDroneInWorld = v;
 		print("TOTAL FORCE is " + v, 50);
-
 		return v;
 	}
 	
@@ -175,7 +187,12 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		for (DronePart part: partArray) {
 			Vector3f posVector = part.getRelativePosition();
 			Vector3f posVectorInWorld = this.convertToWorld(drone, posVector);
+			
 			Vector3f forceVector = part.getTotalForceInWorld(time);
+			if(part instanceof Wheel){
+				System.out.println("WHEEL MOMENT");
+				forceVector = ((Wheel) part).getPrevWheelForce();
+			}
 			
 			Vector3f moment = this.getMoment(posVectorInWorld, forceVector);
 			print(" MOMENT of dronepart at "+ posVector + " IS: " + moment, 40);		
@@ -184,13 +201,14 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 			 momentVector = sum(momentVector, moment);
 		}
 				
-		print("RESULTING MOMENT IS: " + momentVector, 40);		
-		return momentVector;
+		print("RESULTING MOMENT IS: " + momentVector, 40);	
+		return(new Vector3f(00000.0f,50000.0f,0.0f));
+		//return momentVector;
 	
 	}
 	
 	public Vector3f zeroVec() {
-		return new Vector3f(0,0,0);
+		return new Vector3f(0,0,0); 
 	}
 	
 		

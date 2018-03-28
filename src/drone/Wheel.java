@@ -10,12 +10,14 @@ public class Wheel extends DronePart {
 	private float BrakeForce;
 	private float maxWrijving;
 	private float D = 0;
+	private float maxRem;
 	private float lastD = 0;
 	private Vector3f wheelForce;
 	private Vector3f wrijvingForce = new Vector3f(0.0f,0.0f,0.0f);
 	private boolean front;
+	private Vector3f prevWheelForce;
 
-	public Wheel(boolean front, float tyreRadius, float tyreSlope , float dampSlope,  float maxWrijving, Vector3f relativePosition, Drone drone) {		
+	public Wheel(boolean front, float tyreRadius, float tyreSlope , float dampSlope,  float maxWrijving,float maxRem, Vector3f relativePosition, Drone drone) {		
 		setFront(front);
 		setTyreRadius(tyreRadius);
 		setDampslope(dampSlope);
@@ -23,7 +25,8 @@ public class Wheel extends DronePart {
 		setDrone(drone);
 		setRelativePosition(relativePosition);
 		setMaxWrijvingsCoeff(maxWrijving);
-		setBrakeForce(0); // standaard in de lucht
+		setMaxRem(maxRem);
+		setBrakeForce(0);
 		setWheelForce(new Vector3f(0.0f,0.0f,0.0f));
 		setWrijvingForce(new Vector3f(0.0f,0.0f,0.0f));
 		setD(0);
@@ -32,11 +35,9 @@ public class Wheel extends DronePart {
 	public void update(float brakeForce, float time){
 		setBrakeForce(brakeForce);
 		setLastD(getD());
-		//System.out.println("OLD D: " + getD());
 		setD(calcNewD());
-		// System.out.println("NEW D: " + getD());
 		setWheelForce(getNewWheelForce(time));
-		//setWrijvingForce(getNewWrijvingForce(time));
+		setWrijvingForce(getNewWrijvingForce(time));
 	}
 	
 	private void setD(float D) {
@@ -71,7 +72,6 @@ public class Wheel extends DronePart {
 		return this.tyreslope;
 	}
 	
-
 	public void setDampslope(float dampSlope){
 		this.dampslope = dampSlope;
 	}
@@ -96,24 +96,17 @@ public class Wheel extends DronePart {
 	
 	public float calcNewD(){
 		if(isGround()){
-//			return (this.drone.getState().getY()+this.getRelativePosition().getY());
 			return getAbsolutePositionInWorld().getY() - getTyreRadius();
-//			float gravForce = getDrone().getGravity()*getDrone().getTotalMass();
-//			return - (gravForce / getDampSlope());
 		}
 		else return 0.0f;
 	}
 	
-	
 	private Vector3f getNewWheelForce(float time) {
-//			if (this.drone.getYPos() < -this.getRelativePosition().getY())
-//				return null; //CRASH
-//			else
 		if(isGround()){
 			if(time == 0.0) return new Vector3f(0,0,0);
 			float force = Math.abs((this.getTyreSlope()*D) 
 						+ this.getDampSlope()*(D-lastD)/time);
-			return new Vector3f(0,force,0); //afgeleide nog doen
+			return new Vector3f(0,force,0);
 		}
 		else return new Vector3f(0,0,0);
 	}
@@ -123,53 +116,40 @@ public class Wheel extends DronePart {
 			return new Vector3f(0,0,0);
 		}
 		if(isGround() ){
-			Vector3f normaliseSpeed = null;
-			
-			
 			float x_speed = this.getDrone().getState().getVelocity().length(); // TODO draaining rond y-as meerekening
-			
-			
-//			System.out.println("SPEEEd" + this.getWheelForce());
-//			System.out.println(this.getWheelForce().length());
-//			System.out.println(x_speed + "X_SPEED");
-//			
-//			
 			float scalar = this.getWheelForce().length()*this.getMaxWrijvingsCoeff()*x_speed;
-			
-//			System.out.println("scalar " + scalar);
-//			
-//			normaliseSpeed = this.getDrone().getState().getVelocity().normalise(normaliseSpeed); //.normalise(normaliseSpeed);
-//			
-//			System.out.println(normaliseSpeed);
-//			
-//			return fysica.product(scalar,normaliseSpeed);
-			
 			float heading = getDrone().getHeading();
+			//System.out.println("WRIJVINGFORCE" + new Vector3f((float) (scalar*Math.sin(heading)),0.0f,(float) (scalar*Math.cos(heading))));
 			return new Vector3f((float) (scalar*Math.sin(heading)),0.0f,(float) (scalar*Math.cos(heading)));
 		}
-		else return new Vector3f(0,0,0);
+		
+		else {
+			return new Vector3f(0,0,0);
+		}
 	}
-
+	
+	public Vector3f getTotBrakeForce(Vector3f prevTotForce){
+		float brake = this.getBrakeForce();
+		float heading = getDrone().getHeading();	
+		double factor = (brake/this.getMaxRem());
+					
+		double xForce = -factor*prevTotForce.x*Math.sin(heading);
+		double zForce = -factor*prevTotForce.z*Math.cos(heading);
+				
+		Vector3f brakeForce = new Vector3f((float)xForce/3,0.0f,(float)zForce/3);
+		return brakeForce;
+	}
+	
 	@Override
 	public Vector3f getDronePartForce() {
+		return new Vector3f(0,0,0);
+	}
+
+	public Vector3f getDronePartForce(Vector3f prevTotForce) {
 		if(isGround()){
-			float brake = this.getBrakeForce();
-			Vector3f wrijving = this.getWrijvingForce();
-			Vector3f wheelforce = this.getWheelForce();
-			
 			Vector3f total = new Vector3f(0,0,0);
-			
-			// TODO WELKE RICHTING GAAT DE BRAKEFORCE UIT
-			// HOEK KAN NOG NEGATIEF ZIJN -> FOUTE KANT
-			float heading = getDrone().getHeading();
-			Vector3f brakeForce = new Vector3f((float) (brake*Math.sin(heading)),0.0f,(float) (brake*Math.cos(heading)));
-			
-			//System.out.println("BRAKEFORCE: " +brakeForce);
-			
-			Vector3f.add(brakeForce, wrijving, total);
-			Vector3f.add(total, wheelforce, total);
-			
-			// System.out.println("TOTAL WHEEL FORCE " + wheelforce);
+			Vector3f.add(this.getWheelForce(), this.getWrijvingForce(), total);
+			Vector3f.add(total, getTotBrakeForce(prevTotForce), total);
 			return total;
 		}
 		else return new Vector3f(0,0,0);
@@ -206,10 +186,20 @@ public class Wheel extends DronePart {
 	public void setFront(boolean front) {
 		this.front = front;
 	}
-	
-	// TO DO 
-	// D updaten 
-	// tijd gebruiken
-	// draaining rond y-as meerekening bij x-as
 
+	public float getMaxRem() {
+		return maxRem;
+	}
+
+	public void setMaxRem(float maxRem) {
+		this.maxRem = maxRem;
+	}
+
+	public Vector3f getPrevWheelForce() {
+		return prevWheelForce;
+	}
+
+	public void setPrevWheelForce(Vector3f prevWheelForce) {
+		this.prevWheelForce = prevWheelForce;
+	}
 }

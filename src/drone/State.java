@@ -104,9 +104,8 @@ public class State {
 	public void setAngularRotation(Vector3f angularRotation) {
 		this.angularRotation = angularRotation;
 	}
-	
-	
-	
+
+
 	private Vector3f position;
 	private Vector3f hpr = new Vector3f(0,0,0);
 	private Vector3f hprRates = new Vector3f(0,0,0);;
@@ -115,6 +114,4 @@ public class State {
 	
 	private Vector3f angularOrientation;
 	private Vector3f angularRotation;	
-	
-
 }

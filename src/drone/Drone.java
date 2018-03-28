@@ -33,7 +33,7 @@ public class Drone {
 	public float dampSlope = 5000f;
 	
 	
-	public float maxWrijving = 2486;
+	public float maxWrijving = 0.075f;
 	public float maxRem = 2500;
 	
 	//Waarden van de drone
@@ -88,9 +88,9 @@ public class Drone {
 		this.horStabilization = new Airfoil(0, tailMass/2, false, horStabLiftSlope, new Vector3f(0,0,tailSize),this);
 		this.verStabilization = new Airfoil(0, tailMass/2, true, verStabLiftSlope,  new Vector3f(0,0,tailSize),this);
 		
-		this.frontWheel = new Wheel(true,wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(0, wheelY, frontWheelZ),this);
-		this.leftWheel = new Wheel(false,wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(-rearWheelX, wheelY, rearWheelZ),this);
-		this.rightWheel = new Wheel(false,wheelRadius,tyreSlope,dampSlope,maxWrijving,new Vector3f(rearWheelX, wheelY, rearWheelZ),this);
+		this.frontWheel = new Wheel(true,wheelRadius,tyreSlope,dampSlope,maxWrijving,maxRem,new Vector3f(0, wheelY, frontWheelZ),this);
+		this.leftWheel = new Wheel(false,wheelRadius,tyreSlope,dampSlope,maxWrijving,maxRem,new Vector3f(-rearWheelX, wheelY, rearWheelZ),this);
+		this.rightWheel = new Wheel(false,wheelRadius,tyreSlope,dampSlope,maxWrijving,maxRem,new Vector3f(rearWheelX, wheelY, rearWheelZ),this);
 		
 		
 		Vector3f engineRelLocation= this.getEngineLocation();
