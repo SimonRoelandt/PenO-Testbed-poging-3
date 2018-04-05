@@ -27,7 +27,7 @@ import graph.Camera;
 import graph.Mesh;
 import graph.Texture;
 import interfaces.*;
-import autopilotLibrary.CommunicatieTestbed;
+import autopilotLibrary.MyAutopilotModule;
 
 
 public class DummyGame implements IGameLogic {
@@ -58,6 +58,10 @@ public class DummyGame implements IGameLogic {
     private GameItem droneItem;
     
     private final float cubeScale = 5f;
+    
+    public DronesController dronesController;
+
+    private Drone[] drones;
 
  
         //INITIAL SETUPS
@@ -84,9 +88,7 @@ public class DummyGame implements IGameLogic {
     private Timer timer;
     
     private GUI gui;
-    
-    private CommunicatieTestbed comm;
-    
+        
     private List<Mesh> meshList = new ArrayList<Mesh>();;
     
     public boolean startSimulation = false;
@@ -132,8 +134,15 @@ public class DummyGame implements IGameLogic {
         cameraTop.setPosition(20, 300, -50);
         cameraTop.setRotation(-90f, -90f, 0);
         timer = new Timer();
-        drone = new Drone(droneBeginPos.x, droneBeginPos.y, droneBeginPos.z, droneBeginVel);
+
         gui = new GUI(this);
+        
+        drones = DronesController.getDrones();
+
+    }
+    
+    public Drone[] getDrones() {
+    	return this.drones;
     }
 
 
@@ -143,21 +152,28 @@ public class DummyGame implements IGameLogic {
         gui.init();
         gui.run();
         this.window = window;
-        comm = new CommunicatieTestbed();
+       // comm = new CommunicatieTestbed();
         sendConfig = true;
         
         // Maak de gameItem meshes aan
         
         //Drone Item
         
-        Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black, false);
-        //Mesh meshDrone = new Mesh(droneVisual.positions(), droneVisual.colours(), droneVisual.indices());
-        Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
-        GameItem droneItem = new GameItem(meshDrone,false, false);
-        droneItem.setScale(0.5f);
-        droneItem.setRotation(0f, 0f, 0f);
-        droneItem.setPosition(droneBeginPos.x, droneBeginPos.y-1, droneBeginPos.z);
-        this.droneItem = droneItem;
+        for( Drone drone :drones) {
+
+            Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black, false);
+            Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
+            GameItem droneItem = new GameItem(meshDrone,false, false);
+            droneItem.setScale(0.5f);
+            droneItem.setRotation(0f, 0f, 0f);
+            droneItem.setPosition(droneBeginPos.x, droneBeginPos.y-1, droneBeginPos.z);
+
+
+            drone.setGameItem(droneItem);
+            //droneItems.add(droneItem);
+
+        }
+
         
        
        
@@ -197,9 +213,11 @@ public class DummyGame implements IGameLogic {
         
         //---------------------------------tot hier
         
-       //gameItems = worldGenerator(5);
-       gameItems.add(droneItem);
-      
+        for( Drone drone :drones) {
+
+           gameItems.add(drone.getGameItem());
+
+        }
        
        //wereld
 
@@ -262,100 +280,62 @@ public class DummyGame implements IGameLogic {
 	        
     	if (startSimulation && simulationEnded == false) {
 	    	
-    		if(sendConfig == true){
-    			//timer.init();
-    			//Maak config file aan voor de autopilot
-    	        Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
-    	        							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
-    	        							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(), 
-    	        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeight, "", drone.wheelY,
-    	        							drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
-    	        							drone.maxRem, drone.maxWrijving);
-    	        //Maak eerste input aan voor autopilot
-    	        Inputs input = new Inputs(renderer.getPixelsarray(), drone.getState().getX(), drone.getState().getY(), drone.getState().getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), totTime());
-    	        //Start de simulatie in autopilot
-    	        AutopilotOutputs outputs = comm.simulationStarted((AutopilotConfig)config,(AutopilotInputs)input);
-    	        //Update de drone
-    	        drone.update(outputs,0);
-    	        sendConfig = false;
-    		}
-    		
-	        //Roep een timePassed op in Autopilot
+    		  for(Drone drone: drones) {
+    		        GameItem droneItem = drone.getGameItem();
 
-	        float time = totTime();
-	        AutopilotOutputs outputs =  (Outputs) comm.timePassed((AutopilotInputs) new Inputs(renderer.getPixelsarray(), drone.getState().getX(), drone.getState().getY(), drone.getState().getZ(), drone.getHeading(), drone.getPitch(), drone.getRoll(), time));
-	        
-	        //System.out.println("TIME" + time);
-	        
-	        //Update de drone
-	        //System.out.println("LASTLOOPTIME" + timer.getElapsedTime());
-	        
-	        
-	        
-	        
-	        
-	        //drone.update(outputs,timer.getElapsedTime());
-	        drone.update(outputs, interval);
-	        
-	        
-	        
-	        
-	        
-//	        drone.setLeftWingInclination((float) 0.0);
-//	        drone.setRightWingInclination((float) 0.0);
-//	        drone.setHorStabInclination((float) 0.0);
-//	        drone.setVerStabInclination((float) 0.0);
-//	        drone.setThrust((float) 0.0);
-	
-	        //Vlieg recht door + gravitatie
-	        //System.out.println("Pos: " + drone.getPos());
-	        //System.out.println("Vel: " + drone.getVelocity());
-	        //drone.setVelocity(drone.getNewVelocity(timer.getElapsedTime()));
-	        droneItem.setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
-	        System.out.println("positie " + drone.getState().getX() + drone.getState().getY() + drone.getState().getZ());
-	        droneItem.setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
-	        
-	        //meer impressionant:
-	        //camera.setPosition(drone.getXPos(), drone.getYPos()+1f, drone.getZPos()+0.4f);
-	        
-	        //volgens opgave:
-	        camera.setPosition(drone.getState().getX(), drone.getState().getY()+1, drone.getState().getZ()+2);
-	        camera.setRotation(0,0,0);
-	        
-	        cameraSide.setPosition(30 + drone.getState().getX(), cameraSide.getPosition().y,-50 + drone.getState().getZ());
-	        cameraTop.setPosition(20  + drone.getState().getX(), cameraTop.getPosition().y, -50 + drone.getState().getZ());
-	        
-	        //cameraTop.movePosition(drone.getState().getX(),drone.getState().getY(),drone.getState().getZ());
-	        
-	        
-	        cameraPlane.setPosition(drone.getState().getX(), drone.getState().getY(), drone.getState().getZ());
-	        cameraPlane.setRotation(0f, 0f, 0f);
-	        
-	       // System.out.println(drone.getZPos() - gameItems[0].getPosition().z);
-	       //System.out.println("Vel: " + drone.getVelocity()); 
-	     
-	        
-	        //bepaalt wanneer de simulatie stopt
-	        boolean end = true;
-	        for(int i = 0 ; i < gameItems.size(); i++){
-	        	if(gameItems.get(i) != null && gameItems.get(i).getRenderOnPlaneView()){
-			        Vector3f.sub(drone.getState().getPosition(), gameItems.get(i).getPosition(), afstand);
-			        if (afstand.length()<4f) {
-			        	//System.out.println(timer.getTot() + "end");
-			       	    gameItems.remove(i);
-			       	    System.out.println("TARGET HIT");
-			        }
-	        	}
-	        	//if(gameItems.get(i).getRenderOnPlaneView() == true) end = false;
-	        }
-	        //if (end == true) window.simulationEnded = true;
-	        //if (end == true) simulationEnded = true;
-	        
-	        
-	//        if (timer.getTot() > 2000000) {
-	//        	System.out.println(timer.getTot());
-	//        	window.simulationEnded = true;
-	//        }
+    	    		if(sendConfig == true){
+    	    			//timer.init();
+    	    			//Maak config file aan voor de autopilot
+
+
+    	    	        Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
+    	    	        							drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
+    	    	        							drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(),
+    	    	        							renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeight, "", drone.wheelY,
+    	    	        							drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
+    	    	        							drone.maxRem, drone.maxWrijving);
+
+
+    	    	        //Maak eerste input aan voor autopilot
+
+    	    	        //Start de simulatie in autopilot
+
+
+    	    	        //Update de drone
+    	    	        sendConfig = false;
+    	    		}
+
+    		        //Roep een timePassed op in Autopilot
+
+    		        float time = totTime();
+    		        //drone.update(outputs,timer.getElapsedTime());
+
+
+    		        	Inputs input = new Inputs(
+    		        		renderer.getPixelsarray(),
+    		        		drone.getState().getX(),
+    		        		drone.getState().getY(),
+    		        		drone.getState().getZ(),
+
+    		        		drone.getHeading(),
+    		        		drone.getPitch(),
+    		        		drone.getRoll(),
+
+    		        		totTime());
+    		        	
+    		        	
+    		        	//DIT MOET NOG GEFIXT WORDEN (static non static error)
+    			        //MyAutopilotModule.startTimeHasPassed(drone.getId(), input);
+    			        //AutopilotOutputs outputs = MyAutopilotModule.completeTimeHasPassed(drone.getId());
+
+    			        //drone.update(outputs, time);
+
+    			        droneItem.setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
+    			        System.out.println("positie " + drone.getState().getX() + drone.getState().getY() + drone.getState().getZ());
+    			        droneItem.setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
+
+
+    		        }
 	    	}
     	else {
     		float f = timer.getElapsedTime();
@@ -446,7 +426,7 @@ public class DummyGame implements IGameLogic {
         for (GameItem gameItem : gameItems) {
             gameItem.getMesh().cleanUp();
         }
-        comm.simulationEnded();
+        //comm.simulationEnded();
     }
     
     private float totTime = 0;

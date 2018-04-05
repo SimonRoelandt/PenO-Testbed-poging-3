@@ -2,6 +2,8 @@
 
 import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Vector3f;
+
+import engine.GameItem;
 import interfaces.AutopilotOutputs;
 import fysica.Fysica;
 
@@ -77,6 +79,9 @@ public class Drone {
 	
 	private State state;
 	
+	private GameItem gameItem;
+
+	private int id;
 	
 	//-1.97864475 voor 1 wing
 	
@@ -106,6 +111,17 @@ public class Drone {
 		this.state = initState;
 	}
 	
+	public void setGameItem(GameItem gameItem) {
+		this.gameItem = gameItem;
+	}
+	
+	public GameItem getGameItem() {
+		return this.gameItem;
+	}
+	
+	public int getId() {
+		return this.id;
+	}
 	
 	
 	//UPDATE THE DRONE AT EVERY TIME STEP
