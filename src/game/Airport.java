@@ -9,11 +9,11 @@ public class Airport {
 	/**
 	 * Airport width.
 	 */
-	private float w = 60;
+	private float w;
 	/**
 	 * Airport length.
 	 */
-	private float l = 30;
+	private float l;
 	/**
 	 * Airport center x position in the world.
 	 */
@@ -40,15 +40,17 @@ public class Airport {
 	//    
 	//   lane 0   lane 1
 	
-	public Airport(float x, float z, float ori) {
+	public Airport(float x, float z, float ori, float w, float l, int id) {
 		setX(x);
 		setZ(z);
 		setOrientation(ori);
+		setW(w);
+		setL(l);
 	}	
 	
 	//FOR TESTING
 	public static void main(String[] args) {
-		Airport a = new Airport(200,200,(float) Math.PI/2);
+		Airport a = new Airport(200,200,(float) Math.PI/2, 30, 60, 0);
 		
 		float[] cord = a.getStartRunway0Corner();
 		System.out.println("X0start: " + cord[0] + " Y0start: " + cord[1]);
@@ -67,6 +69,20 @@ public class Airport {
 		float rotatedZ = (float) (getZ() + (x  * Math.sin(angle)) + (z * Math.cos(angle)));
 
 		return new float []{rotatedX, rotatedZ};
+	}
+	
+	/**
+	 * Gets the middle position of gate 0.
+	 */
+	public float[] getMiddleGate0(){
+		return getRotatedPoint(0,-getW()/2);
+	}
+	
+	/**
+	 * Gets the middle position of gate 1.
+	 */
+	public float[] getMiddleGate1(){
+		return getRotatedPoint(0,getW()/2);
 	}
 	
 	/**
