@@ -17,6 +17,11 @@ public abstract class DronePart {
 		return this.drone;
 	}
 	
+	public boolean checkCrash(){
+		if(getAbsolutePositionInWorld().y < 0) return true;
+		else return false;
+	}
+	
 	public void setDrone(Drone drone){
 		this.drone = drone;
 	}

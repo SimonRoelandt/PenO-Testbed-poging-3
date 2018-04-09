@@ -52,7 +52,7 @@ public class DummyGame implements IGameLogic {
     
     private static final float CAMERA_POS_STEP = 0.1f;
     
-    private List<GameItem> gameItems;
+    private ArrayList<GameItem> gameItems = new ArrayList<GameItem>();
     
     private final float cubeScale = 5f;
     
@@ -255,16 +255,25 @@ public class DummyGame implements IGameLogic {
 	    }
 	        
     	if (startSimulation && simulationEnded == false) {
-
+    		
+    		//Update Drones
     		droneController.startTimePassed(autopilotModule,renderer,totTime());
     		droneController.completeTimePassed(autopilotModule,interval);
-    	
+    		
+    		//Clean-up crashed drones.
+    		for(Drone d : droneController.getDrones()){
+    			if(d.checkCrash()) ; //TODO REMOVE DRONE
+    		}
+    		
+    		//Update visual drone objects
     		for(Drone drone: droneController.getDrones()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
     			drone.getGameItem().setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
     		}
     	}
     }
+    
+
     
     //Genereert n willekeurige kubussen
     public List<GameItem> worldGenerator(int n){

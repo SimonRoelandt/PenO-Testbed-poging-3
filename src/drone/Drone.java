@@ -123,6 +123,16 @@ public class Drone {
 		return this.id;
 	}
 	
+	/**
+	 * Checks if the drone is crashed.
+	 */
+	public boolean checkCrash(){
+		for(DronePart dp : this.getDroneParts()){
+			if(dp.checkCrash()) return true;
+		}
+		return false;
+	}
+	
 	
 	//UPDATE THE DRONE AT EVERY TIME STEP
 	public void update(AutopilotOutputs outputs,float time){

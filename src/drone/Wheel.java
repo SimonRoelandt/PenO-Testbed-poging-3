@@ -40,6 +40,13 @@ public class Wheel extends DronePart {
 		setWrijvingForce(getNewWrijvingForce(time));
 	}
 	
+	@Override
+	public boolean checkCrash(){
+		if(getAbsolutePositionInWorld().y < 0) return true;
+		else if(getD() > getTyreRadius()) return true;
+		else return false;
+	}
+	
 	private void setD(float D) {
 		this.D=D;
 	}

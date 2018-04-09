@@ -51,6 +51,32 @@ public class DronesController {
 		apModule.defineDrone(1, 0, 0, config);
 	}
 	
+    /**
+     * Checks if the given drone is crashed.
+     */
+	public boolean checkCrash(Drone drone){
+		if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
+			if(onTarmac(drone)){
+				if(drone.checkCrash()) return true;
+				else return false;
+			}
+			else return false;
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the given drone is on tarmac.
+	 */
+	private boolean onTarmac(Drone drone){
+		for (Airport ap : apController.getAirports()){
+			if(ap.onAirport(drone.getState().getX(), drone.getState().getY())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void startTimePassed(AutopilotModule autopilotModule, Renderer renderer, float time){
 		for(Drone drone : getDrones()){
 			Inputs input = new Inputs(

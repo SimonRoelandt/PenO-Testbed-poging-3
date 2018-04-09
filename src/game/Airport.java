@@ -60,7 +60,28 @@ public class Airport {
  	}
 	
 	/**
-	 * Calculates rotated position of the runway according to the orientation.
+	 * Checks if a position is on the airport.
+	 */
+	public boolean onAirport(float x, float y){
+		boolean onAirportX = false;
+		boolean onAirportY = false;
+		float[] a = getStartRunway0Corner();
+		float[] b = getEndRunway1Corner();
+		if(a[0] < b[0]){
+			if(x >= a[0] && x <= b[0]) onAirportX = true;
+		}
+		else if(x <= a[0] && x >= b[0]) onAirportX = true;
+		
+		if(a[1] < b[1]){
+			if(y >= a[1] && y <= b[1]) onAirportY = true;
+		}
+		else if(y <= a[1] && y >= b[1]) onAirportY = true;
+		
+		return (onAirportX && onAirportY);
+	}
+	
+	/**
+	 * Calculates rotated position of a position according to the orientation.
 	 */
 	public float[] getRotatedPoint(float x, float z){
 		float angle = getOrientation();
