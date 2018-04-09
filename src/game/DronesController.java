@@ -8,9 +8,20 @@ import interfaces.AutopilotOutputs;
 import interfaces.Config;
 import interfaces.Inputs;
 
+/**
+ * 
+ * A class of drone controllers.
+ *
+ */
 public class DronesController {
 	
+	/**
+	 * List of all drones.
+	 */
 	private ArrayList<Drone> drones = new ArrayList<Drone>();
+	/**
+	 * The airportController of the world.
+	 */
 	private AirportController apController;
 	
 	public DronesController(AirportController apController){
@@ -20,6 +31,9 @@ public class DronesController {
     	addDrone(new Drone(air1[0], 0, air1[1], new Vector3f(0,0,0)));
 	}
 	
+	/**
+	 * Defines the drones to the given autopilotModule.
+	 */
 	public void defineDrones(Renderer renderer, AutopilotModule apModule){
 //		for(Drone drone : getDrones()){
 //			Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
@@ -77,6 +91,9 @@ public class DronesController {
 		return false;
 	}
 	
+	/**
+	 * Starts a time passed for every drone in the given autopilotModule.
+	 */
 	public void startTimePassed(AutopilotModule autopilotModule, Renderer renderer, float time){
 		for(Drone drone : getDrones()){
 			Inputs input = new Inputs(
@@ -94,6 +111,9 @@ public class DronesController {
 		}
 	}
 	
+	/**
+	 * Completes a time passed in the given autopilotModule.
+	 */
 	public void completeTimePassed(AutopilotModule autopilotModule, float time){
 		for(Drone drone : getDrones()){
 			AutopilotOutputs output = autopilotModule.completeTimeHasPassed(drone.getId());

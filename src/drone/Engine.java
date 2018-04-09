@@ -2,6 +2,11 @@ package drone;
 
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * 
+ * A class of engine drone parts.
+ *
+ */
 public class Engine extends DronePart{
 
 	private float thrust;
@@ -15,6 +20,9 @@ public class Engine extends DronePart{
 		setRelativePosition(relativePosition);
 	}
 	
+	/**
+	 * Gets the thrust force of the engine.
+	 */
 	private Vector3f getThrust() {
 		Vector3f v1 = new Vector3f(0, 0 ,(float) - this.getThrustScalar());
 		return v1;

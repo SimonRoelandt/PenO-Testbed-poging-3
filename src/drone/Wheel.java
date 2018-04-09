@@ -2,6 +2,11 @@ package drone;
 
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * 
+ * A class of wheel drone parts.
+ *
+ */
 public class Wheel extends DronePart {
 
 	private float tyreRadius;
@@ -16,7 +21,7 @@ public class Wheel extends DronePart {
 	private Vector3f wrijvingForce = new Vector3f(0.0f,0.0f,0.0f);
 	private boolean front;
 	private Vector3f prevWheelForce;
-
+	
 	public Wheel(boolean front, float tyreRadius, float tyreSlope , float dampSlope,  float maxWrijving,float maxRem, Vector3f relativePosition, Drone drone) {		
 		setFront(front);
 		setTyreRadius(tyreRadius);
@@ -32,12 +37,15 @@ public class Wheel extends DronePart {
 		setD(0);
 	}
 	
+	/**
+	 * Updates the wheel parameters.
+	 */
 	public void update(float brakeForce, float time){
 		setBrakeForce(brakeForce);
 		setLastD(getD());
 		setD(calcNewD());
 		setWheelForce(getNewWheelForce(time));
-		setWrijvingForce(getNewWrijvingForce(time));
+		setWrijvingForce(getNewFrictionForce(time));
 	}
 	
 	@Override
@@ -47,60 +55,17 @@ public class Wheel extends DronePart {
 		else return false;
 	}
 	
-	private void setD(float D) {
-		this.D=D;
-	}
-	
-	public float getD() {
-		return this.D;
-	}
-	
-	private void setLastD(float lastD) {
-		this.lastD=lastD;
-	}
-	
-	public float getLastD(float lastD ) {
-		return this.lastD;
-	}
-	
-	private void setMaxWrijvingsCoeff(float maxWrijving) {
-		this.maxWrijving=maxWrijving;
-	}
-	
-	public float getMaxWrijvingsCoeff() {
-		return this.maxWrijving;
-	}
-	
-	public void setTyreslope(float liftslope){
-		this.tyreslope = liftslope;
-	}
-	
-	public float getTyreSlope() {
-		return this.tyreslope;
-	}
-	
-	public void setDampslope(float dampSlope){
-		this.dampslope = dampSlope;
-	}
-	
-	public float getDampSlope() {
-		return this.dampslope;
-	}
-	
-	public void setBrakeForce(float brakeForce) {
-		
-		this.BrakeForce=brakeForce;
-	}
-	
-	public float getBrakeForce() {
-		return this.BrakeForce;
-	}
-	
+	/**
+	 * Checks if the tire is on the ground.
+	 */
 	public boolean isGround(){
 		if(getAbsolutePositionInWorld().getY() <= getTyreRadius()) return true;
 		else return false;
 	}
 	
+	/**
+	 * Calculates the new D (amount tire has been pressed in)
+	 */
 	public float calcNewD(){
 		if(isGround()){
 			return getAbsolutePositionInWorld().getY() - getTyreRadius();
@@ -108,6 +73,9 @@ public class Wheel extends DronePart {
 		else return 0.0f;
 	}
 	
+	/**
+	 * Gets the new wheel force, the force the wheel exerts in the positive y direction.
+	 */
 	private Vector3f getNewWheelForce(float time) {
 		if(isGround()){
 			if(time == 0.0) return new Vector3f(0,0,0);
@@ -118,7 +86,10 @@ public class Wheel extends DronePart {
 		else return new Vector3f(0,0,0);
 	}
 
-	public Vector3f getNewWrijvingForce(float time) {
+	/**
+	 * Gets the new friction force.
+	 */
+	public Vector3f getNewFrictionForce(float time) {
 		if(isFront()){
 			return new Vector3f(0,0,0);
 		}
@@ -135,6 +106,9 @@ public class Wheel extends DronePart {
 		}
 	}
 	
+	/**
+	 * Gets the total brake force in the right directions: a factor of the previous total force of the drone.
+	 */
 	public Vector3f getTotBrakeForce(Vector3f prevTotForce){
 		float brake = this.getBrakeForce();
 		float heading = getDrone().getHeading();	
@@ -151,7 +125,10 @@ public class Wheel extends DronePart {
 	public Vector3f getDronePartForce() {
 		return new Vector3f(0,0,0);
 	}
-
+	
+	/**
+	 * Gets the total wheel part force: wheel force, friction force and brake force.
+	 */
 	public Vector3f getDronePartForce(Vector3f prevTotForce) {
 		if(isGround()){
 			Vector3f total = new Vector3f(0,0,0);
@@ -161,6 +138,8 @@ public class Wheel extends DronePart {
 		}
 		else return new Vector3f(0,0,0);
 	}
+	
+//------------GETTERS/SETTERS--------------------------------------------	
 
 	public float getTyreRadius() {
 		return tyreRadius;
@@ -208,5 +187,53 @@ public class Wheel extends DronePart {
 
 	public void setPrevWheelForce(Vector3f prevWheelForce) {
 		this.prevWheelForce = prevWheelForce;
+	}
+	
+	private void setD(float D) {
+		this.D=D;
+	}
+	
+	public float getD() {
+		return this.D;
+	}
+	
+	private void setLastD(float lastD) {
+		this.lastD=lastD;
+	}
+	
+	public float getLastD(float lastD ) {
+		return this.lastD;
+	}
+	
+	private void setMaxWrijvingsCoeff(float maxWrijving) {
+		this.maxWrijving=maxWrijving;
+	}
+	
+	public float getMaxWrijvingsCoeff() {
+		return this.maxWrijving;
+	}
+	
+	public void setTyreslope(float liftslope){
+		this.tyreslope = liftslope;
+	}
+	
+	public float getTyreSlope() {
+		return this.tyreslope;
+	}
+	
+	public void setDampslope(float dampSlope){
+		this.dampslope = dampSlope;
+	}
+	
+	public float getDampSlope() {
+		return this.dampslope;
+	}
+	
+	public void setBrakeForce(float brakeForce) {
+		this.BrakeForce=brakeForce;
+	}
+	
+	public float getBrakeForce() {
+		return this.BrakeForce;
 	}
 }

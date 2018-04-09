@@ -1,5 +1,10 @@
 package game;
 
+/**
+ * 
+ * A class of airports.
+ *
+ */
 public class Airport {
 	
 	/**
