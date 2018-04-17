@@ -80,7 +80,7 @@ public class GUI {
 		frame = new JFrame("Testbed Team Wit");
 		frame.setSize(400, 1200);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocation(1000, 20);
+		frame.setLocation(1300, 20);
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension dim = tk.getScreenSize();
 		frame.setLayout(new GridBagLayout());
