@@ -29,7 +29,7 @@ public class AirportController {
      */
 	public AirportController() {
         Airport air0 = new Airport(0,0,0,AIRPORT_W,AIRPORT_L,0);
-        Airport air1 = new Airport(2000,1000,(float) (Math.PI/4),AIRPORT_W,AIRPORT_L,1);
+        Airport air1 = new Airport(20,20,(float) (Math.PI/4),AIRPORT_W,AIRPORT_L,1);
         airports.add(air0);
         airports.add(air1);
 	}

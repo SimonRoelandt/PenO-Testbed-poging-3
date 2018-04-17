@@ -27,8 +27,8 @@ public class DronesController {
 	public DronesController(AirportController apController){
         float[] air0 = apController.getAirports().get(0).getMiddleGate0();
         float[] air1 = apController.getAirports().get(1).getMiddleGate0();
-        addDrone(new Drone(air0[0], 0, air0[1], new Vector3f(0,0,0)));
-    	addDrone(new Drone(air1[0], 0, air1[1], new Vector3f(0,0,0)));
+        addDrone(new Drone(air0[0], 1.32f, air0[1], new Vector3f(0,0,0)));
+    	addDrone(new Drone(air1[0], 1.32f, air1[1], new Vector3f(0,0,0)));
 	}
 	
 	/**
