@@ -26,7 +26,7 @@ public class Drone {
 	public Wheel rightWheel;
 	
 	//Wheel waarden
-	public float wheelY = -1.12f;
+	public final float wheelY = -1.12f;
 	public float frontWheelZ = -2.079f;
 	public float rearWheelZ = 0.959f;
 	public float rearWheelX = 1.24f;
@@ -34,7 +34,6 @@ public class Drone {
 	
 	public float tyreSlope = 50000f;
 	public float dampSlope = 5000f;
-	
 	
 	public float maxWrijving = 0.075f;
 	public float maxRem = 2500;
@@ -49,32 +48,10 @@ public class Drone {
 	
 	public float maxThrust = 100000;
 	public float maxAOA = (float) (Math.PI /12);
-	
-	
-//	private Vector3f positionInWorld = new Vector3f(0,0,0);
-//	
-//	private Vector3f velocityInWorld = new Vector3f(0,0,0);
-//
-//
-//	private Vector3f angularPositionInWorld = new Vector3f(0,0,0);
-//	private Vector3f angularVelocityInWorld = new Vector3f(0,0,0);
-	
 
 	private static float wingLiftSlope = 10f;
 	private static float horStabLiftSlope = 0.01f;
 	private static float verStabLiftSlope = 0f;
-	
-//	private float xPos;
-//	private float yPos;
-//	private float zPos;
-	
-	private float heading;
-	private float pitch;
-	private float roll;
-	
-	private float headingVel;
-	private float pitchVel;
-	private float rollVel;
 
 	private Matrix3f inertiaMatrix;
 	
@@ -87,8 +64,13 @@ public class Drone {
 	private Airport startingAirport;
 	private int startingGate;
 	
-	//-1.97864475 voor 1 wing
-	
+	/**
+	 * Create a new drone with the given id, at the given gate of the given airport, pointing to the given runway.
+	 * @param id
+	 * @param ap
+	 * @param gate
+	 * @param pointingToRunway
+	 */
 	public Drone(int id,Airport ap, int gate, int pointingToRunway){
 		
 		setId(id);
@@ -125,7 +107,7 @@ public class Drone {
 		this.state = initState;
 	}
 	
-	
+	//DEPRECATED
 	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {	
 		//SETTING DRONE PARTS
 		this.leftWing = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(-wingX,0,0),this);
@@ -151,24 +133,8 @@ public class Drone {
 		this.state = initState;
 	}
 	
-	public void setGameItem(GameItem gameItem) {
-		this.gameItem = gameItem;
-	}
-	
-	public GameItem getGameItem() {
-		return this.gameItem;
-	}
-	
-	public int getId() {
-		return this.id;
-	}
-	
-	public void setId(int id){
-		this.id = id;
-	}
-	
 	/**
-	 * Checks if the drone is crashed.
+	 * Checks in every drone part if the drone is crashed.
 	 */
 	public boolean checkCrash(){
 		for(DronePart dp : this.getDroneParts()){
@@ -178,7 +144,11 @@ public class Drone {
 	}
 	
 	
-	//UPDATE THE DRONE AT EVERY TIME STEP
+	/**
+	 * Updates the drone with the given outputs and the given elapsed time.
+	 * @param outputs
+	 * @param time
+	 */
 	public void update(AutopilotOutputs outputs,float time){
 		
 		System.out.println("========================================================================");
@@ -269,130 +239,50 @@ public class Drone {
 
 	}
 	
-	
-	public State getState() {
-		return this.state;
-	}
-	
-	//geeft alle airfoils + engine
-	public Airfoil getLeftWing() {
-		return this.leftWing;
-	}
-	
-	public Airfoil getRightWing() {
-		return this.rightWing;
-	}
-	
-	public Airfoil getHorStabilizator() {
-		return this.horStabilization;
-	}
-	
-	public Airfoil getVerStabilizator() {
-		return this.verStabilization;
-	}
-	
-	public Engine getEngine() {
-		return this.engine;
-	}
-	
-	public Wheel getFrontWheel(){
-		return this.frontWheel;
-	}
-	
-	public Wheel getLeftWheel(){
-		return this.leftWheel;
-	}
-	
-	public Wheel getRightWheel(){
-		return this.rightWheel;
-	}
-	
-	//
-	public float getThrust() {
-		return this.getEngine().getThrustScalar();
-	}
-	
-	public float getGravity() {
-		return Fysica.gravity;
-	}
-	
-	
-	
-	
-	//POSITION IN WORLD ---------------------------
-	
-//	public Vector3f getPositionInWorld() {
-//		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
-//		return v;
-//	}
-	
-//	public void setPositionInWorld(Vector3f pos) {
-//		this.xPos = pos.getX();
-//		this.yPos = pos.getY();
-//		this.zPos = pos.getZ();
-//	}
-//	
-//	public void setPositionInWorld(float x, float y, float z){
-//		this.xPos = x;
-//		this.yPos = y;
-//		this.zPos = z;
-//	}
-//	
-//	public void setXPos(float x) {
-//		this.xPos = x;
-//	}
-//	
-//	public float getXPos() {
-//		return this.xPos;
-//	}
-//	
-//	public void setYPos(float y) {
-//		this.yPos = y;
-//	}
-//	
-//	public float getYPos() {
-//		return this.yPos;
-//	}
-//	
-//	public void setZPos(float z) {
-//		this.zPos = z;
-//	}
-//	
-//	public float getZPos() {
-//		return this.zPos;
-//	}
-	
-	
-	//VELOCITY IN WORLD ---------------------------------------------------
-//	public void setVelocityInWorld(Vector3f vel) {
-//		this.velocityInWorld = vel;
-//	}
-//	
-//	public Vector3f getVelocityInWorld() {
-//		return this.velocityInWorld;
-//	}
-//	
-	
-	//ANGULAR POSITION IN WORLD
+	//INERTIA MATRICES
 
-//	public Vector3f getAngularPositionInWorld() {
-//		return this.angularPositionInWorld;
-//	}
-//	
-//	public void setAngularPositionInWorld(Vector3f angularPosition) {
-//		this.angularPositionInWorld = angularPosition;
-//	}
+	public void setInertiaMatrix() { // bij berekeningen transformeren naar wereldassenstelsel
+		Matrix3f inertiaMatrix = new Matrix3f();
+		
+		inertiaMatrix.m00= 
+				(float) (this.tailMass*Math.pow(this.tailSize,2) + 
+						this.engineMass*Math.pow(this.getEngineLocation().getZ(),2));//nieuwe functie aangemaakt met engineplace op basis van zwaartepunt
+		inertiaMatrix.m01=0f;
+		inertiaMatrix.m02=0f;
+		
+		inertiaMatrix.m10=0f;
+		inertiaMatrix.m11=(float) ((2*this.wingMass*Math.pow(this.wingX,2))+ (this.tailMass*Math.pow(this.tailSize,2)+this.engineMass*Math.pow(this.getEngineLocation().getZ(),2)));
+		inertiaMatrix.m12=0f;
+		
+		inertiaMatrix.m20=0f;
+		inertiaMatrix.m21=0f;
+		inertiaMatrix.m22=(float)(2*this.wingMass*Math.pow(this.wingX,2));
+		
+		this.inertiaMatrix=inertiaMatrix;
+		
+	}
+
+	//INERTIA MATRIX
 	
+	private Matrix3f getInertiaMatrix(){
+		return this.inertiaMatrix;
+	}
 	
-	//ANGULAR ROTATION IN WORLD
-	
-//	public Vector3f getAngularVelocityInWorld() {
-//		return this.angularVelocityInWorld;
-//	}
-//	
-//	public void setAngularVelocityInWorld(Vector3f angularRotation) {
-//		this.angularVelocityInWorld = angularRotation;
-//	}
+	public Matrix3f getIneriaMatrixInWorld(){
+		
+		Matrix3f inertiaMatrix = this.getInertiaMatrix();
+		
+		Matrix3f conversionMatrix = this.fysica.getRotationMatrix(this);
+		Matrix3f conversionMatrixInverted = new Matrix3f();
+		Matrix3f.transpose(conversionMatrix, conversionMatrixInverted);
+		
+		Matrix3f inertiaMatrixInWorld = new Matrix3f();
+		Matrix3f.mul(conversionMatrix, inertiaMatrix, inertiaMatrixInWorld);
+		Matrix3f.mul(inertiaMatrixInWorld, conversionMatrixInverted, inertiaMatrixInWorld);
+		
+		return inertiaMatrixInWorld;
+		
+	}
 	
 	public void setThrust(float thrust) {
 		this.getEngine().setThrust(thrust);
@@ -453,7 +343,6 @@ public class Drone {
 	
 	public float getHeadingVel() {	
 		return this.getState().getHeadingRate();
-
 	}
 	
 	public float getPitchVel() {
@@ -463,19 +352,6 @@ public class Drone {
 	public float getRollVel() {
 		return this.getState().getRollRate();
 	}
-	
-	//Getters van alle finals
-	
-	public float getWingX() {
-		return this.wingX;
-	}
-	
-	public float getTailSize() {
-		return tailSize;
-	}
-	
-	
-	//MASS FUNCTIONS
 	
 	public float getTotalMass(){
 		return this.getEngineMass() + 2*this.getWingMass()+this.getTailMass();
@@ -518,53 +394,6 @@ public class Drone {
 	public float getVerStabLiftSlope() {
 		return Drone.verStabLiftSlope;
 	}
-	
-	
-	
-	//INERTIA MATRICES
-
-	public void setInertiaMatrix() { // bij berekeningen transformeren naar wereldassenstelsel
-		Matrix3f inertiaMatrix = new Matrix3f();
-		
-		inertiaMatrix.m00= 
-				(float) (this.tailMass*Math.pow(this.tailSize,2) + 
-						this.engineMass*Math.pow(this.getEngineLocation().getZ(),2));//nieuwe functie aangemaakt met engineplace op basis van zwaartepunt
-		inertiaMatrix.m01=0f;
-		inertiaMatrix.m02=0f;
-		
-		inertiaMatrix.m10=0f;
-		inertiaMatrix.m11=(float) ((2*this.wingMass*Math.pow(this.wingX,2))+ (this.tailMass*Math.pow(this.tailSize,2)+this.engineMass*Math.pow(this.getEngineLocation().getZ(),2)));
-		inertiaMatrix.m12=0f;
-		
-		inertiaMatrix.m20=0f;
-		inertiaMatrix.m21=0f;
-		inertiaMatrix.m22=(float)(2*this.wingMass*Math.pow(this.wingX,2));
-		
-		this.inertiaMatrix=inertiaMatrix;
-		
-	}
-
-	//INERTIA MATRIX
-	
-	private Matrix3f getInertiaMatrix(){
-		return this.inertiaMatrix;
-	}
-	
-	public Matrix3f getIneriaMatrixInWorld(){
-		
-		Matrix3f inertiaMatrix = this.getInertiaMatrix();
-		
-		Matrix3f conversionMatrix = this.fysica.getRotationMatrix(this);
-		Matrix3f conversionMatrixInverted = new Matrix3f();
-		Matrix3f.transpose(conversionMatrix, conversionMatrixInverted);
-		
-		Matrix3f inertiaMatrixInWorld = new Matrix3f();
-		Matrix3f.mul(conversionMatrix, inertiaMatrix, inertiaMatrixInWorld);
-		Matrix3f.mul(inertiaMatrixInWorld, conversionMatrixInverted, inertiaMatrixInWorld);
-		
-		return inertiaMatrixInWorld;
-		
-	}
 
 	public Airport getStartingAirport() {
 		return startingAirport;
@@ -581,4 +410,73 @@ public class Drone {
 	public void setStartingGate(int startingGate) {
 		this.startingGate = startingGate;
 	}
+	
+	public void setGameItem(GameItem gameItem) {
+		this.gameItem = gameItem;
+	}
+	
+	public GameItem getGameItem() {
+		return this.gameItem;
+	}
+	
+	public int getId() {
+		return this.id;
+	}
+	
+	public void setId(int id){
+		this.id = id;
+	}
+	
+	public State getState() {
+		return this.state;
+	}
+	
+	public Airfoil getLeftWing() {
+		return this.leftWing;
+	}
+	
+	public Airfoil getRightWing() {
+		return this.rightWing;
+	}
+	
+	public Airfoil getHorStabilizator() {
+		return this.horStabilization;
+	}
+	
+	public Airfoil getVerStabilizator() {
+		return this.verStabilization;
+	}
+	
+	public Engine getEngine() {
+		return this.engine;
+	}
+	
+	public Wheel getFrontWheel(){
+		return this.frontWheel;
+	}
+	
+	public Wheel getLeftWheel(){
+		return this.leftWheel;
+	}
+	
+	public Wheel getRightWheel(){
+		return this.rightWheel;
+	}
+	
+	public float getThrust() {
+		return this.getEngine().getThrustScalar();
+	}
+	
+	public float getGravity() {
+		return Fysica.gravity;
+	}
+	
+	public float getWingX() {
+		return this.wingX;
+	}
+	
+	public float getTailSize() {
+		return tailSize;
+	}
+
 }

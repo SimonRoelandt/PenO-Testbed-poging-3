@@ -114,7 +114,7 @@ public class DronesController {
 	}
 	
 	/**
-	 * Completes a time passed in the given autopilotModule.
+	 * Completes a time passed for every drone in the given autopilotModule.
 	 */
 	public void completeTimePassed(AutopilotModule autopilotModule, float time){
 		for(Drone drone : getDrones()){
