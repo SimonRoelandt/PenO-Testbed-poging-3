@@ -15,17 +15,20 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import javax.swing.border.*;
 
 import org.lwjgl.util.vector.Vector3f;
 
 import drone.Airfoil;
+import drone.Drone;
 import drone.Engine;
 import engine.GameItem;
 
 import javax.swing.*;
 
+import game.DronesController;
 import game.DummyGame;
 
 public class GUI {
@@ -45,10 +48,18 @@ public class GUI {
 	JList<GameItem> list;
 	DefaultListModel<GameItem> listModel;
 	
+	ArrayList<Drone> drones;
+	
+    private DronesController dronesController;
+
+	
 	float xPos, yPos, zPos;
 	
 	public GUI(DummyGame dummyGame) {
 		this.dummyGame = dummyGame;
+		this.dronesController = this.dummyGame.droneController;
+		//this.drones = this.dronesController.getDrones();
+
 	}
 	
 	public void init() {	
@@ -85,12 +96,14 @@ public class GUI {
 		frame.add(panelValues, c);
 		
 		
-		
 		//panelen om in te vullen: 
 		panelConfig = new JPanel();
 		panelConfig.setLayout(new GridLayout(7,1));
 		Border configBorder = BorderFactory.createTitledBorder("Configuration");
 		panelConfig.setBorder(configBorder);
+		
+
+		/*
 		panelWingX = addLabelTextPanelConfig("WingX", dummyGame.drone.wingX);
 		panelWingX.tf.addActionListener(new ListenForWingX());
 		paneltailsize = addLabelTextPanelConfig("Tail Size", dummyGame.drone.tailSize);
@@ -113,6 +126,7 @@ public class GUI {
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelConfig, c);
 		
+		*/
 		
 		
 		//panel met view-buttons
@@ -247,6 +261,7 @@ public class GUI {
 	}
 	
 	public void update() {
+		/*
 		positie.labelValue.setText("(" + round(dummyGame.drone.getState().getPosition().x,2) +
 
 				", " + round(dummyGame.drone.getState().getPosition().y,2) + 
@@ -280,29 +295,14 @@ public class GUI {
 		aoa.labelValue.setText("(" + dummyGame.drone.leftWing.getAngleOfAttack() + ")");
 		//aoa.labelValue.setText("(" + round(dummyGame.drone.getAOA(),2) + ")");
 		
-		/*
-		listModel.clear();
-		if (dummyGame.getGameItems() != null) {
-			for (GameItem gameItem: dummyGame.getGameItems()) {
-				listModel.clear();
-				if (gameItem.getRenderOnPlaneView() == true)
-					listModel.addElement(gameItem);
-			}
-		}
 		*/
+		
 	}
 	
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	// LISTENERS
 	private class ListenForGenerate implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
