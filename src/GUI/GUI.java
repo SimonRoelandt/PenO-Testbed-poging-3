@@ -2,13 +2,15 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.LayoutManager;
 import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.*;
@@ -16,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.border.*;
 
@@ -36,7 +39,7 @@ public class GUI {
 	private JFrame frame;
 	JButton buttonPlane, buttonChase, buttonSide, buttonFree;
 	int buttonClicked;				
-	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove;
+	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove, panelChooseDrone;
 	JLabel label1, label2;
 	JTextField textfield1, textfield2;
 	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos;
@@ -48,9 +51,14 @@ public class GUI {
 	JList<GameItem> list;
 	DefaultListModel<GameItem> listModel;
 	
-	ArrayList<Drone> drones;
+	private ArrayList<Drone> drones;
 	
     private DronesController dronesController;
+    
+    private Drone currentDrone;
+    
+    private int droneAmount;
+    
 
 	
 	float xPos, yPos, zPos;
@@ -58,11 +66,16 @@ public class GUI {
 	public GUI(DummyGame dummyGame) {
 		this.dummyGame = dummyGame;
 		this.dronesController = this.dummyGame.droneController;
-		//this.drones = this.dronesController.getDrones();
+		this.drones = this.dronesController.getDrones();
+		currentDrone = drones.get(0);
+		droneAmount = drones.size();
 
 	}
 	
 	public void init() {	
+		
+		
+		
 		frame = new JFrame("Testbed Team Wit");
 		frame.setSize(400, 1000);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,6 +85,46 @@ public class GUI {
 		frame.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
+		
+		
+		
+		List<JButton> buttonDrones = new ArrayList<JButton>();
+		/*
+		for (Drone drone : drones) {
+			buttonDrones.add(new JButton())
+		}
+		
+		buttonPlane = new JButton("Plane");
+		buttonPlane.addActionListener(new ListenForPlaneButton());
+		buttonChase = new JButton("Chase");
+		buttonChase.addActionListener(new ListenForChaseButton());
+		buttonSide = new JButton("Ortho");
+		buttonSide.addActionListener(new ListenForSideButton());
+		buttonFree = new JButton("Custom");
+		buttonFree.addActionListener(new ListenForFreeButton());
+		
+		panelChooseDrone = new JPanel();
+		panelChooseDrone.setLayout(new GridLayout(1,droneAmount));
+		
+		panelViews.add(buttonFree);
+		panelViews.add(buttonChase);
+		panelViews.add(buttonPlane);
+		panelViews.add(buttonSide);
+		
+		Border viewBorder = BorderFactory.createTitledBorder("Views");
+		panelViews.setBorder(viewBorder);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.insets = new Insets(20,0,0,0); 
+		frame.add(panelViews, c);
+		*/
+		
+		
+		
+		
 		
 		
 		
@@ -351,24 +404,40 @@ public class GUI {
 	private class ListenForPlaneButton implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dummyGame.renderer.view =  "plane";
+			for (Component viewbutton : panelViews.getComponents()) {
+				viewbutton.setBackground(null);
+			}
+			buttonPlane.setBackground(Color.BLUE);
 		}
 	}
 	
 	private class ListenForChaseButton implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dummyGame.renderer.view =  "chase";
+			for (Component viewbutton : panelViews.getComponents()) {
+				viewbutton.setBackground(null);
+			}
+			buttonChase.setBackground(Color.BLUE);
 		}
 	}
 	
 	private class ListenForSideButton implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dummyGame.renderer.view =  "side";
+			for (Component viewbutton : panelViews.getComponents()) {
+				viewbutton.setBackground(null);
+			}
+			buttonSide.setBackground(Color.BLUE);
 		}
 	}
 	
 	private class ListenForFreeButton implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dummyGame.renderer.view =  "free";
+			for (Component viewbutton : panelViews.getComponents()) {
+				viewbutton.setBackground(null);
+			}
+			buttonFree.setBackground(Color.BLUE);
 		}
 	}
 	
