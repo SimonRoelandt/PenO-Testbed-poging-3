@@ -1,8 +1,12 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import autopilotLibrary.MyAutopilotModule;
+import engine.GameItem;
+import engine.Square;
+import graph.Mesh;
 
 /**
  * 
@@ -24,12 +28,15 @@ public class AirportController {
      */
     private final float AIRPORT_L = 50;
 	
+    public List<GameItem> airportItems = new ArrayList<GameItem>();
+    
+    
     /**
      * Creates a new airportController with a number of airports.
      */
 	public AirportController() {
         Airport air0 = new Airport(0,0,0,AIRPORT_W,AIRPORT_L,0);
-        Airport air1 = new Airport(20,20,(float) (Math.PI/4),AIRPORT_W,AIRPORT_L,1);
+        Airport air1 = new Airport(20,30,(float) (Math.PI/4),AIRPORT_W,AIRPORT_L,1);
         airports.add(air0);
         airports.add(air1);
 	}
@@ -45,11 +52,23 @@ public class AirportController {
 		}
 	}
 	
+	public void visualise() {
+		for (Airport airport : airports) {
+			airport.visualise();
+			airportItems.add(airport.getItem());
+		}
+	}
+
+	
 	public ArrayList<Airport> getAirports() {
 		return airports;
 	}
 
 	public void setAirports(ArrayList<Airport> airports) {
 		this.airports = airports;
+	}
+	
+	public List<GameItem> getAirportItems() {
+		return this.airportItems;
 	}
 }

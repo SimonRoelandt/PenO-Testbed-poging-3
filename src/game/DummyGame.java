@@ -21,6 +21,7 @@ import engine.Ground;
 import engine.IGameLogic;
 import engine.MouseInput;
 import engine.OBJLoader;
+import engine.Square;
 import engine.Timer;
 import engine.Window;
 import graph.Camera;
@@ -50,7 +51,7 @@ public class DummyGame implements IGameLogic {
     
     public final Camera cameraTop;
     
-    private static final float CAMERA_POS_STEP = 0.1f;
+    private static final float CAMERA_POS_STEP = 10f;
     
     private ArrayList<GameItem> gameItems = new ArrayList<GameItem>();
     
@@ -133,11 +134,13 @@ public class DummyGame implements IGameLogic {
         cameraTop.setRotation(-90f, -90f, 0);
         timer = new Timer();
 
-        gui = new GUI(this);
+        
         
         autopilotModule = new MyAutopilotModule();
         apController = new AirportController();
         droneController = new DronesController(apController);
+        
+        gui = new GUI(this);
     }
     
     @Override
@@ -218,6 +221,13 @@ public class DummyGame implements IGameLogic {
        xMinCoordinate = -xRenderDistance + groundPieceWidth/2;
        zMinCoordinate = -zRenderDistance + groundPieceWidth/2; 
        //gameItems.add(ground.getGroundGameItem()); 
+       
+       //AIRPORT VISUAL
+       apController.visualise();
+       gameItems.addAll(apController.getAirportItems());
+       
+       
+       
     }
 
     @Override

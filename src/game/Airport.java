@@ -1,5 +1,13 @@
 package game;
 
+import java.awt.Color;
+
+import engine.Balk;
+import engine.GameItem;
+import engine.Square;
+import graph.Mesh;
+import graph.Texture;
+
 /**
  * 
  * A class of airports.
@@ -32,6 +40,11 @@ public class Airport {
 	 */
 	private float orientation;
 	
+	private Texture texture;
+	
+	private Mesh mesh;
+	
+	private GameItem airportItem;
 	
 	// AIRPORT CONFIGURATION
 	//
@@ -53,7 +66,14 @@ public class Airport {
 		setL(l);
 	}	
 	
+	public void visualise() {
+		texture = new Texture("res/download.png");
+		mesh = generateMesh();
+		airportItem = generateGameItem();
+	}
+	
 	//FOR TESTING
+	/*
 	public static void main(String[] args) {
 		Airport a = new Airport(200,200,(float) Math.PI/2, 30, 60, 0);
 		
@@ -63,7 +83,7 @@ public class Airport {
 		float[] cord1 = a.getEndRunway0Corner();
 		System.out.println("X0end: " + cord1[0] + " Y0end: " + cord1[1]);
  	}
-	
+	*/
 	/**
 	 * Checks if a position is on the airport.
 	 */
@@ -95,6 +115,28 @@ public class Airport {
 		float rotatedZ = (float) (getZ() + (x  * Math.sin(angle)) + (z * Math.cos(angle)));
 
 		return new float []{rotatedX, rotatedZ};
+	}
+	
+	public Mesh generateMesh() {
+		
+		Square airport = new Square(getStartRunway0Corner()[0],getStartRunway0Corner()[1],
+				getEndRunway0Corner()[0],getEndRunway0Corner()[1],
+				getEndRunway1Corner()[0],getEndRunway1Corner()[1],
+				getStartRunway1Corner()[0],getStartRunway1Corner()[1],
+				Color.BLACK,
+				false);
+		
+		
+		Mesh airportmesh = new Mesh(airport.positions(),null,airport.indices(),airport.textCoords(),this.texture);
+		return airportmesh;
+
+	}
+	
+	public GameItem generateGameItem() {
+		Mesh airportmesh = mesh;
+		GameItem airportItem = new GameItem(airportmesh, false, true);
+		airportItem.setId(texture.id);
+		return airportItem;
 	}
 	
 	/**
@@ -198,6 +240,14 @@ public class Airport {
 
 	public void setOrientation(float orientation) {
 		this.orientation = orientation;
+	}
+	
+	public Mesh getMesh() {
+		return this.mesh;
+	}
+
+	public GameItem getItem() {
+		return this.airportItem;
 	}
 
 }
