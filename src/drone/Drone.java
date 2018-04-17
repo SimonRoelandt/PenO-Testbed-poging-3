@@ -61,7 +61,7 @@ public class Drone {
 	
 
 	private static float wingLiftSlope = 10f;
-	private static float horStabLiftSlope = 5f;
+	private static float horStabLiftSlope = 0.01f;
 	private static float verStabLiftSlope = 0f;
 	
 //	private float xPos;
@@ -186,6 +186,7 @@ public class Drone {
 		System.out.println("========================================================================");
 		
         float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
+        scaledThrust = scaledThrust*3;
         
         //OM TE TESTEN LATER WEGDOEN:
         
@@ -232,16 +233,13 @@ public class Drone {
         
         newState.setAngularRotation(fysica.getNewAngularVelocityInWorld(this, time));
         
-        
         float newHeading = this.getHeading() + (this.getHeadingVel() * time);
 		this.fysica.print("-- NEW HEADING IS:" + newHeading, 30);
 		
 		float newPitch = this.getPitch() + this.getPitchVel() * time;
-		this.setPitch(newPitch);
 		this.fysica.print("-- NEW PITCH IS:" + time + " . " + this.getPitchVel()  + " = " + newPitch, 30);
 		
 		float newRoll = this.getRoll() + this.getRollVel() * time;
-		this.setRoll(newRoll);
 		this.fysica.print("-- NEW ROLL IS:" + time + " . " + this.getRollVel() +  " = " + newRoll, 30);
 		
 		
@@ -440,67 +438,26 @@ public class Drone {
 				getVerStabilizator(), getEngine(),getFrontWheel(),getLeftWheel(),getRightWheel()};
 		return droneParts;
 	}
-		
-	public void setHeading(float heading) {
-		this.heading = fysica.clean(heading);
-	}
 
 	public float getHeading() {
 		return this.getState().getHeading();
 	}
-	
-	public void setPitch(float pitch) {
-		this.pitch = fysica.clean(pitch);
-	}
 
 	public float getPitch() {
-		
-		//TODO getters 0
-		
 		return this.getState().getPitch();
-		
-		
-		//return 0;
-	}
-	
-	public void setRoll(float roll) {
-		this.roll = fysica.clean(roll);
 	}
 
-	public float getRoll() {
-		
-		
+	public float getRoll() {		
 		return this.getState().getRoll();
-		
-		
-		//return 0;
 	}
 	
-	public void setHeadingVel(float vel) {
-		this.headingVel = vel;
-	}
-	
-	public float getHeadingVel() {
-		
-		
+	public float getHeadingVel() {	
 		return this.getState().getHeadingRate();
-		
-		
-		//return 0;
-		
-		
-	}
-	
-	public void setPitchVel(float vel) {
-		this.pitchVel = vel;
+
 	}
 	
 	public float getPitchVel() {
 		return this.getState().getPitchRate();
-	}
-	
-	public void setRollVel(float vel) {
-		this.rollVel = vel;
 	}
 	
 	public float getRollVel() {
@@ -609,25 +566,19 @@ public class Drone {
 		
 	}
 
-
 	public Airport getStartingAirport() {
 		return startingAirport;
 	}
-
 
 	public void setStartingAirport(Airport startingAirport) {
 		this.startingAirport = startingAirport;
 	}
 
-
 	public int getStartingGate() {
 		return startingGate;
 	}
 
-
 	public void setStartingGate(int startingGate) {
 		this.startingGate = startingGate;
 	}
-	
-
 }

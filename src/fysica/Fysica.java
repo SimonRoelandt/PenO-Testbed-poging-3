@@ -6,6 +6,8 @@ import drone.Drone;
 import drone.DronePart;
 import drone.Wheel;
 
+import java.util.concurrent.SynchronousQueue;
+
 import org.lwjgl.util.vector.Matrix3f;
 
 public class Fysica {
@@ -106,7 +108,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
 	public void print(Object obj, int priority){
-		if(priority >= 40){
+		if(priority >= 100){
 			System.out.println("PRINTLOG: "+ obj);
 		}
 	}
@@ -187,24 +189,22 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		for (DronePart part: partArray) {
 			Vector3f posVector = part.getRelativePosition();
 			Vector3f posVectorInWorld = this.convertToWorld(drone, posVector);
-			
+
 			Vector3f forceVector = part.getTotalForceInWorld(time);
 			if(part instanceof Wheel){
-				System.out.println("WHEEL MOMENT");
 				forceVector = ((Wheel) part).getPrevWheelForce();
 			}
 			
 			Vector3f moment = this.getMoment(posVectorInWorld, forceVector);
 			print(" MOMENT of dronepart at "+ posVector + " IS: " + moment, 40);		
 
+			momentVector = sum(momentVector, moment);
 			
-			 momentVector = sum(momentVector, moment);
 		}
 				
 		print("RESULTING MOMENT IS: " + momentVector, 40);	
-		return(new Vector3f(00000.0f,50000.0f,0.0f));
-		//return momentVector;
-	
+		//return(new Vector3f(00000.0f,50000.0f,0.0f));
+		return momentVector;
 	}
 	
 	public Vector3f zeroVec() {
@@ -282,9 +282,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		float cosp = (float) Math.cos(pitch);
 		
 		//TODO verandert:
-		//headingrate headingRate = wy - wz*cosh +wx*sinp*sinh/(cosp);
-		//pitchrate =  wx*cosh + wz*sinh
-		//rollRate = wz*cosh/cosp - wx*sinh/cosp;
+//		float headingRate = wy - wz*cosh +wx*sinp*sinh/(cosp);
+//		float pitchRate =  wx*cosh + wz*sinh;
+//		float rollRate = wz*cosh/cosp - wx*sinh/cosp;
 		
 		float headingRate = wy + wz*cosh*sinp/cosp +wx*sinp*sinh/(cosp);
 		float pitchRate = wx*cosh - wz*sinh;
