@@ -50,6 +50,7 @@ public class GUI {
 	JTabbedPane tabbedPaneGenerate;
 	JList<GameItem> list;
 	DefaultListModel<GameItem> listModel;
+	List<JButton> buttonDrones = new ArrayList<JButton>();
 	
 	private ArrayList<Drone> drones;
 	
@@ -77,7 +78,7 @@ public class GUI {
 		
 		
 		frame = new JFrame("Testbed Team Wit");
-		frame.setSize(400, 1000);
+		frame.setSize(400, 1200);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocation(1000, 20);
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -88,44 +89,31 @@ public class GUI {
 		
 		
 		
-		List<JButton> buttonDrones = new ArrayList<JButton>();
-		/*
-		for (Drone drone : drones) {
-			buttonDrones.add(new JButton())
-		}
 		
-		buttonPlane = new JButton("Plane");
-		buttonPlane.addActionListener(new ListenForPlaneButton());
-		buttonChase = new JButton("Chase");
-		buttonChase.addActionListener(new ListenForChaseButton());
-		buttonSide = new JButton("Ortho");
-		buttonSide.addActionListener(new ListenForSideButton());
-		buttonFree = new JButton("Custom");
-		buttonFree.addActionListener(new ListenForFreeButton());
 		
 		panelChooseDrone = new JPanel();
 		panelChooseDrone.setLayout(new GridLayout(1,droneAmount));
 		
-		panelViews.add(buttonFree);
-		panelViews.add(buttonChase);
-		panelViews.add(buttonPlane);
-		panelViews.add(buttonSide);
+
+		for (Drone drone : drones) {
+			int count = drones.indexOf(drone);
+			JButton button = new JButton("Drone " + (count +1));
+			buttonDrones.add(button);
+			button.addActionListener(new ListenForDrone(count));
+			panelChooseDrone.add(button);
+		}
+
+		Border droneBorder = BorderFactory.createTitledBorder("Drones");
+		panelChooseDrone.setBorder(droneBorder);
 		
-		Border viewBorder = BorderFactory.createTitledBorder("Views");
-		panelViews.setBorder(viewBorder);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.insets = new Insets(20,0,0,0); 
-		frame.add(panelViews, c);
-		*/
 		
-		
-		
-		
-		
+		frame.add(panelChooseDrone, c);
 		
 		
 		panelValues = new JPanel();
@@ -142,7 +130,7 @@ public class GUI {
 		aoa = new LabelPanel("Angle of Attack", panelValues);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 0;
+		c.gridy = 1;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.insets = new Insets(20,0,0,0); 
@@ -157,30 +145,30 @@ public class GUI {
 		
 
 		//TEMP GUI FIX
-		/*
-		panelWingX = addLabelTextPanelConfig("WingX", dummyGame.drone.wingX);
+		
+		panelWingX = addLabelTextPanelConfig("WingX", currentDrone.wingX);
 		panelWingX.tf.addActionListener(new ListenForWingX());
-		paneltailsize = addLabelTextPanelConfig("Tail Size", dummyGame.drone.tailSize);
+		paneltailsize = addLabelTextPanelConfig("Tail Size", currentDrone.tailSize);
 		paneltailsize.tf.addActionListener(new ListenForTailSize());
-		panelenginemass = addLabelTextPanelConfig("Engine Mass", dummyGame.drone.engineMass);
+		panelenginemass = addLabelTextPanelConfig("Engine Mass", currentDrone.engineMass);
 		panelenginemass.tf.addActionListener(new ListenForEngineMass());
-		panelwingmass = addLabelTextPanelConfig("Wing Mass", dummyGame.drone.wingMass);
+		panelwingmass = addLabelTextPanelConfig("Wing Mass", currentDrone.wingMass);
 		panelwingmass.tf.addActionListener(new ListenForWingMass());
-		paneltailmass = addLabelTextPanelConfig("Tail Mass", dummyGame.drone.tailMass);
+		paneltailmass = addLabelTextPanelConfig("Tail Mass", currentDrone.tailMass);
 		paneltailmass.tf.addActionListener(new ListenForTailMass());
-		panelmaxthrust = addLabelTextPanelConfig("Max Thrust", dummyGame.drone.maxThrust);
+		panelmaxthrust = addLabelTextPanelConfig("Max Thrust", currentDrone.maxThrust);
 		panelmaxthrust.tf.addActionListener(new ListenForMaxThrust());
-		panelmaxaoa = addLabelTextPanelConfig("Max AOA", dummyGame.drone.maxAOA);
+		panelmaxaoa = addLabelTextPanelConfig("Max AOA", currentDrone.maxAOA);
 		panelmaxaoa.tf.addActionListener(new ListenForMaxAOA());
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 2;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelConfig, c);
 		
-		*/
+		
 		
 		
 		//panel met view-buttons
@@ -204,7 +192,7 @@ public class GUI {
 		panelViews.setBorder(viewBorder);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 3;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.insets = new Insets(20,0,0,0); 
@@ -252,7 +240,7 @@ public class GUI {
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 3;
+		c.gridy = 4;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(tabbedPaneGenerate, c);
 		
@@ -264,7 +252,7 @@ public class GUI {
 		buttonStart.button.addActionListener(new ListenForStartButton());
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		frame.add(panelStart, c);
@@ -315,41 +303,41 @@ public class GUI {
 	}
 	
 	public void update() {
-		/*
-		positie.labelValue.setText("(" + round(dummyGame.drone.getState().getPosition().x,2) +
+		
+		positie.labelValue.setText("(" + round(currentDrone.getState().getPosition().x,2) +
 
-				", " + round(dummyGame.drone.getState().getPosition().y,2) + 
-				", " + round(dummyGame.drone.getState().getPosition().z,2) +
+				", " + round(currentDrone.getState().getPosition().y,2) + 
+				", " + round(currentDrone.getState().getPosition().z,2) +
 				")");
-		hpr.labelValue.setText("(" + round(dummyGame.drone.getHeading(),2) +
-				", " + round(dummyGame.drone.getPitch(),2) + 
-				", " + round(dummyGame.drone.getRoll(),2) + 
+		hpr.labelValue.setText("(" + round(currentDrone.getHeading(),2) +
+				", " + round(currentDrone.getPitch(),2) + 
+				", " + round(currentDrone.getRoll(),2) + 
 				")");
-		snelheid.labelValue.setText("(" + round(dummyGame.drone.getState().getVelocity().x,2)+
-				", " + round(dummyGame.drone.getState().getVelocity().y,2)+ 
-				", " + round(dummyGame.drone.getState().getVelocity().z,2) + 
+		snelheid.labelValue.setText("(" + round(currentDrone.getState().getVelocity().x,2)+
+				", " + round(currentDrone.getState().getVelocity().y,2)+ 
+				", " + round(currentDrone.getState().getVelocity().z,2) + 
 				")");
-		versnelling.labelValue.setText("(" + round(dummyGame.drone.fysica.accelerationInWorld.x,2) +
-				", " + round(dummyGame.drone.fysica.accelerationInWorld.y,2)+ 
-				", " + round(dummyGame.drone.fysica.accelerationInWorld.z,2) + 
+		versnelling.labelValue.setText("(" + round(currentDrone.fysica.accelerationInWorld.x,2) +
+				", " + round(currentDrone.fysica.accelerationInWorld.y,2)+ 
+				", " + round(currentDrone.fysica.accelerationInWorld.z,2) + 
 				")");
-		inclinatie.labelValue.setText("(" + round(dummyGame.drone.getLeftWingInclination(),2) + 
-				", " + round(dummyGame.drone.getRightWingInclination(),2) + 
-				", " + round(dummyGame.drone.getHorStabInclination(),2) + 
-				", " + round(dummyGame.drone.getVerStabInclination(),2) +
+		inclinatie.labelValue.setText("(" + round(currentDrone.getLeftWingInclination(),2) + 
+				", " + round(currentDrone.getRightWingInclination(),2) + 
+				", " + round(currentDrone.getHorStabInclination(),2) + 
+				", " + round(currentDrone.getVerStabInclination(),2) +
 				")");
 		
-		thrust.labelValue.setText("(" + round(dummyGame.drone.engine.getThrustScalar(),5) + ")");
+		thrust.labelValue.setText("(" + round(currentDrone.engine.getThrustScalar(),5) + ")");
 
-		force.labelValue.setText("(" + round(dummyGame.drone.fysica.totalForceOnDroneInWorld.getX(),5) +
-				", " + round(dummyGame.drone.fysica.totalForceOnDroneInWorld.getY(),5) +
-				", " + round(dummyGame.drone.fysica.totalForceOnDroneInWorld.getZ(),5) +
+		force.labelValue.setText("(" + round(currentDrone.fysica.totalForceOnDroneInWorld.getX(),5) +
+				", " + round(currentDrone.fysica.totalForceOnDroneInWorld.getY(),5) +
+				", " + round(currentDrone.fysica.totalForceOnDroneInWorld.getZ(),5) +
 				")");
 		
-		aoa.labelValue.setText("(" + dummyGame.drone.leftWing.getAngleOfAttack() + ")");
-		//aoa.labelValue.setText("(" + round(dummyGame.drone.getAOA(),2) + ")");
+		aoa.labelValue.setText("(" + currentDrone.leftWing.getAngleOfAttack() + ")");
+		//aoa.labelValue.setText("(" + round(currentDrone.getAOA(),2) + ")");
 		
-		*/
+		
 		
 	}
 	
@@ -358,6 +346,20 @@ public class GUI {
 	
 
 	// LISTENERS
+	private class ListenForDrone implements ActionListener {
+		int number;
+		public ListenForDrone(int number) {
+			this.number = number;
+		}
+		public void actionPerformed(ActionEvent e) {
+			currentDrone = drones.get(number);
+			for (Component viewbutton : panelChooseDrone.getComponents()) {
+				viewbutton.setBackground(null);
+			}
+			buttonDrones.get(number).setBackground(Color.RED);
+		}
+	}
+	
 	private class ListenForGenerate implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dummyGame.addGameItems(dummyGame.worldGenerator(5));
@@ -455,72 +457,72 @@ public class GUI {
 	private class ListenForWingX implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(panelWingX.tf.getText());
-			dummyGame.drone.wingX = input;
-			dummyGame.drone.leftWing         = new Airfoil(0, dummyGame.drone.wingMass, false, 0.1f, new Vector3f(-input,0,0),dummyGame.drone);
-			dummyGame.drone.leftWing.setDrone(dummyGame.drone);
-			dummyGame.drone.rightWing        = new Airfoil(0, dummyGame.drone.wingMass,   false, 0.1f, new Vector3f(input,0,0),dummyGame.drone);
-			dummyGame.drone.rightWing.setDrone(dummyGame.drone);
-			dummyGame.drone.setInertiaMatrix();
+			currentDrone.wingX = input;
+			currentDrone.leftWing         = new Airfoil(0, currentDrone.wingMass, false, 0.1f, new Vector3f(-input,0,0),currentDrone);
+			currentDrone.leftWing.setDrone(currentDrone);
+			currentDrone.rightWing        = new Airfoil(0, currentDrone.wingMass,   false, 0.1f, new Vector3f(input,0,0),currentDrone);
+			currentDrone.rightWing.setDrone(currentDrone);
+			currentDrone.setInertiaMatrix();
 		}
 	}
 	
 	private class ListenForTailSize implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(paneltailsize.tf.getText());
-			dummyGame.drone.tailSize = input;
-			dummyGame.drone.horStabilization = new Airfoil(0, dummyGame.drone.tailMass/2, false, 0.05f, new Vector3f(0,0,input),dummyGame.drone);
-			dummyGame.drone.horStabilization.setDrone(dummyGame.drone);	
-			dummyGame.drone.verStabilization = new Airfoil(0, dummyGame.drone.tailMass/2, true, 0.05f,  new Vector3f(0,0,input),dummyGame.drone);
-			dummyGame.drone.verStabilization.setDrone(dummyGame.drone);
-			dummyGame.drone.setInertiaMatrix();
+			currentDrone.tailSize = input;
+			currentDrone.horStabilization = new Airfoil(0, currentDrone.tailMass/2, false, 0.05f, new Vector3f(0,0,input),currentDrone);
+			currentDrone.horStabilization.setDrone(currentDrone);	
+			currentDrone.verStabilization = new Airfoil(0, currentDrone.tailMass/2, true, 0.05f,  new Vector3f(0,0,input),currentDrone);
+			currentDrone.verStabilization.setDrone(currentDrone);
+			currentDrone.setInertiaMatrix();
 		}
 	}
 	
 	private class ListenForEngineMass implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(panelenginemass.tf.getText());
-			dummyGame.drone.engineMass = input;
-			dummyGame.drone.engine = new Engine(0, input, new Vector3f(0,0,-1),dummyGame.drone,dummyGame.drone.getMaxThrust());
-			dummyGame.drone.setInertiaMatrix();
+			currentDrone.engineMass = input;
+			currentDrone.engine = new Engine(0, input, new Vector3f(0,0,-1),currentDrone,currentDrone.getMaxThrust());
+			currentDrone.setInertiaMatrix();
 		}
 	}
 	
 	private class ListenForWingMass implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(panelwingmass.tf.getText());
-			dummyGame.drone.wingMass= input;
-			dummyGame.drone.leftWing         = new Airfoil(0, input,   false,  0.1f, new Vector3f(-dummyGame.drone.wingX,0,0),dummyGame.drone);
-			dummyGame.drone.leftWing.setDrone(dummyGame.drone);
-			dummyGame.drone.rightWing        = new Airfoil(0, input,   false,  0.1f, new Vector3f(dummyGame.drone.wingX,0,0),dummyGame.drone);
-			dummyGame.drone.rightWing.setDrone(dummyGame.drone);
-			dummyGame.drone.setInertiaMatrix();
+			currentDrone.wingMass= input;
+			currentDrone.leftWing         = new Airfoil(0, input,   false,  0.1f, new Vector3f(-currentDrone.wingX,0,0),currentDrone);
+			currentDrone.leftWing.setDrone(currentDrone);
+			currentDrone.rightWing        = new Airfoil(0, input,   false,  0.1f, new Vector3f(currentDrone.wingX,0,0),currentDrone);
+			currentDrone.rightWing.setDrone(currentDrone);
+			currentDrone.setInertiaMatrix();
 		}
 	}
 	
 	private class ListenForTailMass implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(paneltailmass.tf.getText());
-			dummyGame.drone.tailMass = input;
-			dummyGame.drone.horStabilization = new Airfoil(0, input/2, false,  0.05f, new Vector3f(0,0,dummyGame.drone.tailSize),dummyGame.drone);
-			dummyGame.drone.horStabilization.setDrone(dummyGame.drone);			
-			dummyGame.drone.verStabilization = new Airfoil(0, input/2, true,  0.05f,  new Vector3f(0,0,dummyGame.drone.tailSize),dummyGame.drone);
-			dummyGame.drone.verStabilization.setDrone(dummyGame.drone);
-			dummyGame.drone.setInertiaMatrix();
+			currentDrone.tailMass = input;
+			currentDrone.horStabilization = new Airfoil(0, input/2, false,  0.05f, new Vector3f(0,0,currentDrone.tailSize),currentDrone);
+			currentDrone.horStabilization.setDrone(currentDrone);			
+			currentDrone.verStabilization = new Airfoil(0, input/2, true,  0.05f,  new Vector3f(0,0,currentDrone.tailSize),currentDrone);
+			currentDrone.verStabilization.setDrone(currentDrone);
+			currentDrone.setInertiaMatrix();
 		}
 	}
 	
 	private class ListenForMaxThrust implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(panelmaxthrust.tf.getText());
-			dummyGame.drone.maxThrust = input;
-			dummyGame.drone.engine.setMaxThrust(input);
+			currentDrone.maxThrust = input;
+			currentDrone.engine.setMaxThrust(input);
 		}
 	}
 	
 	private class ListenForMaxAOA implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			float input = Float.parseFloat(panelmaxaoa.tf.getText());
-			dummyGame.drone.maxAOA = input;
+			currentDrone.maxAOA = input;
 		}
 	}
 	

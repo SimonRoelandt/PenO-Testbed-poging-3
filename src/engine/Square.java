@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class Square {
 	
-	private float hoogte=0.1f;
+	private float hoogte=2f;
 	private float x1;
 	private float y1;
 	private float x2;
