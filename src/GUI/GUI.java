@@ -103,6 +103,7 @@ public class GUI {
 		panelConfig.setBorder(configBorder);
 		
 
+		//TEMP GUI FIX
 		/*
 		panelWingX = addLabelTextPanelConfig("WingX", dummyGame.drone.wingX);
 		panelWingX.tf.addActionListener(new ListenForWingX());
