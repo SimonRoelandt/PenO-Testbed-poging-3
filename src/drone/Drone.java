@@ -89,8 +89,9 @@ public class Drone {
 	
 	//-1.97864475 voor 1 wing
 	
-	public Drone(Airport ap, int gate, int pointingToRunway){
+	public Drone(int id,Airport ap, int gate, int pointingToRunway){
 		
+		setId(id);
 		setStartingAirport(ap);
 		setStartingGate(gate);
 		
@@ -160,6 +161,10 @@ public class Drone {
 	
 	public int getId() {
 		return this.id;
+	}
+	
+	public void setId(int id){
+		this.id = id;
 	}
 	
 	/**

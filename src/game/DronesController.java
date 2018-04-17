@@ -29,8 +29,8 @@ public class DronesController {
 //      float[] air1 = apController.getAirports().get(1).getMiddleGate0();
 //      addDrone(new Drone(air0[0], 1.32f, air0[1], new Vector3f(0,0,0)));
 //    	addDrone(new Drone(air1[0], 1.32f, air1[1], new Vector3f(0,0,0)));
-		addDrone(new Drone(apController.getAirports().get(0), 0, 0));
-    	addDrone(new Drone(apController.getAirports().get(1), 0, 0));
+		addDrone(new Drone(0,apController.getAirports().get(0), 0, 0));
+    	addDrone(new Drone(1,apController.getAirports().get(1), 0, 0));
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public class DronesController {
 				renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeight, "", drone.wheelY,
 				drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
 				drone.maxRem, drone.maxWrijving);
-			apModule.defineDrone(drone.getStartingAirport().getId(), drone.getStartingGate(), 0, config); // TODO DRONE ZOU BEGIN AIRPORT MOETEN BIJHOUDEN
+			apModule.defineDrone(drone.getStartingAirport().getId(), drone.getStartingGate(), 0, config);
 		}
 		//TODO VOOR NU EVEN DEZE TWEE DRONES AANMAKEN
 //		Drone drone = getDrones().get(0);
