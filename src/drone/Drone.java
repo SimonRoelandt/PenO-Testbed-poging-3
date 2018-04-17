@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 import engine.GameItem;
 import interfaces.AutopilotOutputs;
 import fysica.Fysica;
+import game.Airport;
 
 
 public class Drone {
@@ -83,7 +84,45 @@ public class Drone {
 
 	private int id;
 	
+	private Airport startingAirport;
+	private int startingGate;
+	
 	//-1.97864475 voor 1 wing
+	
+	public Drone(Airport ap, int gate, int pointingToRunway){
+		
+		setStartingAirport(ap);
+		setStartingGate(gate);
+		
+		float xPos = ap.getMiddleGate0()[0];
+		float yPos = 1.32f;
+		float zPos = ap.getMiddleGate0()[1];
+		Vector3f velocity = new Vector3f(0,0,0);
+		
+		//TODO ROTATIE VAN DRONE AFHANKELIJK VAN AIRPORT ORIENTATIE!!
+		
+		//SETTING DRONE PARTS
+		this.leftWing = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(-wingX,0,0),this);
+		this.rightWing = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(wingX,0,0),this);
+		this.horStabilization = new Airfoil(0, tailMass/2, false, horStabLiftSlope, new Vector3f(0,0,tailSize),this);
+		this.verStabilization = new Airfoil(0, tailMass/2, true, verStabLiftSlope,  new Vector3f(0,0,tailSize),this);
+		
+		this.frontWheel = new Wheel(true,wheelRadius,tyreSlope,dampSlope,maxWrijving,maxRem,new Vector3f(0, wheelY, frontWheelZ),this);
+		this.leftWheel = new Wheel(false,wheelRadius,tyreSlope,dampSlope,maxWrijving,maxRem,new Vector3f(-rearWheelX, wheelY, rearWheelZ),this);
+		this.rightWheel = new Wheel(false,wheelRadius,tyreSlope,dampSlope,maxWrijving,maxRem,new Vector3f(rearWheelX, wheelY, rearWheelZ),this);
+		
+		Vector3f engineRelLocation= this.getEngineLocation();
+		this.engine = new Engine(0,  engineMass, engineRelLocation, this, this.maxThrust);
+		
+		//SETTING INERTIA MATRIX
+		this.setInertiaMatrix();
+		
+		//SETTING POSITION AND VELOCITY STATE IN WORLD
+		State initState = new State();
+		initState.setPosition(new Vector3f(xPos, yPos, zPos));
+		initState.setVelocity(velocity);
+		this.state = initState;
+	}
 	
 	
 	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {	
@@ -563,6 +602,26 @@ public class Drone {
 		
 		return inertiaMatrixInWorld;
 		
+	}
+
+
+	public Airport getStartingAirport() {
+		return startingAirport;
+	}
+
+
+	public void setStartingAirport(Airport startingAirport) {
+		this.startingAirport = startingAirport;
+	}
+
+
+	public int getStartingGate() {
+		return startingGate;
+	}
+
+
+	public void setStartingGate(int startingGate) {
+		this.startingGate = startingGate;
 	}
 	
 
