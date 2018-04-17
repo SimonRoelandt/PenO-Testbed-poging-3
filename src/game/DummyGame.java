@@ -280,7 +280,11 @@ public class DummyGame implements IGameLogic {
     		for(Drone drone: droneController.getDrones()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
     			drone.getGameItem().setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
+    			System.out.println("PITCH: " + drone.getPitch());
     		}
+    		
+    		camera.setPosition(droneController.getDrones().get(0).getState().getX()-5, droneController.getDrones().get(0).getState().getY(), droneController.getDrones().get(0).getState().getZ()+5);
+    		camera.setRotation((float )Math.PI/2, 0.0f, 0.0f);
     	}
     }
     
