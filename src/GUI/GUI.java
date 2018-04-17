@@ -98,6 +98,7 @@ public class GUI {
 		for (Drone drone : drones) {
 			int count = drones.indexOf(drone);
 			JButton button = new JButton("Drone " + (count +1));
+			button.setFocusPainted(false);
 			buttonDrones.add(button);
 			button.addActionListener(new ListenForDrone(count));
 			panelChooseDrone.add(button);
@@ -173,12 +174,16 @@ public class GUI {
 		
 		//panel met view-buttons
 		buttonPlane = new JButton("Plane");
+		buttonPlane.setFocusPainted(false);
 		buttonPlane.addActionListener(new ListenForPlaneButton());
 		buttonChase = new JButton("Chase");
+		buttonChase.setFocusPainted(false);
 		buttonChase.addActionListener(new ListenForChaseButton());
 		buttonSide = new JButton("Ortho");
+		buttonSide.setFocusPainted(false);
 		buttonSide.addActionListener(new ListenForSideButton());
 		buttonFree = new JButton("Custom");
+		buttonFree.setFocusPainted(false);
 		buttonFree.addActionListener(new ListenForFreeButton());
 		
 		panelViews = new JPanel();
