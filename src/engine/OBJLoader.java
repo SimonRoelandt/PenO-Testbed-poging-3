@@ -17,8 +17,22 @@ public class OBJLoader {
 		FileReader fr = null;
 		FileReader fr2 = null;
 		try {
-			fr = new FileReader(new File("src\\p39.obj"));
-			fr2 = new FileReader(new File("src\\p39.obj"));
+			String machineOS = System.getProperty("os.name");
+			
+			
+			if(machineOS.length() == 8){
+				System.out.println("OS of machine is: " + machineOS);
+
+				fr = new FileReader(new File("src/p39.obj"));
+				fr2 = new FileReader(new File("src/p39.obj"));
+			} else {
+				System.out.println("OS of machine is not Mac ");
+
+				fr = new FileReader(new File("src\\p39.obj"));
+				fr2 = new FileReader(new File("src\\p39.obj"));
+			}
+			
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.err.print("File not found");
