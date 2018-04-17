@@ -25,44 +25,46 @@ public class DronesController {
 	private AirportController apController;
 	
 	public DronesController(AirportController apController){
-        float[] air0 = apController.getAirports().get(0).getMiddleGate0();
-        float[] air1 = apController.getAirports().get(1).getMiddleGate0();
-        addDrone(new Drone(air0[0], 0, air0[1], new Vector3f(0,0,0)));
-    	addDrone(new Drone(air1[0], 0, air1[1], new Vector3f(0,0,0)));
+//      float[] air0 = apController.getAirports().get(0).getMiddleGate0();
+//      float[] air1 = apController.getAirports().get(1).getMiddleGate0();
+//      addDrone(new Drone(air0[0], 1.32f, air0[1], new Vector3f(0,0,0)));
+//    	addDrone(new Drone(air1[0], 1.32f, air1[1], new Vector3f(0,0,0)));
+		addDrone(new Drone(0,apController.getAirports().get(0), 0, 0));
+    	addDrone(new Drone(1,apController.getAirports().get(1), 0, 0));
 	}
 	
 	/**
 	 * Defines the drones to the given autopilotModule.
 	 */
 	public void defineDrones(Renderer renderer, AutopilotModule apModule){
-//		for(Drone drone : getDrones()){
-//			Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
+		for(Drone drone : getDrones()){
+			Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
+				drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
+				drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(),
+				renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeight, "", drone.wheelY,
+				drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
+				drone.maxRem, drone.maxWrijving);
+			apModule.defineDrone(drone.getStartingAirport().getId(), drone.getStartingGate(), 0, config);
+		}
+		//TODO VOOR NU EVEN DEZE TWEE DRONES AANMAKEN
+//		Drone drone = getDrones().get(0);
+//		Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
 //				drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
 //				drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(),
 //				renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeight, "", drone.wheelY,
 //				drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
 //				drone.maxRem, drone.maxWrijving);
-//			apModule.defineDrone(0, 0, 0, config); // TODO DRONE ZOU BEGIN AIRPORT MOETEN BIJHOUDEN
-//		}
-		//TODO VOOR NU EVEN DEZE TWEE DRONES AANMAKEN
-		Drone drone = getDrones().get(0);
-		Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
-				drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
-				drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(),
-				renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeight, "", drone.wheelY,
-				drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
-				drone.maxRem, drone.maxWrijving);
-		apModule.defineDrone(0, 0, 0, config);
-		
-		drone = getDrones().get(1);
-		config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
-				drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
-				drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(),
-				renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeight, "", drone.wheelY,
-				drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
-				drone.maxRem, drone.maxWrijving);
-		
-		apModule.defineDrone(1, 0, 0, config);
+//		apModule.defineDrone(0, 0, 0, config);
+//		
+//		drone = getDrones().get(1);
+//		config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
+//				drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
+//				drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(),
+//				renderer.fov, renderer.fov, renderer.imageWidthAutopilot, renderer.imageHeight, "", drone.wheelY,
+//				drone.frontWheelZ, drone.rearWheelZ, drone.rearWheelX, drone.tyreSlope, drone.dampSlope, drone.wheelRadius,
+//				drone.maxRem, drone.maxWrijving);
+//		
+//		apModule.defineDrone(1, 0, 0, config);
 	}
 	
     /**
