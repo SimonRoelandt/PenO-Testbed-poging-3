@@ -81,6 +81,17 @@ public class DronesController {
 		return false;
 	}
 	
+    /**
+     * Checks if the two given drones have crashed.
+     */
+	public boolean checkCrash(Drone d, Drone d2){	
+		if(Math.sqrt(Math.pow(d2.getX() - d.getX(), 2))
+				+ Math.sqrt(Math.pow(d2.getY() - d.getY(), 2))
+				+ Math.sqrt(Math.pow(d2.getZ() - d.getZ(), 2))
+		    < 5) return true;
+		else return false;
+	}
+	
 	/**
 	 * Checks if the given drone is on tarmac - in an airport.
 	 */

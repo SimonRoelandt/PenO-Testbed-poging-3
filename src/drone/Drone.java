@@ -480,5 +480,17 @@ public class Drone {
 	public float getTailSize() {
 		return tailSize;
 	}
+	
+	public float getX(){
+		return getState().getX();
+	}
+	
+	public float getY(){
+		return getState().getY();
+	}
+	
+	public float getZ(){
+		return getState().getZ();
+	}
 
 }

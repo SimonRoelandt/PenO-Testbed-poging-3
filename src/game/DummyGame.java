@@ -246,7 +246,15 @@ public class DummyGame implements IGameLogic {
     		
     		//Clean-up crashed drones.
     		for(Drone d : droneController.getDrones()){
-    			if(d.checkCrash()) removeDrone(d);
+    			//Crash on ground
+    			if(droneController.checkCrash(d)) removeDrone(d);
+    			//Crash between two drones
+    			for(Drone d2 : droneController.getDrones()){
+    				if(!d.equals(d2) && droneController.checkCrash(d,d2)){
+    					removeDrone(d);
+    					removeDrone(d2);
+    				}
+    			}
     		}
     		
     		//Update visual drone objects
