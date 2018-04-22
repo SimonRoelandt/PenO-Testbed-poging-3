@@ -1,0 +1,9 @@
+   
+private float cameraSideOriginal;
+
+cameraSideOriginal = cameraSide.getPosition().y;
+
+int followY = 0;
+	        if (drone.getState().getY() > 20f)
+	        	followY = 1;
+	        cameraSide.setPosition(30 + drone.getState().getX(), cameraSideOriginal + followY*(drone.getState().getY()-20),-50 + drone.getState().getZ());

@@ -334,9 +334,9 @@ public class GUI {
 		
 		thrust.labelValue.setText("(" + round(currentDrone.engine.getThrustScalar(),5) + ")");
 
-		force.labelValue.setText("(" + round(currentDrone.fysica.totalForceOnDroneInWorld.getX(),5) +
-				", " + round(currentDrone.fysica.totalForceOnDroneInWorld.getY(),5) +
-				", " + round(currentDrone.fysica.totalForceOnDroneInWorld.getZ(),5) +
+		force.labelValue.setText("(" + round(currentDrone.fysica.totalForceOnDroneInWorld.getX(),0) +
+				", " + round(currentDrone.fysica.totalForceOnDroneInWorld.getY(),0) +
+				", " + round(currentDrone.fysica.totalForceOnDroneInWorld.getZ(),0) +
 				")");
 		
 		aoa.labelValue.setText("(" + currentDrone.leftWing.getAngleOfAttack() + ")");
@@ -358,6 +358,7 @@ public class GUI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			currentDrone = drones.get(number);
+			dummyGame.currentDroneId = number;
 			for (Component viewbutton : panelChooseDrone.getComponents()) {
 				viewbutton.setBackground(null);
 			}
@@ -414,7 +415,7 @@ public class GUI {
 			for (Component viewbutton : panelViews.getComponents()) {
 				viewbutton.setBackground(null);
 			}
-			buttonPlane.setBackground(Color.BLUE);
+			buttonPlane.setBackground(Color.RED);
 		}
 	}
 	
@@ -424,7 +425,7 @@ public class GUI {
 			for (Component viewbutton : panelViews.getComponents()) {
 				viewbutton.setBackground(null);
 			}
-			buttonChase.setBackground(Color.BLUE);
+			buttonChase.setBackground(Color.RED);
 		}
 	}
 	
@@ -434,7 +435,7 @@ public class GUI {
 			for (Component viewbutton : panelViews.getComponents()) {
 				viewbutton.setBackground(null);
 			}
-			buttonSide.setBackground(Color.BLUE);
+			buttonSide.setBackground(Color.RED);
 		}
 	}
 	
@@ -444,7 +445,7 @@ public class GUI {
 			for (Component viewbutton : panelViews.getComponents()) {
 				viewbutton.setBackground(null);
 			}
-			buttonFree.setBackground(Color.BLUE);
+			buttonFree.setBackground(Color.RED);
 		}
 	}
 	

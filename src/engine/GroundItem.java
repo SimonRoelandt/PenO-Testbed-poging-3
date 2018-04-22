@@ -7,10 +7,8 @@ public class GroundItem extends GameItem {
 	private float xpos; 
 	private float zpos;//the center of the piece of ground
 	
-	public GroundItem(Mesh mesh, boolean render, boolean texture, float xpos, float zpos) {
+	public GroundItem(Mesh mesh, boolean render, boolean texture) {
 		super(mesh, render, texture);
-		this.xpos = xpos;
-		this.zpos = zpos;
 	}
 	
 	public float getXpos() {

@@ -44,7 +44,11 @@ public class Airport {
 	
 	private Mesh mesh;
 	
+	private Mesh mesh2;
+	
 	private GameItem airportItem;
+	
+	private GameItem airportItem2;
 	
 	// AIRPORT CONFIGURATION
 	//
@@ -67,9 +71,9 @@ public class Airport {
 	}	
 	
 	public void visualise() {
-		texture = new Texture("res/download.png");
-		mesh = generateMesh();
-		airportItem = generateGameItem();
+		texture = new Texture("res/airport.png");
+		generateMesh();
+		generateGameItem();
 	}
 	
 	//FOR TESTING
@@ -117,26 +121,26 @@ public class Airport {
 		return new float []{rotatedX, rotatedZ};
 	}
 	
-	public Mesh generateMesh() {
+	public void generateMesh() {
 		
-		Square airport = new Square(getStartRunway0Corner()[0],getStartRunway0Corner()[1],
+		Square airport1 = new Square(getStartRunway0Corner()[0],getStartRunway0Corner()[1],
 				getEndRunway0Corner()[0],getEndRunway0Corner()[1],
 				getEndRunway1Corner()[0],getEndRunway1Corner()[1],
 				getStartRunway1Corner()[0],getStartRunway1Corner()[1],
 				Color.BLACK,
-				false);
+				false,
+				1);
 		
-		
-		Mesh airportmesh = new Mesh(airport.positions(),null,airport.indices(),airport.textCoords(),this.texture);
-		return airportmesh;
+		Mesh airportmesh = new Mesh(airport1.positions(),null,airport1.indices(),airport1.textCoordsAirport(),this.texture);
+		this.mesh = airportmesh;
 
 	}
 	
-	public GameItem generateGameItem() {
+	public void generateGameItem() {
 		Mesh airportmesh = mesh;
 		GameItem airportItem = new GameItem(airportmesh, false, true);
 		airportItem.setId(texture.id);
-		return airportItem;
+		this.airportItem = airportItem;
 	}
 	
 	/**
@@ -249,5 +253,8 @@ public class Airport {
 	public GameItem getItem() {
 		return this.airportItem;
 	}
-
+	
+	public GameItem getItem2() {
+		return this.airportItem2;
+	}
 }

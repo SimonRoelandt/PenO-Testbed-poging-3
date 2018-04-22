@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class Square {
 	
-	private float hoogte=2f;
+	private float hoogte=0f;
 	private float x1;
 	private float y1;
 	private float x2;
@@ -15,9 +15,10 @@ public class Square {
 	private float y4;
 	private float[] colorfront;
 	private Color color; 
+	private float textureScale;
 	
 
-	public Square(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, Color color, boolean texture) {
+	public Square(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, Color color, boolean texture, float textureScale) {
 	this.x1 = x1;
 	this.y1 = y1;
 	this.x2 = x2;
@@ -27,6 +28,7 @@ public class Square {
 	this.x4 = x4;
 	this.y4 = y4;
 	this.color = color;
+	this.textureScale = textureScale;
 	
 	if (!texture)
 		getAllColorFaces(color);
@@ -79,9 +81,21 @@ public class Square {
 	public float[] textCoords() {
 		float[] textCoords = new float[] {
 				0,0,
-				0,1,
-				1,1,
-				1,0,
+				0,textureScale,
+				textureScale,textureScale,
+				textureScale,0,
+				
+				
+		};
+		return textCoords;
+	}
+	
+	public float[] textCoordsAirport() {
+		float[] textCoords = new float[] {
+				0.20f,0.1133f,
+				0.20f,1-0.1133f,
+				1-0.20f,1-0.1133f,
+				1-0.20f,0.1133f,
 				
 				
 		};

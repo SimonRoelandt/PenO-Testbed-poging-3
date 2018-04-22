@@ -21,6 +21,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 
 import engine.GameItem;
+import engine.GroundItem;
 import engine.Utils;
 import engine.Window;
 import graph.Camera;
@@ -47,7 +48,7 @@ public class Renderer {
     private int depthbufferFree;
     float fov = (float) Math.toRadians(120.0f);
     private static float z_near = 0.01f;
-    private static float z_far = 1000.f;
+    private static float z_far = 10000.f;
     private final Transformation transformation;
     int imageWidth;
     int imageHeight;
@@ -240,140 +241,155 @@ public class Renderer {
         window.setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         //CHASE
-        for(GameItem gameItem : gameItems) {
-        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
-        	shaderProgram.bind();
-        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-        	shaderProgramTexture.bind();
-        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
-        	
-        	if (gameItem.texture) {
-        		shaderProgramTexture.bind();
-        		gameItem.getMesh().renderTex(imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
-        	}
-        	else {
-        		shaderProgram.bind();
-        		gameItem.getMesh().render(imageWidth, imageHeight, window.getWidth(), window.getHeight());
-        	}
+        if (view == "chase") {
+	        for(GameItem gameItem : gameItems) {
+	        	if (gameItem instanceof GroundItem)
+	        		glDepthMask(false);
+	        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+	        	shaderProgram.bind();
+	        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+	        	shaderProgramTexture.bind();
+	        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+	        	
+	        	if (gameItem.texture) {
+	        		shaderProgramTexture.bind();
+	        		gameItem.getMesh().renderTex(imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+	        	}
+	        	else {
+	        		shaderProgram.bind();
+	        		gameItem.getMesh().render(imageWidth, imageHeight, window.getWidth(), window.getHeight());
+	        	}
+	        	glDepthMask(true);
+	        }
         }
         
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferFree);
        	clear();
        	
         //FREE
-        viewMatrix = transformation.getViewMatrix(cameraFree);
-        for(GameItem gameItem : gameItems) {
-        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
-        	shaderProgram.bind();
-        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-        	shaderProgramTexture.bind();
-        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
-        
-        	if (gameItem.texture) {
-        		shaderProgramTexture.bind();
-        		gameItem.getMesh().renderFreeTex(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
-        	}
-        	else {
-        		shaderProgram.bind();
-        		gameItem.getMesh().renderFree(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight());
-        	}
-        	
-        	
-        }
-        
+       	if (view == "free") {
+	        viewMatrix = transformation.getViewMatrix(cameraFree);
+	        for(GameItem gameItem : gameItems) {
+	        	if (gameItem instanceof GroundItem)
+	        		glDepthMask(false);
+	        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+	        	shaderProgram.bind();
+	        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+	        	shaderProgramTexture.bind();
+	        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+	        
+	        	if (gameItem.texture) {
+	        		shaderProgramTexture.bind();
+	        		gameItem.getMesh().renderFreeTex(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+	        	}
+	        	else {
+	        		shaderProgram.bind();
+	        		gameItem.getMesh().renderFree(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight());
+	        	}
+	        	glDepthMask(true);
+	        	
+	        }
+       	}  
         
        	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
        	clear();
        	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
   
         //PLANE
-        viewMatrix = transformation.getViewMatrix(cameraPlane);
-        for(GameItem gameItem : gameItems) {
-        	if(gameItem.getRenderOnPlaneView()){
-        		Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
-        		shaderProgram.bind();
-            	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            	shaderProgramTexture.bind();
-            	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
-
-            	if (gameItem.texture) {
-            		shaderProgramTexture.bind();
-            		gameItem.getMesh().renderCameraPlaneTex(framebuffer, imageWidthAutopilot, imageHeightAutopilot, window.getWidth(), window.getHeight(), gameItem.textureId);
-            	}
-            	else {
-            		shaderProgram.bind();
-            		gameItem.getMesh().renderCameraPlane(framebuffer, imageWidthAutopilot, imageHeightAutopilot, window.getWidth(), window.getHeight());
-            	}
-            	
-        	}
-        } 
-        
+       	if (view == "plane") {
+	        viewMatrix = transformation.getViewMatrix(cameraPlane);
+	        for(GameItem gameItem : gameItems) {
+	        	if(gameItem.getRenderOnPlaneView()){
+	        		Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+	        		shaderProgram.bind();
+	            	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+	            	shaderProgramTexture.bind();
+	            	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+	
+	            	if (gameItem.texture) {
+	            		shaderProgramTexture.bind();
+	            		gameItem.getMesh().renderCameraPlaneTex(framebuffer, imageWidthAutopilot, imageHeightAutopilot, window.getWidth(), window.getHeight(), gameItem.textureId);
+	            	}
+	            	else {
+	            		shaderProgram.bind();
+	            		gameItem.getMesh().renderCameraPlane(framebuffer, imageWidthAutopilot, imageHeightAutopilot, window.getWidth(), window.getHeight());
+	            	}
+	            	
+	        	}
+	        } 
+       	}
         
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferSide);
        	clear();
        	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
   
-       	//Verander naar orthogonaal
+       	if (view == "side") {
+       		//Verander naar orthogonaal
        	
        	
-       	projectionMatrix = transformation.getProjectionMatrixOrthogonal(120,120, z_near, z_far);
-       	shaderProgram.bind();
-       	shaderProgram.setUniform("projectionMatrix",projectionMatrix);
-       	shaderProgramTexture.bind();
-       	shaderProgramTexture.setUniform("projectionMatrix", projectionMatrix);
-       	// orthogonale projectiematrix werkt nog niet
-       	
-       	
-       	
-        
-
-       	
-        //SIDE
-        viewMatrix = transformation.getViewMatrix(cameraSide);
-        for(GameItem gameItem : gameItems) {
-        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
-        	shaderProgram.bind();
-            shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            shaderProgramTexture.bind();
-            shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
-
-            if (gameItem.texture) {
-        		shaderProgramTexture.bind();
-        		gameItem.getMesh().renderCameraSideTex(framebufferSide, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);	        	
-        		}
-        	else {
-        		shaderProgram.bind();
-        		gameItem.getMesh().renderCameraSide(framebufferSide, imageWidth, imageHeight, window.getWidth(), window.getHeight());	        	
-        		}
-            
-        	
-        } 
-        
-        
-        glBindFramebuffer(GL_FRAMEBUFFER, framebufferTop);
-       	clear();
-       	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  
-        //TOP
-        viewMatrix = transformation.getViewMatrix(cameraTop);
-        for(GameItem gameItem : gameItems) {
-        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
-        	shaderProgram.bind();
-            shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            shaderProgramTexture.bind();
-            shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
-
-            if (gameItem.texture) {
-        		shaderProgramTexture.bind();
-        		gameItem.getMesh().renderCameraTopTex(framebufferTop, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
-            }
-        	else {
-        		shaderProgram.bind();
-        		gameItem.getMesh().renderCameraTop(framebufferTop, imageWidth, imageHeight, window.getWidth(), window.getHeight());            
-        	}
-        } 
-        //glViewport(0, 0, window.getWidth(), window.getHeight());
-        
+	       	projectionMatrix = transformation.getProjectionMatrixOrthogonal(120,120, z_near, z_far);
+	       	shaderProgram.bind();
+	       	shaderProgram.setUniform("projectionMatrix",projectionMatrix);
+	       	shaderProgramTexture.bind();
+	       	shaderProgramTexture.setUniform("projectionMatrix", projectionMatrix);
+	       	// orthogonale projectiematrix werkt nog niet
+	       	
+	       	
+	       	
+	        
+	
+	       	
+	        //SIDE
+	        viewMatrix = transformation.getViewMatrix(cameraSide);
+	        for(GameItem gameItem : gameItems) {
+	        	if (gameItem instanceof GroundItem)
+	        		glDepthMask(false);
+	        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+	        	shaderProgram.bind();
+	            shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+	            shaderProgramTexture.bind();
+	            shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+	
+	            if (gameItem.texture) {
+	        		shaderProgramTexture.bind();
+	        		gameItem.getMesh().renderCameraSideTex(framebufferSide, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);	        	
+	        		}
+	        	else {
+	        		shaderProgram.bind();
+	        		gameItem.getMesh().renderCameraSide(framebufferSide, imageWidth, imageHeight, window.getWidth(), window.getHeight());	        	
+	        		}
+	            
+	        	glDepthMask(true);
+	        } 
+	       	
+	        
+	        glBindFramebuffer(GL_FRAMEBUFFER, framebufferTop);
+	       	clear();
+	       	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	  
+	        //TOP
+	        viewMatrix = transformation.getViewMatrix(cameraTop);
+	        for(GameItem gameItem : gameItems) {
+	        	if (gameItem instanceof GroundItem)
+	        		glDepthMask(false);
+	        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+	        	shaderProgram.bind();
+	            shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+	            shaderProgramTexture.bind();
+	            shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+	
+	            if (gameItem.texture) {
+	        		shaderProgramTexture.bind();
+	        		gameItem.getMesh().renderCameraTopTex(framebufferTop, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+	            }
+	        	else {
+	        		shaderProgram.bind();
+	        		gameItem.getMesh().renderCameraTop(framebufferTop, imageWidth, imageHeight, window.getWidth(), window.getHeight());            
+	        	}
+	            glDepthMask(true);
+	        } 
+	        //glViewport(0, 0, window.getWidth(), window.getHeight());
+       	}
    
        
         
@@ -397,7 +413,10 @@ public class Renderer {
         for (int i = 0; i < imageWidthAutopilot*imageHeightAutopilot*3; i++)
         	pixelsarray[i] = pixels.get(i);
         
-        
+       
+      if (view == "chase") {
+    	  glBindFramebuffer(GL_FRAMEBUFFER,0);
+      }
       
       if (view == "plane") {
     	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);

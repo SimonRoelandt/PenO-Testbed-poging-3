@@ -7,13 +7,14 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.awt.Color;
 import org.lwjgl.util.vector.Vector3f;
 
 import graph.Mesh;
 
 public class OBJLoader {
 
-	public static Mesh loadOBJModel(String fileName) {
+	public static Mesh loadOBJModel(String fileName, Color color) {
 		FileReader fr = null;
 		FileReader fr2 = null;
 		try {
@@ -23,13 +24,13 @@ public class OBJLoader {
 			if(machineOS.length() == 8){
 				System.out.println("OS of machine is: " + machineOS);
 
-				fr = new FileReader(new File("src/p39.obj"));
-				fr2 = new FileReader(new File("src/p39.obj"));
+				fr = new FileReader(new File("src/"+fileName+".obj"));
+				fr2 = new FileReader(new File("src/"+fileName+".obj"));
 			} else {
 				System.out.println("OS of machine is not Mac ");
 
-				fr = new FileReader(new File("src\\p39.obj"));
-				fr2 = new FileReader(new File("src\\p39.obj"));
+				fr = new FileReader(new File("src\\"+fileName+".obj"));
+				fr2 = new FileReader(new File("src\\"+fileName+".obj"));
 			}
 			
 			
