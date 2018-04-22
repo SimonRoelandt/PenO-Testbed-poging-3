@@ -21,8 +21,6 @@ import engine.Ground;
 import engine.IGameLogic;
 import engine.MouseInput;
 import engine.OBJLoader;
-import engine.Square;
-import engine.Timer;
 import engine.Window;
 import graph.Camera;
 import graph.Mesh;
@@ -65,39 +63,17 @@ public class DummyGame implements IGameLogic {
 
  
         //INITIAL SETUPS
-    
-    private final Vector3f droneBeginPosinAir = new Vector3f(0,35,-550);
-    private final Vector3f droneBeginVelinAir = new Vector3f(0,7,-66);
-    
-    private final Vector3f droneBeginPosonGround = new Vector3f(0,1.33f,0);
-    private final Vector3f droneBeginVelonGround = new Vector3f(0,0,-10);
-
-    
-    private final Vector3f droneBeginPos = droneBeginPosonGround;
-    private final Vector3f droneBeginVel = droneBeginVelonGround;
-    
-
+   
     private Balk balk;
-
     private Mesh mesh;
-    
-    private Vector3f afstand = new Vector3f();
-    
-    public Drone drone;
-    
-    private Timer timer;
-    
-    private GUI gui;
+    private List<Mesh> meshList = new ArrayList<Mesh>();
+    private Ground ground;
         
-    private List<Mesh> meshList = new ArrayList<Mesh>();;
+    private GUI gui;
     
     public boolean startSimulation = false;
-    
     public boolean simulationEnded = false;
-    
     public boolean sendConfig = false;
-    
-    private Ground ground;
     
     //TODO
     private float xRenderDistance = 5000;
@@ -131,10 +107,7 @@ public class DummyGame implements IGameLogic {
         cameraPlane.setPosition(0, 0, 0);
         cameraTop = new Camera();
         cameraTop.setPosition(20, 300, -50);
-        cameraTop.setRotation(-90f, -90f, 0);
-        timer = new Timer();
-
-        
+        cameraTop.setRotation(-90f, -90f, 0);        
         
         autopilotModule = new MyAutopilotModule();
         apController = new AirportController();
@@ -200,7 +173,7 @@ public class DummyGame implements IGameLogic {
             gameItems.add(drone.getGameItem());
         }
     	        
-     //WORLD VISUAL
+        //WORLD VISUAL
 
        /*
        Ground ground = new Ground();
@@ -225,8 +198,6 @@ public class DummyGame implements IGameLogic {
        //AIRPORT VISUAL
        apController.visualise();
        gameItems.addAll(apController.getAirportItems());
-       
-       
        
     }
 
@@ -254,10 +225,12 @@ public class DummyGame implements IGameLogic {
     public void update(float interval, MouseInput mouseInput) {
     	totTime += interval;
 	    gui.update();
+	    
 	    // Update camera positie
 	    cameraFree.movePosition(cameraInc.x * CAMERA_POS_STEP,
 	        cameraInc.y * CAMERA_POS_STEP,
 	        cameraInc.z * CAMERA_POS_STEP);
+	    
 	    // Update camera door muis            
 	    if (mouseInput.isRightButtonPressed()) {
 	        Vector2f rotVec = mouseInput.getDisplVec();
@@ -273,7 +246,7 @@ public class DummyGame implements IGameLogic {
     		
     		//Clean-up crashed drones.
     		for(Drone d : droneController.getDrones()){
-    			if(d.checkCrash()) ; //TODO REMOVE DRONE
+    			if(d.checkCrash()) removeDrone(d);
     		}
     		
     		//Update visual drone objects
@@ -288,9 +261,22 @@ public class DummyGame implements IGameLogic {
     	}
     }
     
+    /**
+     * Removes the given drone from the world.
+     * @param d
+     * 		  The given drone.
+     */
+    private void removeDrone(Drone d) {
+		this.getGameItems().remove(d.getGameItem());
+		droneController.remove(d);
+	}
 
-    
-    //Genereert n willekeurige kubussen
+	/**
+	 * Generates the given number of cubes at random (in a pre-defined area) position.
+	 * @param n
+	 * 		  The nb of cubes.
+	 * @return list of cube gameItems.
+	 */
     public List<GameItem> worldGenerator(int n){
     	Random rand = new Random();
     	List<GameItem> gameItems = new ArrayList<GameItem>();
@@ -358,13 +344,14 @@ public class DummyGame implements IGameLogic {
     public List<GameItem> getGameItems() {
     	return gameItems;
     }
+  
+    public float totTime(){
+    	return totTime;
+    }
+    
     @Override
     public void render(Window window) throws Exception {
         renderer.render(window, camera, cameraFree, cameraPlane, cameraSide, cameraTop, gameItems);
-    }
-    
-    public float totTime(){
-    	return totTime;
     }
 
     @Override
@@ -373,7 +360,7 @@ public class DummyGame implements IGameLogic {
         for (GameItem gameItem : gameItems) {
             gameItem.getMesh().cleanUp();
         }
-        //comm.simulationEnded();
+        autopilotModule.simulationEnded();
     }
-  
+
 }

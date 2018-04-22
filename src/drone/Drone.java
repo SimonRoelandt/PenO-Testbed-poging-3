@@ -38,6 +38,8 @@ public class Drone {
 	public float maxWrijving = 0.075f;
 	public float maxRem = 2500;
 	
+	public final float Y_START_POS = -(wheelY) + wheelRadius;
+	
 	//Waarden van de drone
 	public float wingX = 4.2f;
 	public float tailSize = 4.2f;
@@ -78,7 +80,7 @@ public class Drone {
 		setStartingGate(gate);
 		
 		float xPos = ap.getMiddleGate0()[0];
-		float yPos = 1.32f;
+		float yPos = Y_START_POS;
 		float zPos = ap.getMiddleGate0()[1];
 		Vector3f velocity = new Vector3f(0,0,0);
 		

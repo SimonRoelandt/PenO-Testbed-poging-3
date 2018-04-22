@@ -71,10 +71,10 @@ public class DronesController {
      * Checks if the given drone is crashed.
      */
 	public boolean checkCrash(Drone drone){
-		if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
+		if(drone.checkCrash()) return true;
+		else if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
 			if(onTarmac(drone)){
-				if(drone.checkCrash()) return true;
-				else return false;
+				return false;
 			}
 			else return false;
 		}
@@ -82,11 +82,11 @@ public class DronesController {
 	}
 	
 	/**
-	 * Checks if the given drone is on tarmac.
+	 * Checks if the given drone is on tarmac - in an airport.
 	 */
 	private boolean onTarmac(Drone drone){
 		for (Airport ap : apController.getAirports()){
-			if(ap.onAirport(drone.getState().getX(), drone.getState().getY())){
+			if(ap.onAirport(drone.getState().getX(), drone.getState().getZ())){
 				return true;
 			}
 		}
@@ -123,6 +123,14 @@ public class DronesController {
 		}
 	}
 	
+	/**
+	 * Removes given drone from the droneController.
+	 * @param d
+	 */
+	public void remove(Drone d) {
+		this.getDrones().remove(d);
+	}
+	
 	public ArrayList<Drone> getDrones() {
 		return drones;
 	}
@@ -138,5 +146,4 @@ public class DronesController {
 	public void setApController(AirportController apController) {
 		this.apController = apController;
 	}
-
 }
