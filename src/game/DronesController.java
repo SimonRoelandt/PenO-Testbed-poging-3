@@ -71,22 +71,33 @@ public class DronesController {
      * Checks if the given drone is crashed.
      */
 	public boolean checkCrash(Drone drone){
-		if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
+		if(drone.checkCrash()) return true;
+		else if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
 			if(onTarmac(drone)){
-				if(drone.checkCrash()) return true;
-				else return false;
+				return false;
 			}
 			else return false;
 		}
 		return false;
 	}
 	
+    /**
+     * Checks if the two given drones have crashed.
+     */
+	public boolean checkCrash(Drone d, Drone d2){	
+		if(Math.sqrt(Math.pow(d2.getX() - d.getX(), 2))
+				+ Math.sqrt(Math.pow(d2.getY() - d.getY(), 2))
+				+ Math.sqrt(Math.pow(d2.getZ() - d.getZ(), 2))
+		    < 5) return true;
+		else return false;
+	}
+	
 	/**
-	 * Checks if the given drone is on tarmac.
+	 * Checks if the given drone is on tarmac - in an airport.
 	 */
 	private boolean onTarmac(Drone drone){
 		for (Airport ap : apController.getAirports()){
-			if(ap.onAirport(drone.getState().getX(), drone.getState().getY())){
+			if(ap.onAirport(drone.getState().getX(), drone.getState().getZ())){
 				return true;
 			}
 		}
@@ -114,13 +125,21 @@ public class DronesController {
 	}
 	
 	/**
-	 * Completes a time passed in the given autopilotModule.
+	 * Completes a time passed for every drone in the given autopilotModule.
 	 */
 	public void completeTimePassed(AutopilotModule autopilotModule, float time){
 		for(Drone drone : getDrones()){
 			AutopilotOutputs output = autopilotModule.completeTimeHasPassed(drone.getId());
 			drone.update(output, time);
 		}
+	}
+	
+	/**
+	 * Removes given drone from the droneController.
+	 * @param d
+	 */
+	public void remove(Drone d) {
+		this.getDrones().remove(d);
 	}
 	
 	public ArrayList<Drone> getDrones() {
@@ -138,5 +157,4 @@ public class DronesController {
 	public void setApController(AirportController apController) {
 		this.apController = apController;
 	}
-
 }

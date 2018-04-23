@@ -49,7 +49,7 @@ public abstract class DronePart {
 	/**
 	 * Converts the drone part force to the world coordinates. 
 	 */
-	private Vector3f getDronePartForceInWorld() {
+	public Vector3f getDronePartForceInWorld() {
 		return fysica.convertToWorld(this.getDrone(), getDronePartForce());
 	}
 	

@@ -26,7 +26,7 @@ public class Drone {
 	public Wheel rightWheel;
 	
 	//Wheel waarden
-	public float wheelY = -1.12f;
+	public final float wheelY = -1.12f;
 	public float frontWheelZ = -2.079f;
 	public float rearWheelZ = 0.959f;
 	public float rearWheelX = 1.24f;
@@ -35,9 +35,10 @@ public class Drone {
 	public float tyreSlope = 50000f;
 	public float dampSlope = 5000f;
 	
-	
 	public float maxWrijving = 0.075f;
 	public float maxRem = 2500;
+	
+	public final float Y_START_POS = -(wheelY) + wheelRadius;
 	
 	//Waarden van de drone
 	public float wingX = 4.2f;
@@ -49,32 +50,10 @@ public class Drone {
 	
 	public float maxThrust = 100000;
 	public float maxAOA = (float) (Math.PI /12);
-	
-	
-//	private Vector3f positionInWorld = new Vector3f(0,0,0);
-//	
-//	private Vector3f velocityInWorld = new Vector3f(0,0,0);
-//
-//
-//	private Vector3f angularPositionInWorld = new Vector3f(0,0,0);
-//	private Vector3f angularVelocityInWorld = new Vector3f(0,0,0);
-	
 
 	private static float wingLiftSlope = 10f;
-	private static float horStabLiftSlope = 5f;
+	private static float horStabLiftSlope = 0.01f;
 	private static float verStabLiftSlope = 0f;
-	
-//	private float xPos;
-//	private float yPos;
-//	private float zPos;
-	
-	private float heading;
-	private float pitch;
-	private float roll;
-	
-	private float headingVel;
-	private float pitchVel;
-	private float rollVel;
 
 	private Matrix3f inertiaMatrix;
 	
@@ -87,8 +66,13 @@ public class Drone {
 	private Airport startingAirport;
 	private int startingGate;
 	
-	//-1.97864475 voor 1 wing
-	
+	/**
+	 * Create a new drone with the given id, at the given gate of the given airport, pointing to the given runway.
+	 * @param id
+	 * @param ap
+	 * @param gate
+	 * @param pointingToRunway
+	 */
 	public Drone(int id,Airport ap, int gate, int pointingToRunway){
 		
 		setId(id);
@@ -96,7 +80,7 @@ public class Drone {
 		setStartingGate(gate);
 		
 		float xPos = ap.getMiddleGate0()[0];
-		float yPos = 1.32f;
+		float yPos = Y_START_POS;
 		float zPos = ap.getMiddleGate0()[1];
 		Vector3f velocity = new Vector3f(0,0,0);
 		
@@ -125,7 +109,7 @@ public class Drone {
 		this.state = initState;
 	}
 	
-	
+	//DEPRECATED
 	public Drone(float xPos, float yPos, float zPos, Vector3f velocity ) {	
 		//SETTING DRONE PARTS
 		this.leftWing = new Airfoil(0, wingMass,   false, wingLiftSlope, new Vector3f(-wingX,0,0),this);
@@ -151,24 +135,8 @@ public class Drone {
 		this.state = initState;
 	}
 	
-	public void setGameItem(GameItem gameItem) {
-		this.gameItem = gameItem;
-	}
-	
-	public GameItem getGameItem() {
-		return this.gameItem;
-	}
-	
-	public int getId() {
-		return this.id;
-	}
-	
-	public void setId(int id){
-		this.id = id;
-	}
-	
 	/**
-	 * Checks if the drone is crashed.
+	 * Checks in every drone part if the drone is crashed.
 	 */
 	public boolean checkCrash(){
 		for(DronePart dp : this.getDroneParts()){
@@ -178,7 +146,11 @@ public class Drone {
 	}
 	
 	
-	//UPDATE THE DRONE AT EVERY TIME STEP
+	/**
+	 * Updates the drone with the given outputs and the given elapsed time.
+	 * @param outputs
+	 * @param time
+	 */
 	public void update(AutopilotOutputs outputs,float time){
 		
 		System.out.println("========================================================================");
@@ -186,6 +158,7 @@ public class Drone {
 		System.out.println("========================================================================");
 		
         float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
+        scaledThrust = scaledThrust*3;
         
         //OM TE TESTEN LATER WEGDOEN:
         
@@ -232,16 +205,13 @@ public class Drone {
         
         newState.setAngularRotation(fysica.getNewAngularVelocityInWorld(this, time));
         
-        
         float newHeading = this.getHeading() + (this.getHeadingVel() * time);
 		this.fysica.print("-- NEW HEADING IS:" + newHeading, 30);
 		
 		float newPitch = this.getPitch() + this.getPitchVel() * time;
-		this.setPitch(newPitch);
 		this.fysica.print("-- NEW PITCH IS:" + time + " . " + this.getPitchVel()  + " = " + newPitch, 30);
 		
 		float newRoll = this.getRoll() + this.getRollVel() * time;
-		this.setRoll(newRoll);
 		this.fysica.print("-- NEW ROLL IS:" + time + " . " + this.getRollVel() +  " = " + newRoll, 30);
 		
 		
@@ -270,299 +240,6 @@ public class Drone {
         this.state = newState;
 
 	}
-	
-	
-	public State getState() {
-		return this.state;
-	}
-	
-	//geeft alle airfoils + engine
-	public Airfoil getLeftWing() {
-		return this.leftWing;
-	}
-	
-	public Airfoil getRightWing() {
-		return this.rightWing;
-	}
-	
-	public Airfoil getHorStabilizator() {
-		return this.horStabilization;
-	}
-	
-	public Airfoil getVerStabilizator() {
-		return this.verStabilization;
-	}
-	
-	public Engine getEngine() {
-		return this.engine;
-	}
-	
-	public Wheel getFrontWheel(){
-		return this.frontWheel;
-	}
-	
-	public Wheel getLeftWheel(){
-		return this.leftWheel;
-	}
-	
-	public Wheel getRightWheel(){
-		return this.rightWheel;
-	}
-	
-	//
-	public float getThrust() {
-		return this.getEngine().getThrustScalar();
-	}
-	
-	public float getGravity() {
-		return Fysica.gravity;
-	}
-	
-	
-	
-	
-	//POSITION IN WORLD ---------------------------
-	
-//	public Vector3f getPositionInWorld() {
-//		Vector3f v = new Vector3f(getXPos(), getYPos(), getZPos());
-//		return v;
-//	}
-	
-//	public void setPositionInWorld(Vector3f pos) {
-//		this.xPos = pos.getX();
-//		this.yPos = pos.getY();
-//		this.zPos = pos.getZ();
-//	}
-//	
-//	public void setPositionInWorld(float x, float y, float z){
-//		this.xPos = x;
-//		this.yPos = y;
-//		this.zPos = z;
-//	}
-//	
-//	public void setXPos(float x) {
-//		this.xPos = x;
-//	}
-//	
-//	public float getXPos() {
-//		return this.xPos;
-//	}
-//	
-//	public void setYPos(float y) {
-//		this.yPos = y;
-//	}
-//	
-//	public float getYPos() {
-//		return this.yPos;
-//	}
-//	
-//	public void setZPos(float z) {
-//		this.zPos = z;
-//	}
-//	
-//	public float getZPos() {
-//		return this.zPos;
-//	}
-	
-	
-	//VELOCITY IN WORLD ---------------------------------------------------
-//	public void setVelocityInWorld(Vector3f vel) {
-//		this.velocityInWorld = vel;
-//	}
-//	
-//	public Vector3f getVelocityInWorld() {
-//		return this.velocityInWorld;
-//	}
-//	
-	
-	//ANGULAR POSITION IN WORLD
-
-//	public Vector3f getAngularPositionInWorld() {
-//		return this.angularPositionInWorld;
-//	}
-//	
-//	public void setAngularPositionInWorld(Vector3f angularPosition) {
-//		this.angularPositionInWorld = angularPosition;
-//	}
-	
-	
-	//ANGULAR ROTATION IN WORLD
-	
-//	public Vector3f getAngularVelocityInWorld() {
-//		return this.angularVelocityInWorld;
-//	}
-//	
-//	public void setAngularVelocityInWorld(Vector3f angularRotation) {
-//		this.angularVelocityInWorld = angularRotation;
-//	}
-	
-	public void setThrust(float thrust) {
-		this.getEngine().setThrust(thrust);
-	}
-	
-	public void setLeftWingInclination(float incl) {
-		this.getLeftWing().setInclination(incl);
-	}
-	
-	public float getLeftWingInclination() {
-		return this.getLeftWing().getInclination();
-	}
-	
-	public void setRightWingInclination(float incl) {
-		this.getRightWing().setInclination(incl);
-	}
-	
-	public float getRightWingInclination() {
-		return this.getRightWing().getInclination();
-	}
-	
-	public void setHorStabInclination(float incl) {
-		this.getHorStabilizator().setInclination(incl);
-	}
-	
-	public float getHorStabInclination() {
-		return this.getHorStabilizator().getInclination();
-	}
-	
-	public void setVerStabInclination(float incl) {
-		this.getVerStabilizator().setInclination(incl);
-	}
-	
-	public float getVerStabInclination() {
-		return this.getVerStabilizator().getInclination();
-	}
-	
-	public DronePart[] getDroneParts() {
-		DronePart[] droneParts = {
-				getLeftWing(), 
-				getRightWing(), 
-				getHorStabilizator(), 
-				getVerStabilizator(), getEngine(),getFrontWheel(),getLeftWheel(),getRightWheel()};
-		return droneParts;
-	}
-		
-	public void setHeading(float heading) {
-		this.heading = fysica.clean(heading);
-	}
-
-	public float getHeading() {
-		return this.getState().getHeading();
-	}
-	
-	public void setPitch(float pitch) {
-		this.pitch = fysica.clean(pitch);
-	}
-
-	public float getPitch() {
-		
-		//TODO getters 0
-		
-		return this.getState().getPitch();
-		
-		
-		//return 0;
-	}
-	
-	public void setRoll(float roll) {
-		this.roll = fysica.clean(roll);
-	}
-
-	public float getRoll() {
-		
-		
-		return this.getState().getRoll();
-		
-		
-		//return 0;
-	}
-	
-	public void setHeadingVel(float vel) {
-		this.headingVel = vel;
-	}
-	
-	public float getHeadingVel() {
-		
-		
-		return this.getState().getHeadingRate();
-		
-		
-		//return 0;
-		
-		
-	}
-	
-	public void setPitchVel(float vel) {
-		this.pitchVel = vel;
-	}
-	
-	public float getPitchVel() {
-		return this.getState().getPitchRate();
-	}
-	
-	public void setRollVel(float vel) {
-		this.rollVel = vel;
-	}
-	
-	public float getRollVel() {
-		return this.getState().getRollRate();
-	}
-	
-	//Getters van alle finals
-	
-	public float getWingX() {
-		return this.wingX;
-	}
-	
-	public float getTailSize() {
-		return tailSize;
-	}
-	
-	
-	//MASS FUNCTIONS
-	
-	public float getTotalMass(){
-		return this.getEngineMass() + 2*this.getWingMass()+this.getTailMass();
-	}
-	
-	public float getEngineMass() {
-		return this.getEngine().getMass();
-	}
-
-	public Vector3f getEngineLocation() {
-		Vector3f EngineLocation= new Vector3f(0,0,-this.tailSize*this.tailMass/this.engineMass);
-		return EngineLocation;
-	}
-	
-	//Alle vleugels hebben dezelfde massa
-	public float getWingMass() {
-		return this.getLeftWing().getMass();
-	}
-		
-	public float getTailMass() {
-		return this.getHorStabilizator().getMass() + this.getVerStabilizator().getMass();
-	}
-	
-	public float getMaxThrust() {
-		return this.getEngine().getMaxthrust();
-	}
-	
-	public float getMaxAOA() {
-		return this.maxAOA;
-	}
-	
-	public float getWingLiftSlope() {
-		return Drone.wingLiftSlope;
-	}
-
-	public float getHorStabLiftSlope() {
-		return Drone.horStabLiftSlope;
-	}
-
-	public float getVerStabLiftSlope() {
-		return Drone.verStabLiftSlope;
-	}
-	
-	
 	
 	//INERTIA MATRICES
 
@@ -608,26 +285,212 @@ public class Drone {
 		return inertiaMatrixInWorld;
 		
 	}
+	
+	public void setThrust(float thrust) {
+		this.getEngine().setThrust(thrust);
+	}
+	
+	public void setLeftWingInclination(float incl) {
+		this.getLeftWing().setInclination(incl);
+	}
+	
+	public float getLeftWingInclination() {
+		return this.getLeftWing().getInclination();
+	}
+	
+	public void setRightWingInclination(float incl) {
+		this.getRightWing().setInclination(incl);
+	}
+	
+	public float getRightWingInclination() {
+		return this.getRightWing().getInclination();
+	}
+	
+	public void setHorStabInclination(float incl) {
+		this.getHorStabilizator().setInclination(incl);
+	}
+	
+	public float getHorStabInclination() {
+		return this.getHorStabilizator().getInclination();
+	}
+	
+	public void setVerStabInclination(float incl) {
+		this.getVerStabilizator().setInclination(incl);
+	}
+	
+	public float getVerStabInclination() {
+		return this.getVerStabilizator().getInclination();
+	}
+	
+	public DronePart[] getDroneParts() {
+		DronePart[] droneParts = {
+				getLeftWing(), 
+				getRightWing(), 
+				getHorStabilizator(), 
+				getVerStabilizator(), getEngine(),getFrontWheel(),getLeftWheel(),getRightWheel()};
+		return droneParts;
+	}
 
+	public float getHeading() {
+		return this.getState().getHeading();
+	}
+
+	public float getPitch() {
+		return this.getState().getPitch();
+	}
+
+	public float getRoll() {		
+		return this.getState().getRoll();
+	}
+	
+	public float getHeadingVel() {	
+		return this.getState().getHeadingRate();
+	}
+	
+	public float getPitchVel() {
+		return this.getState().getPitchRate();
+	}
+	
+	public float getRollVel() {
+		return this.getState().getRollRate();
+	}
+	
+	public float getTotalMass(){
+		return this.getEngineMass() + 2*this.getWingMass()+this.getTailMass();
+	}
+	
+	public float getEngineMass() {
+		return this.getEngine().getMass();
+	}
+
+	public Vector3f getEngineLocation() {
+		Vector3f EngineLocation= new Vector3f(0,0,-this.tailSize*this.tailMass/this.engineMass);
+		return EngineLocation;
+	}
+	
+	//Alle vleugels hebben dezelfde massa
+	public float getWingMass() {
+		return this.getLeftWing().getMass();
+	}
+		
+	public float getTailMass() {
+		return this.getHorStabilizator().getMass() + this.getVerStabilizator().getMass();
+	}
+	
+	public float getMaxThrust() {
+		return this.getEngine().getMaxthrust();
+	}
+	
+	public float getMaxAOA() {
+		return this.maxAOA;
+	}
+	
+	public float getWingLiftSlope() {
+		return Drone.wingLiftSlope;
+	}
+
+	public float getHorStabLiftSlope() {
+		return Drone.horStabLiftSlope;
+	}
+
+	public float getVerStabLiftSlope() {
+		return Drone.verStabLiftSlope;
+	}
 
 	public Airport getStartingAirport() {
 		return startingAirport;
 	}
 
-
 	public void setStartingAirport(Airport startingAirport) {
 		this.startingAirport = startingAirport;
 	}
-
 
 	public int getStartingGate() {
 		return startingGate;
 	}
 
-
 	public void setStartingGate(int startingGate) {
 		this.startingGate = startingGate;
 	}
 	
+	public void setGameItem(GameItem gameItem) {
+		this.gameItem = gameItem;
+	}
+	
+	public GameItem getGameItem() {
+		return this.gameItem;
+	}
+	
+	public int getId() {
+		return this.id;
+	}
+	
+	public void setId(int id){
+		this.id = id;
+	}
+	
+	public State getState() {
+		return this.state;
+	}
+	
+	public Airfoil getLeftWing() {
+		return this.leftWing;
+	}
+	
+	public Airfoil getRightWing() {
+		return this.rightWing;
+	}
+	
+	public Airfoil getHorStabilizator() {
+		return this.horStabilization;
+	}
+	
+	public Airfoil getVerStabilizator() {
+		return this.verStabilization;
+	}
+	
+	public Engine getEngine() {
+		return this.engine;
+	}
+	
+	public Wheel getFrontWheel(){
+		return this.frontWheel;
+	}
+	
+	public Wheel getLeftWheel(){
+		return this.leftWheel;
+	}
+	
+	public Wheel getRightWheel(){
+		return this.rightWheel;
+	}
+	
+	public float getThrust() {
+		return this.getEngine().getThrustScalar();
+	}
+	
+	public float getGravity() {
+		return Fysica.gravity;
+	}
+	
+	public float getWingX() {
+		return this.wingX;
+	}
+	
+	public float getTailSize() {
+		return tailSize;
+	}
+	
+	public float getX(){
+		return getState().getX();
+	}
+	
+	public float getY(){
+		return getState().getY();
+	}
+	
+	public float getZ(){
+		return getState().getZ();
+	}
 
 }
