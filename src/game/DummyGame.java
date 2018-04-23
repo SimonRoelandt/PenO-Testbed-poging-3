@@ -21,6 +21,8 @@ import engine.Ground;
 import engine.IGameLogic;
 import engine.MouseInput;
 import engine.OBJLoader;
+import engine.Square;
+import engine.Timer;
 import engine.Window;
 import graph.Camera;
 import graph.Mesh;
@@ -31,15 +33,15 @@ import autopilotLibrary.MyAutopilotModule;
 public class DummyGame implements IGameLogic {
 
 	
-	private static final float MOUSE_SENSITIVITY = 0.01f;
+	private static final float MOUSE_SENSITIVITY = 0.1f;
 	
     public final Renderer renderer;
     
     public Window window;
     
     private final Vector3f cameraInc;
-
-    private final Camera camera;
+    
+    private List<Camera> chaseCameras = new ArrayList<Camera>();
     
     private final Camera cameraFree;
     
@@ -49,7 +51,7 @@ public class DummyGame implements IGameLogic {
     
     public final Camera cameraTop;
     
-    private static final float CAMERA_POS_STEP = 10f;
+    private static final float CAMERA_POS_STEP = 1f;
     
     private ArrayList<GameItem> gameItems = new ArrayList<GameItem>();
     
@@ -65,38 +67,40 @@ public class DummyGame implements IGameLogic {
         //INITIAL SETUPS
    
     private Balk balk;
+
     private Mesh mesh;
-    private List<Mesh> meshList = new ArrayList<Mesh>();
-    private Ground ground;
-        
+
     private GUI gui;
+        
+    private List<Mesh> meshList = new ArrayList<Mesh>();;
     
     public boolean startSimulation = false;
+    
     public boolean simulationEnded = false;
+    
     public boolean sendConfig = false;
     
-    //TODO
-    private float xRenderDistance = 5000;
+    private Ground ground;
     
-    private float zRenderDistance = 5000;
+    public int currentDroneId;
     
-    private float groundPieceWidth;
-    
-    private float xMaxCoordinate;
-    
-    private float zMaxCoordinate;
-    
-    private float xMinCoordinate;
-    
-    private float zMinCoordinate;
-    
+
     private MyAutopilotModule autopilotModule;
     
     public DummyGame() {
         renderer = new Renderer();
-        camera = new Camera();
-        camera.setPosition(0, 1, 2);
-        camera.setRotation(0,0,0);
+        autopilotModule = new MyAutopilotModule();
+        apController = new AirportController();
+        droneController = new DronesController(apController);
+        
+        
+        for (Drone drone : droneController.getDrones()) {
+        	Camera camera = new Camera();
+            camera.setPosition(0, 1, 2);
+            camera.setRotation(0,0,0);
+        	chaseCameras.add(camera);
+        }
+
         cameraFree = new Camera();
         cameraFree.setPosition(0, 1, 5);
         cameraSide = new Camera();
@@ -107,11 +111,11 @@ public class DummyGame implements IGameLogic {
         cameraPlane.setPosition(0, 0, 0);
         cameraTop = new Camera();
         cameraTop.setPosition(20, 300, -50);
-        cameraTop.setRotation(-90f, -90f, 0);        
+        cameraTop.setRotation(-90f, -90f, 0);
+
         
-        autopilotModule = new MyAutopilotModule();
-        apController = new AirportController();
-        droneController = new DronesController(apController);
+        
+        
         
         gui = new GUI(this);
     }
@@ -129,8 +133,9 @@ public class DummyGame implements IGameLogic {
         
       //DRONES VISUAL
         for( Drone drone : droneController.getDrones()) {
-            Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black, false);
-            Mesh meshDrone = OBJLoader.loadOBJModel("Eurofighter");
+        	Color[] colors = {Color.RED, Color.blue};
+            Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black, false,1);
+            Mesh meshDrone = OBJLoader.loadOBJModel("p39", Color.GREEN);
             GameItem droneItem = new GameItem(meshDrone,false, false);
             droneItem.setScale(0.5f);
             droneItem.setRotation(drone.getState().getPitch(), drone.getState().getHeading(), drone.getState().getRoll()); //TODO JUIST?
@@ -140,7 +145,7 @@ public class DummyGame implements IGameLogic {
         }
 
       //CUBES VISUAL
-        balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, Color.red, false);
+        balk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, Color.red, false,1);
         Texture balkTexture = null;
         mesh = new Mesh(balk.positions(), balk.colours(), balk.indices(), new float[]{}, balkTexture);
         createMesh(Color.red);
@@ -173,7 +178,7 @@ public class DummyGame implements IGameLogic {
             gameItems.add(drone.getGameItem());
         }
     	        
-        //WORLD VISUAL
+     //WORLD VISUAL
 
        /*
        Ground ground = new Ground();
@@ -186,18 +191,15 @@ public class DummyGame implements IGameLogic {
        
        //TODO
        ground = new Ground();
-       ground.generateStart(2*xRenderDistance, 2*zRenderDistance);
+       ground.generateStart();
        gameItems.addAll(ground.getListGroundItems());
-       groundPieceWidth = ground.getWidthPiece();
-       xMaxCoordinate = xRenderDistance - groundPieceWidth/2;
-       zMaxCoordinate = zRenderDistance - groundPieceWidth/2;
-       xMinCoordinate = -xRenderDistance + groundPieceWidth/2;
-       zMinCoordinate = -zRenderDistance + groundPieceWidth/2; 
-       //gameItems.add(ground.getGroundGameItem()); 
+       
        
        //AIRPORT VISUAL
        apController.visualise();
        gameItems.addAll(apController.getAirportItems());
+       
+       
        
     }
 
@@ -225,12 +227,10 @@ public class DummyGame implements IGameLogic {
     public void update(float interval, MouseInput mouseInput) {
     	totTime += interval;
 	    gui.update();
-	    
 	    // Update camera positie
 	    cameraFree.movePosition(cameraInc.x * CAMERA_POS_STEP,
 	        cameraInc.y * CAMERA_POS_STEP,
 	        cameraInc.z * CAMERA_POS_STEP);
-	    
 	    // Update camera door muis            
 	    if (mouseInput.isRightButtonPressed()) {
 	        Vector2f rotVec = mouseInput.getDisplVec();
@@ -243,10 +243,10 @@ public class DummyGame implements IGameLogic {
     		droneController.startTimePassed(autopilotModule,renderer,totTime());
     		System.out.println("");
     		droneController.completeTimePassed(autopilotModule,interval);
-    		
+    		/*
     		//Clean-up crashed drones.
     		for(Drone d : droneController.getDrones()){
-    			//Crash on ground
+    	 		//Crash on ground
     			if(droneController.checkCrash(d)) removeDrone(d);
     			//Crash between two drones
     			for(Drone d2 : droneController.getDrones()){
@@ -256,16 +256,18 @@ public class DummyGame implements IGameLogic {
     				}
     			}
     		}
-    		
+    		*/
     		//Update visual drone objects
     		for(Drone drone: droneController.getDrones()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
     			drone.getGameItem().setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
-    			System.out.println("PITCH: " + drone.getPitch());
     		}
-    		
-    		camera.setPosition(droneController.getDrones().get(0).getState().getX()-5, droneController.getDrones().get(0).getState().getY(), droneController.getDrones().get(0).getState().getZ()+5);
-    		camera.setRotation((float )Math.PI/2, 0.0f, 0.0f);
+    		//Update chase-cameras
+    		Vector3f currentDronePos = droneController.getDrones().get(currentDroneId).getState().getPosition();
+    		float currentDroneHeading = droneController.getDrones().get(currentDroneId).getState().getHeading();
+    		System.out.println(currentDroneHeading);
+    		chaseCameras.get(currentDroneId).setPosition(currentDronePos.x-2*(float)Math.sin((double)(currentDroneHeading)),currentDronePos.y+1,currentDronePos.z+2*(float)Math.cos((double)currentDroneHeading));
+    		chaseCameras.get(currentDroneId).setRotation(0,(float)Math.toDegrees(currentDroneHeading),0);
     	}
     }
     
@@ -274,10 +276,12 @@ public class DummyGame implements IGameLogic {
      * @param d
      * 		  The given drone.
      */
+    /*
     private void removeDrone(Drone d) {
 		this.getGameItems().remove(d.getGameItem());
 		droneController.remove(d);
 	}
+	*/
 
 	/**
 	 * Generates the given number of cubes at random (in a pre-defined area) position.
@@ -345,21 +349,20 @@ public class DummyGame implements IGameLogic {
     }
     
     public void createMesh(Color color) {
-    	Balk createbalk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, color, false);
+    	Balk createbalk = new Balk(-0.5f, -0.5f, -0.5f, 1f, 1f, 1f, color, false,1);
     	meshList.add(new Mesh(createbalk.positions(), createbalk.colours(), createbalk.indices(),  new float[]{} , null));	
     }
     
     public List<GameItem> getGameItems() {
     	return gameItems;
     }
-  
-    public float totTime(){
-    	return totTime;
-    }
-    
     @Override
     public void render(Window window) throws Exception {
-        renderer.render(window, camera, cameraFree, cameraPlane, cameraSide, cameraTop, gameItems);
+        renderer.render(window, chaseCameras.get(currentDroneId), cameraFree, cameraPlane, cameraSide, cameraTop, gameItems);
+    }
+    
+    public float totTime(){
+    	return totTime;
     }
 
     @Override
@@ -370,5 +373,5 @@ public class DummyGame implements IGameLogic {
         }
         autopilotModule.simulationEnded();
     }
-
+  
 }
