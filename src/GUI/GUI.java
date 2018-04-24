@@ -208,6 +208,8 @@ public class GUI {
 		frame.add(panelViews, c);
 		// tot hier
 		
+		////////////////////// IN COMMENT VOOR DEMO
+		/*
 		//random cubes
 		tabbedPaneGenerate = new JTabbedPane();
 		panelGenerate = new JPanel();
@@ -252,24 +254,29 @@ public class GUI {
 		c.gridy = 4;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(tabbedPaneGenerate, c);
+		*/
+		
+		
+		////////////////////////// TOT HIER
+		////////////////////////// als uncomment: c.gridy telkens +1 voor hieronder
 		
 		
 		//PACKAGE
 		panelAddPackage = new JPanel();
 		panelAddPackage.setLayout(new GridLayout(4,1));
-		panelFromAirport = addLabelTextPanelCustom("From Airport: " , 0f);
+		panelFromAirport = addLabelTextPanelAddPackage("From Airport: " , 0);
 		panelFromAirport.tf.addActionListener(new ListenForFromAirport());
-		panelToAirport = addLabelTextPanelCustom("To Airport: " , 0f);
+		panelToAirport = addLabelTextPanelAddPackage("To Airport: " , 0);
 		panelToAirport.tf.addActionListener(new ListenForToAirport());
 		
 
-		buttonAddPackage = addButtonPanelCustomCube("Add Package");
+		buttonAddPackage = addButtonPanelAddPackage("Add Package");
 		buttonAddPackage.button.setFocusPainted(false);
 		buttonAddPackage.button.addActionListener(new ListenForAddPackage());
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 5;
+		c.gridy = 4;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelAddPackage, c);
 		
@@ -279,7 +286,7 @@ public class GUI {
 		buttonStart.button.addActionListener(new ListenForStartButton());
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 6;
+		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		frame.add(panelStart, c);
@@ -327,6 +334,12 @@ public class GUI {
 	}
 	public ButtonPanel addButtonPanelCustomCube(String text) {
 		return new ButtonPanel(text, panelCustomCube);
+	}
+	public ButtonPanel addButtonPanelAddPackage(String text) {
+		return new ButtonPanel(text, panelAddPackage);
+	}
+	public LabelTextPanel addLabelTextPanelAddPackage(String text, int value) {
+		return new LabelTextPanel(text, value, panelAddPackage);
 	}
 	
 	public void update() {
