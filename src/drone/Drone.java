@@ -324,6 +324,7 @@ public class Drone {
 		GameItem droneIconItem = new GameItem(droneIconMesh, false, true, true);
 		droneIconItem.setId(texture.id);
 		droneIconItem.setPosition(this.getState().getX(), hoogte, this.getState().getZ());
+		droneIconItem.setRotation(0f, this.getState().getHeading(), 0f);
 		this.droneIconGameItem = droneIconItem;
 	}
 	
