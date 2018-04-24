@@ -47,7 +47,7 @@ public class GUI {
 					panelFromAirport, panelToAirport;
 	GLPanel glpanel;
 	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube, buttonAddPackage;
-	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force;
+	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force, resulmoment;
 	JFileChooser fc;
 	JTabbedPane tabbedPaneGenerate;
 	JList<GameItem> list;
@@ -133,6 +133,7 @@ public class GUI {
 		thrust = new LabelPanel("Thrust", panelValues);
 		force = new LabelPanel("force", panelValues);
 		aoa = new LabelPanel("Angle of Attack", panelValues);
+		resulmoment = new LabelPanel("Resulting Moment", panelValues);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
@@ -165,6 +166,7 @@ public class GUI {
 		panelmaxthrust.tf.addActionListener(new ListenForMaxThrust());
 		panelmaxaoa = addLabelTextPanelConfig("Max AOA", currentDrone.maxAOA);
 		panelmaxaoa.tf.addActionListener(new ListenForMaxAOA());
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
@@ -376,8 +378,10 @@ public class GUI {
 		aoa.labelValue.setText("(" + currentDrone.leftWing.getAngleOfAttack() + ")");
 		//aoa.labelValue.setText("(" + round(currentDrone.getAOA(),2) + ")");
 		
-		
-		
+		resulmoment.labelValue.setText("(" + round(currentDrone.fysica.getDroneResultingMomentInWorld(currentDrone).getX(),0) +
+				", " + round(currentDrone.fysica.getDroneResultingMomentInWorld(currentDrone).getY(),0) +
+				", " + round(currentDrone.fysica.getDroneResultingMomentInWorld(currentDrone).getZ(),0) +
+				")");
 	}
 	
 	
