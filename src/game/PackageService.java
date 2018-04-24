@@ -64,6 +64,18 @@ public class PackageService {
 	public boolean isPackageGate(int ap, int gate){
 		return apController.getAirport(ap).isPackageGate(gate);
 	}
+	
+	/**
+	 * Gets a list of all package positions.
+	 */
+	public ArrayList<float[]> getPackages(){
+		ArrayList<float[]> pos = new ArrayList<float[]>();
+		for(Airport ap : apController.getAirports()){
+			if(ap.isPackageGate0()) pos.add(ap.getMiddleGate0());
+			if(ap.isPackageGate1()) pos.add(ap.getMiddleGate1());
+		}
+		return pos;
+	}
 
 
 }
