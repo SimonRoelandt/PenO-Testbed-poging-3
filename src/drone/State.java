@@ -30,6 +30,19 @@ public class State {
 	}
 	
 	
+	//DRONE MOMENT
+	
+	Vector3f moment = new Vector3f();
+	
+	public Vector3f getMoment() {
+		return this.moment;
+	}
+	
+	public void setMoment(Vector3f moment) {
+		this.moment = moment;
+	}
+	
+	
 	//VELOCITY
 	public Vector3f getVelocity() {
 		return this.velocity;
@@ -69,6 +82,7 @@ public class State {
 	public float getRoll(){
 		return getHPR().getZ();
 	}
+	
 	
 	
 	//ANGULAR HPR rates
