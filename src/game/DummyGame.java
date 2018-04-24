@@ -134,7 +134,7 @@ public class DummyGame implements IGameLogic {
         	Color[] colors = {Color.RED, Color.blue};
             Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black, false,1);
             Mesh meshDrone = OBJLoader.loadOBJModel("p39", Color.GREEN);
-            GameItem droneItem = new GameItem(meshDrone,false, false);
+            GameItem droneItem = new GameItem(meshDrone,false, false, false);
             droneItem.setScale(0.5f);
             droneItem.setRotation(drone.getState().getPitch(), drone.getState().getHeading(), drone.getState().getRoll()); //TODO JUIST?
             droneItem.setPosition(drone.getState().getX(), drone.getState().getY(), drone.getState().getZ());
@@ -153,10 +153,10 @@ public class DummyGame implements IGameLogic {
         createMesh(Color.cyan);
         createMesh(Color.magenta);
 
-        GameItem gameItem = new GameItem(mesh,true, false);
-        GameItem gameItem2 = new GameItem(mesh,true, false);
-        GameItem gameItem3 = new GameItem(mesh,true, false);
-        GameItem gameItem4 = new GameItem(mesh,true, false);
+        GameItem gameItem = new GameItem(mesh,true, false, false);
+        GameItem gameItem2 = new GameItem(mesh,true, false, false);
+        GameItem gameItem3 = new GameItem(mesh,true, false, false);
+        GameItem gameItem4 = new GameItem(mesh,true, false, false);
         
         gameItem4.setPosition(-10, 0, 0);
         gameItem4.setRotation(-60f, 20f, 40f);
@@ -310,7 +310,7 @@ public class DummyGame implements IGameLogic {
     	//Mesh mesh = new Mesh(balk.positions(), balk.colours(), balk.indices());
         
         for(int i=0;i<n;i++){
-        	GameItem gameItem = new GameItem(randomMesh(),true, false);
+        	GameItem gameItem = new GameItem(randomMesh(),true, false, false);
         	
         	float z = i * -40f - 30;
         	float x = rand.nextInt(20) -10;
@@ -333,7 +333,7 @@ public class DummyGame implements IGameLogic {
     }
     
     public void addGameItemAtPos(float xPos, float yPos, float zPos) {
-    	GameItem gameItem = new GameItem(randomMesh(), true, false);
+    	GameItem gameItem = new GameItem(randomMesh(), true, false, false);
     	gameItem.setPosition(xPos, yPos, zPos);
     	gameItem.setScale(cubeScale);
     	this.gameItems.add(gameItem);
@@ -343,7 +343,7 @@ public class DummyGame implements IGameLogic {
     	CubeLoader cl = new CubeLoader();
     	cl.generatePositions(file);
     	for (int i = 0; i < cl.xpos.size(); i++) {
-    		GameItem gameItem = new GameItem(randomMesh(), true, false);
+    		GameItem gameItem = new GameItem(randomMesh(), true, false, false);
     		gameItem.setPosition(cl.xpos.get(i), cl.ypos.get(i), cl.zpos.get(i));
     		gameItem.setScale(cubeScale);
     		addGameItem(gameItem);
