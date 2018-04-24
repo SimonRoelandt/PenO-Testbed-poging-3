@@ -2,11 +2,8 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import autopilotLibrary.MyAutopilotModule;
 import engine.GameItem;
-import engine.Square;
-import graph.Mesh;
 
 /**
  * 
@@ -36,7 +33,7 @@ public class AirportController {
      */
 	public AirportController() {
         Airport air0 = new Airport(0,0,0,AIRPORT_W,AIRPORT_L,0);
-        Airport air1 = new Airport(200,310,(float) (Math.PI/4),AIRPORT_W,AIRPORT_L,1);
+        Airport air1 = new Airport(0,500,0,AIRPORT_W,AIRPORT_L,1);
         airports.add(air0);
         airports.add(air1);
 	}
@@ -58,6 +55,17 @@ public class AirportController {
 			airportItems.add(airport.getItem());
 		}
 	}
+	
+	/**
+	 * Gets the airport of the given id.
+	 * @param id
+	 */
+	public Airport getAirport(int id){
+		for(Airport ap : getAirports()){
+			if(ap.getId() == id) return ap;
+		}
+		return null;
+	}
 
 	
 	public ArrayList<Airport> getAirports() {
@@ -70,5 +78,9 @@ public class AirportController {
 	
 	public List<GameItem> getAirportItems() {
 		return this.airportItems;
+	}
+
+	public void deliverPackage(int fromAp, int fromGate, int toAp, int toGate) {
+		getAirport(fromAp).setPackageGate(true, fromGate);
 	}
 }

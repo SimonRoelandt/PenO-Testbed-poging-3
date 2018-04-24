@@ -57,9 +57,9 @@ public class DummyGame implements IGameLogic {
     
     private final float cubeScale = 5f;
     
-    public DronesController droneController;
-     
+    public DronesController droneController; 
     private AirportController apController;
+    private PackageService packageService;
     
     private float totTime = 0;
 
@@ -83,8 +83,7 @@ public class DummyGame implements IGameLogic {
     private Ground ground;
     
     public int currentDroneId;
-    
-
+   
     private MyAutopilotModule autopilotModule;
     
     public DummyGame() {
@@ -92,7 +91,7 @@ public class DummyGame implements IGameLogic {
         autopilotModule = new MyAutopilotModule();
         apController = new AirportController();
         droneController = new DronesController(apController);
-        
+        packageService = new PackageService(apController,droneController);
         
         for (Drone drone : droneController.getDrones()) {
         	Camera camera = new Camera();
@@ -257,6 +256,9 @@ public class DummyGame implements IGameLogic {
     			}
     		}
     		
+    		//Check package pick-up
+    		packageService.checkPickup();
+    		
     		//Update visual drone objects
     		for(Drone drone: droneController.getDrones()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
@@ -269,6 +271,15 @@ public class DummyGame implements IGameLogic {
     		chaseCameras.get(currentDroneId).setPosition(currentDronePos.x-2*(float)Math.sin((double)(currentDroneHeading)),currentDronePos.y+1,currentDronePos.z+2*(float)Math.cos((double)currentDroneHeading));
     		chaseCameras.get(currentDroneId).setRotation(0,(float)Math.toDegrees(currentDroneHeading),0);
     	}
+    }
+    
+    /**
+     * Adds a package request from one airport to another.
+     * @param fromAirport
+     * @param toAirport
+     */
+    public void addPackage(int fromAirport, int toAirport){
+    	packageService.newPackage(autopilotModule, fromAirport, toAirport);
     }
     
     /**

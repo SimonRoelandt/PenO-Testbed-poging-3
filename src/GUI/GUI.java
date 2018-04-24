@@ -39,13 +39,15 @@ public class GUI {
 	private JFrame frame;
 	JButton buttonPlane, buttonChase, buttonSide, buttonFree;
 	int buttonClicked;				
-	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove, panelChooseDrone;
+	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove, panelChooseDrone,
+			panelAddPackage;
 	JLabel label1, label2;
 	JTextField textfield1, textfield2;
-	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos;
+	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos,
+					panelFromAirport, panelToAirport;
 	GLPanel glpanel;
-	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube;
-	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force;
+	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube, buttonAddPackage;
+	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force, resulmoment;
 	JFileChooser fc;
 	JTabbedPane tabbedPaneGenerate;
 	JList<GameItem> list;
@@ -63,6 +65,8 @@ public class GUI {
 
 	
 	float xPos, yPos, zPos;
+	
+	int fromAirport, toAirport;
 	
 	public GUI(DummyGame dummyGame) {
 		this.dummyGame = dummyGame;
@@ -129,6 +133,7 @@ public class GUI {
 		thrust = new LabelPanel("Thrust", panelValues);
 		force = new LabelPanel("force", panelValues);
 		aoa = new LabelPanel("Angle of Attack", panelValues);
+		resulmoment = new LabelPanel("Resulting Moment", panelValues);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
@@ -161,6 +166,7 @@ public class GUI {
 		panelmaxthrust.tf.addActionListener(new ListenForMaxThrust());
 		panelmaxaoa = addLabelTextPanelConfig("Max AOA", currentDrone.maxAOA);
 		panelmaxaoa.tf.addActionListener(new ListenForMaxAOA());
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
@@ -204,6 +210,8 @@ public class GUI {
 		frame.add(panelViews, c);
 		// tot hier
 		
+		////////////////////// IN COMMENT VOOR DEMO
+		/*
 		//random cubes
 		tabbedPaneGenerate = new JTabbedPane();
 		panelGenerate = new JPanel();
@@ -248,8 +256,31 @@ public class GUI {
 		c.gridy = 4;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(tabbedPaneGenerate, c);
+		*/
 		
 		
+		////////////////////////// TOT HIER
+		////////////////////////// als uncomment: c.gridy telkens +1 voor hieronder
+		
+		
+		//PACKAGE
+		panelAddPackage = new JPanel();
+		panelAddPackage.setLayout(new GridLayout(4,1));
+		panelFromAirport = addLabelTextPanelAddPackage("From Airport: " , 0);
+		panelFromAirport.tf.addActionListener(new ListenForFromAirport());
+		panelToAirport = addLabelTextPanelAddPackage("To Airport: " , 0);
+		panelToAirport.tf.addActionListener(new ListenForToAirport());
+		
+
+		buttonAddPackage = addButtonPanelAddPackage("Add Package");
+		buttonAddPackage.button.setFocusPainted(false);
+		buttonAddPackage.button.addActionListener(new ListenForAddPackage());
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 4;
+		c.insets = new Insets(20,0,0,0); 
+		frame.add(panelAddPackage, c);
 		
 		//startknop
 		panelStart = new JPanel();
@@ -282,7 +313,6 @@ public class GUI {
 		
 		//frame.pack();
 	
-	
 	}
 	
 	public void run() {
@@ -305,6 +335,12 @@ public class GUI {
 	}
 	public ButtonPanel addButtonPanelCustomCube(String text) {
 		return new ButtonPanel(text, panelCustomCube);
+	}
+	public ButtonPanel addButtonPanelAddPackage(String text) {
+		return new ButtonPanel(text, panelAddPackage);
+	}
+	public LabelTextPanel addLabelTextPanelAddPackage(String text, int value) {
+		return new LabelTextPanel(text, value, panelAddPackage);
 	}
 	
 	public void update() {
@@ -342,8 +378,10 @@ public class GUI {
 		aoa.labelValue.setText("(" + currentDrone.leftWing.getAngleOfAttack() + ")");
 		//aoa.labelValue.setText("(" + round(currentDrone.getAOA(),2) + ")");
 		
-		
-		
+		resulmoment.labelValue.setText("(" + round(currentDrone.fysica.getDroneResultingMomentInWorld(currentDrone).getX(),0) +
+				", " + round(currentDrone.fysica.getDroneResultingMomentInWorld(currentDrone).getY(),0) +
+				", " + round(currentDrone.fysica.getDroneResultingMomentInWorld(currentDrone).getZ(),0) +
+				")");
 	}
 	
 	
@@ -532,33 +570,28 @@ public class GUI {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	private class ListenForKeys implements KeyListener{
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-
+	private class ListenForFromAirport implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			fromAirport = Integer.parseInt(panelFromAirport.tf.getText());
 		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-		
-		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-			
-		}
-		
 	}
-
+	
+	private class ListenForToAirport implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			toAirport = Integer.parseInt(panelToAirport.tf.getText());
+		}
+	}
+	
+	private class ListenForAddPackage implements ActionListener {
+		public void actionPerformed(ActionEvent e) {	
+			dummyGame.addPackage(fromAirport, toAirport);
+		}
+	}
+	
+	
+	
+	
+	
 	
     /**
      * Round to certain number of decimals
