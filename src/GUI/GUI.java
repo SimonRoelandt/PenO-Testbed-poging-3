@@ -39,12 +39,14 @@ public class GUI {
 	private JFrame frame;
 	JButton buttonPlane, buttonChase, buttonSide, buttonFree;
 	int buttonClicked;				
-	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove, panelChooseDrone;
+	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove, panelChooseDrone,
+			panelAddPackage;
 	JLabel label1, label2;
 	JTextField textfield1, textfield2;
-	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos;
+	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos,
+					panelFromAirport, panelToAirport;
 	GLPanel glpanel;
-	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube;
+	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube, buttonAddPackage;
 	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force;
 	JFileChooser fc;
 	JTabbedPane tabbedPaneGenerate;
@@ -63,6 +65,8 @@ public class GUI {
 
 	
 	float xPos, yPos, zPos;
+	
+	int fromAirport, toAirport;
 	
 	public GUI(DummyGame dummyGame) {
 		this.dummyGame = dummyGame;
@@ -250,6 +254,24 @@ public class GUI {
 		frame.add(tabbedPaneGenerate, c);
 		
 		
+		//PACKAGE
+		panelAddPackage = new JPanel();
+		panelAddPackage.setLayout(new GridLayout(4,1));
+		panelFromAirport = addLabelTextPanelCustom("From Airport: " , 0f);
+		panelFromAirport.tf.addActionListener(new ListenForFromAirport());
+		panelToAirport = addLabelTextPanelCustom("To Airport: " , 0f);
+		panelToAirport.tf.addActionListener(new ListenForToAirport());
+		
+
+		buttonAddPackage = addButtonPanelCustomCube("Add Package");
+		buttonAddPackage.button.setFocusPainted(false);
+		buttonAddPackage.button.addActionListener(new ListenForAddPackage());
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 5;
+		c.insets = new Insets(20,0,0,0); 
+		frame.add(panelAddPackage, c);
 		
 		//startknop
 		panelStart = new JPanel();
@@ -257,7 +279,7 @@ public class GUI {
 		buttonStart.button.addActionListener(new ListenForStartButton());
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 5;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		frame.add(panelStart, c);
@@ -532,33 +554,28 @@ public class GUI {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	private class ListenForKeys implements KeyListener{
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-
+	private class ListenForFromAirport implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			fromAirport = Integer.parseInt(panelFromAirport.tf.getText());
 		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-		
-		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-			
-		}
-		
 	}
-
+	
+	private class ListenForToAirport implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			toAirport = Integer.parseInt(panelToAirport.tf.getText());
+		}
+	}
+	
+	private class ListenForAddPackage implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			dummyGame.addPackage(fromAirport, toAirport);
+		}
+	}
+	
+	
+	
+	
+	
 	
     /**
      * Round to certain number of decimals
