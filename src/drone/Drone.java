@@ -79,9 +79,10 @@ public class Drone {
 		setStartingAirport(ap);
 		setStartingGate(gate);
 		
-		float xPos = ap.getMiddleGate0()[0];
+		float xPos = ap.getMiddleGate1()[0];
 		float yPos = Y_START_POS;
-		float zPos = ap.getMiddleGate0()[1];
+		float zPos = ap.getMiddleGate1()[1];
+		
 		Vector3f velocity = new Vector3f(0,0,0);
 		
 		//TODO ROTATIE VAN DRONE AFHANKELIJK VAN AIRPORT ORIENTATIE!!

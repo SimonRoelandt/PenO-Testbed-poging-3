@@ -1,6 +1,5 @@
 package game;
 
-
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.awt.Color;
@@ -243,19 +242,6 @@ public class DummyGame implements IGameLogic {
     		System.out.println("");
     		droneController.completeTimePassed(autopilotModule,interval);
     		
-    		//Clean-up crashed drones.
-    		for(Drone d : droneController.getDrones()){
-    	 		//Crash on ground
-    			if(droneController.checkCrash(d)) removeDrone(d);
-    			//Crash between two drones
-    			for(Drone d2 : droneController.getDrones()){
-    				if(!d.equals(d2) && droneController.checkCrash(d,d2)){
-    					removeDrone(d);
-    					removeDrone(d2);
-    				}
-    			}
-    		}
-    		
     		//Check package pick-up
     		packageService.checkPickup();
     		
@@ -265,11 +251,30 @@ public class DummyGame implements IGameLogic {
     			drone.getGameItem().setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
     		}
     		//Update chase-cameras
-    		Vector3f currentDronePos = droneController.getDrones().get(currentDroneId).getState().getPosition();
-    		float currentDroneHeading = droneController.getDrones().get(currentDroneId).getState().getHeading();
-    		System.out.println(currentDroneHeading);
-    		chaseCameras.get(currentDroneId).setPosition(currentDronePos.x-2*(float)Math.sin((double)(currentDroneHeading)),currentDronePos.y+1,currentDronePos.z+2*(float)Math.cos((double)currentDroneHeading));
-    		chaseCameras.get(currentDroneId).setRotation(0,(float)Math.toDegrees(currentDroneHeading),0);
+    		if(!droneController.isEmpty() && droneController.getDrones().get(currentDroneId) != null){
+    			Vector3f currentDronePos = droneController.getDrones().get(currentDroneId).getState().getPosition();
+    			float currentDroneHeading = droneController.getDrones().get(currentDroneId).getState().getHeading();
+    			System.out.println(currentDroneHeading);
+    			chaseCameras.get(currentDroneId).setPosition(currentDronePos.x-2*(float)Math.sin((double)(currentDroneHeading)),currentDronePos.y+1,currentDronePos.z+2*(float)Math.cos((double)currentDroneHeading));
+    			chaseCameras.get(currentDroneId).setRotation(0,(float)Math.toDegrees(currentDroneHeading),0);
+    		}
+    		
+    		//Clean-up crashed drones.
+    		ArrayList<Drone> toRemove = new ArrayList<Drone>();
+    		for(Drone d : droneController.getDrones()){
+    	 		//Crash on ground
+    			if(droneController.checkCrash(d)) toRemove.add(d);
+    			//Crash between two drones
+    			for(Drone d2 : droneController.getDrones()){
+    				if(!d.equals(d2) && droneController.checkCrash(d,d2)){
+    					toRemove.add(d);
+    					toRemove.add(d2);
+    				}
+    			}
+    		}
+    		for(Drone d : toRemove){
+    			removeDrone(d);
+    		}
     	}
     }
     

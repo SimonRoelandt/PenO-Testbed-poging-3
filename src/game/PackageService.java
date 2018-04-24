@@ -1,5 +1,8 @@
 package game;
 
+import java.util.ArrayList;
+
+import drone.Drone;
 import interfaces.AutopilotModule;
 
 public class PackageService {
@@ -16,7 +19,13 @@ public class PackageService {
 	 * Check for pickup of any packages.
 	 */
 	public void checkPickup() {
-		
+		System.out.println("CHECK PICKUP");
+		 for(Drone d : droneController.getDrones()){
+			 for(Airport ap : apController.getAirports()){
+				if( ap.onGate0(d.getX(), d.getZ())) System.out.println("ON GATE 0");
+				if( ap.onGate1(d.getX(), d.getZ())) System.out.println("ON GATE 1");
+			 }
+		 }
 	}
 	
 	/**

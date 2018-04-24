@@ -1,8 +1,6 @@
 package game;
 
 import java.awt.Color;
-
-import engine.Balk;
 import engine.GameItem;
 import engine.Square;
 import graph.Mesh;
@@ -80,51 +78,6 @@ public class Airport {
 		generateGameItem();
 	}
 	
-	//FOR TESTING
-	/*
-	public static void main(String[] args) {
-		Airport a = new Airport(200,200,(float) Math.PI/2, 30, 60, 0);
-		
-		float[] cord = a.getStartRunway0Corner();
-		System.out.println("X0start: " + cord[0] + " Y0start: " + cord[1]);
-		
-		float[] cord1 = a.getEndRunway0Corner();
-		System.out.println("X0end: " + cord1[0] + " Y0end: " + cord1[1]);
- 	}
-	*/
-	/**
-	 * Checks if a position is on the airport.
-	 */
-	public boolean onAirport(float x, float y){
-		boolean onAirportX = false;
-		boolean onAirportY = false;
-		float[] a = getStartRunway0Corner();
-		float[] b = getEndRunway1Corner();
-		if(a[0] < b[0]){
-			if(x >= a[0] && x <= b[0]) onAirportX = true;
-		}
-		else if(x <= a[0] && x >= b[0]) onAirportX = true;
-		
-		if(a[1] < b[1]){
-			if(y >= a[1] && y <= b[1]) onAirportY = true;
-		}
-		else if(y <= a[1] && y >= b[1]) onAirportY = true;
-		
-		return (onAirportX && onAirportY);
-	}
-	
-	/**
-	 * Calculates rotated position of a position according to the orientation.
-	 */
-	public float[] getRotatedPoint(float x, float z){
-		float angle = getOrientation();
-		
-		float rotatedX = (float) (getX() + (x  * Math.cos(angle)) - (z * Math.sin(angle)));
-		float rotatedZ = (float) (getZ() + (x  * Math.sin(angle)) + (z * Math.cos(angle)));
-
-		return new float []{rotatedX, rotatedZ};
-	}
-	
 	public void generateMesh() {
 		
 		Square airport1 = new Square(getStartRunway0Corner()[0],getStartRunway0Corner()[1],
@@ -145,6 +98,122 @@ public class Airport {
 		GameItem airportItem = new GameItem(airportmesh, false, true);
 		airportItem.setId(texture.id);
 		this.airportItem = airportItem;
+	}
+	
+	//FOR TESTING
+	/*
+	public static void main(String[] args) {
+		Airport a = new Airport(200,200,(float) Math.PI/2, 30, 60, 0);
+		
+		float[] cord = a.getStartRunway0Corner();
+		System.out.println("X0start: " + cord[0] + " Y0start: " + cord[1]);
+		
+		float[] cord1 = a.getEndRunway0Corner();
+		System.out.println("X0end: " + cord1[0] + " Y0end: " + cord1[1]);
+ 	}
+	*/
+	
+	/**
+	 * Checks if a position is on gate 0.
+	 */
+	public boolean onGate0(float x, float z){
+		boolean onGateX = false;
+		boolean onGateZ = false;
+		float[] a = getStartGate0();
+		float[] b = getEndGate0();
+		if(a[0] < b[0]){
+			if(x >= a[0] && x <= b[0]) onGateX = true;
+		}
+		else if(x <= a[0] && x >= b[0]) onGateX = true;
+		
+		if(a[1] < b[1]){
+			if(z >= a[1] && z <= b[1]) onGateZ = true;
+		}
+		else if(z <= a[1] && z >= b[1]) onGateZ = true;
+		
+		return (onGateX && onGateZ);
+	}
+	
+	/**
+	 * Checks if a position is on gate 1.
+	 */
+	public boolean onGate1(float x, float z){
+		boolean onGateX = false;
+		boolean onGateZ = false;
+		float[] a = getStartGate1();
+		float[] b = getEndGate1();
+		if(a[0] < b[0]){
+			if(x >= a[0] && x <= b[0]) onGateX = true;
+		}
+		else if(x <= a[0] && x >= b[0]) onGateX = true;
+		
+		if(a[1] < b[1]){
+			if(z >= a[1] && z <= b[1]) onGateZ = true;
+		}
+		else if(z <= a[1] && z >= b[1]) onGateZ = true;
+		
+		return (onGateX && onGateZ);
+	}
+	
+	/**
+	 * Checks if a position is on the airport.
+	 */
+	public boolean onAirport(float x, float z){
+		boolean onAirportX = false;
+		boolean onAirportZ = false;
+		float[] a = getStartRunway0Corner();
+		float[] b = getEndRunway1Corner();
+		if(a[0] < b[0]){
+			if(x >= a[0] && x <= b[0]) onAirportX = true;
+		}
+		else if(x <= a[0] && x >= b[0]) onAirportX = true;
+		
+		if(a[1] < b[1]){
+			if(z >= a[1] && z <= b[1]) onAirportZ = true;
+		}
+		else if(z <= a[1] && z >= b[1]) onAirportZ = true;
+		
+		return (onAirportX && onAirportZ);
+	}
+	
+	/**
+	 * Calculates rotated position of a position according to the orientation.
+	 */
+	public float[] getRotatedPoint(float x, float z){
+		float angle = getOrientation();
+		
+		float rotatedX = (float) (getX() + (x  * Math.cos(angle)) - (z * Math.sin(angle)));
+		float rotatedZ = (float) (getZ() + (x  * Math.sin(angle)) + (z * Math.cos(angle)));
+
+		return new float []{rotatedX, rotatedZ};
+	}
+	
+	/**
+	 * Gets the start position corner of gate 0.
+	 */
+	public float[] getStartGate0(){
+		return getRotatedPoint(-getW()/2,-getW());
+	}
+	
+	/**
+	 * Gets the start position corner of gate 1.
+	 */
+	public float[] getStartGate1(){
+		return getRotatedPoint(-getW()/2, 0);
+	}
+	
+	/**
+	 * Gets the end position corner of gate 0.
+	 */
+	public float[] getEndGate0(){
+		return getRotatedPoint(getW()/2,0);
+	}
+	
+	/**
+	 * Gets the end position corner of gate 1.
+	 */
+	public float[] getEndGate1(){
+		return getRotatedPoint(getW()/2,getW());
 	}
 	
 	/**

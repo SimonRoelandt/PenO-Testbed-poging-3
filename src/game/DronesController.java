@@ -27,7 +27,7 @@ public class DronesController {
 	public DronesController(AirportController apController){
 		this.apController = apController;
 		addDrone(new Drone(0,apController.getAirports().get(0), 0, 0));
-    	addDrone(new Drone(1,apController.getAirports().get(1), 0, 0));
+    	//addDrone(new Drone(1,apController.getAirports().get(1), 0, 0));
 	}
 	
 	/**
@@ -68,12 +68,15 @@ public class DronesController {
      * Checks if the given drone is crashed.
      */
 	public boolean checkCrash(Drone drone){
+		System.out.println("CRASH?");
 		if(drone.checkCrash()) return true;
 		else if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
+			System.out.println("ON GROUND");
 			if(onTarmac(drone)){
+				System.out.println("TARMAC");
 				return false;
 			}
-			else return false;
+			else return true;
 		}
 		return false;
 	}
@@ -153,5 +156,9 @@ public class DronesController {
 
 	public void setApController(AirportController apController) {
 		this.apController = apController;
+	}
+
+	public boolean isEmpty() {
+		return getDrones().isEmpty();
 	}
 }
