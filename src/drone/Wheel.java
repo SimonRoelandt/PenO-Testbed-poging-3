@@ -59,7 +59,7 @@ public class Wheel extends DronePart {
 	 * Checks if the tire is on the ground.
 	 */
 	public boolean isGround(){
-		if(getAbsolutePositionInWorld().getY() <= getTyreRadius()) return true;
+		if(getAbsolutePositionInWorld().getY() <= getTyreRadius() + 0.0002) return true;
 		else return false;
 	}
 	
