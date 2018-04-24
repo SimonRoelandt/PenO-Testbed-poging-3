@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class Square {
 	
-	private float hoogte=0f;
+	private float hoogte;
 	private float x1;
 	private float y1;
 	private float x2;
@@ -18,7 +18,7 @@ public class Square {
 	private float textureScale;
 	
 
-	public Square(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, Color color, boolean texture, float textureScale) {
+	public Square(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float hoogte, Color color, boolean texture, float textureScale) {
 	this.x1 = x1;
 	this.y1 = y1;
 	this.x2 = x2;
@@ -27,6 +27,7 @@ public class Square {
 	this.y3 = y3;
 	this.x4 = x4;
 	this.y4 = y4;
+	this.hoogte = hoogte;
 	this.color = color;
 	this.textureScale = textureScale;
 	
