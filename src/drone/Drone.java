@@ -77,6 +77,8 @@ public class Drone {
 	private Airport startingAirport;
 	private int startingGate;
 	
+	private boolean carryingPackage = false;
+	
 	/**
 	 * Create a new drone with the given id, at the given gate of the given airport, pointing to the given runway.
 	 * @param id
@@ -537,6 +539,14 @@ public class Drone {
 	
 	public float getZ(){
 		return getState().getZ();
+	}
+
+	public boolean isCarryingPackage() {
+		return carryingPackage;
+	}
+
+	public void setCarryingPackage(boolean carryingPackage) {
+		this.carryingPackage = carryingPackage;
 	}
 
 }
