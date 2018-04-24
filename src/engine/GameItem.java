@@ -11,20 +11,26 @@ public class GameItem {
 	private float scale;
 	private final Vector3f rotation;
 	private boolean renderOnPlaneView;
+	private boolean renderOnlyTopView;
 	public boolean texture;
 	public int textureId;
 	
-	public GameItem(Mesh mesh,boolean render, boolean texture) {
+	public GameItem(Mesh mesh,boolean render, boolean texture, boolean renderTop) {
 		this.mesh = mesh;
 		position = new Vector3f(0,0,0);
 		scale = 1;
 		rotation = new Vector3f(0,0,0);
 		this.renderOnPlaneView = render;
+		this.renderOnlyTopView = renderTop;
 		this.texture = texture;
 	}
 	
 	public boolean getRenderOnPlaneView(){
 		return this.renderOnPlaneView;
+	}
+	
+	public boolean getRenderOnTopView(){
+		return this.renderOnlyTopView;
 	}
 	
 	public Vector3f getPosition() {

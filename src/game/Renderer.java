@@ -58,7 +58,7 @@ public class Renderer {
     private ByteBuffer screen;
     private byte[] pixelsarray;
     public BufferedImage screenshot;
-    public String view = "free";
+    public String view = "side";
 
     public Renderer() {
     	transformation = new Transformation();
@@ -327,18 +327,53 @@ public class Renderer {
        		//Verander naar orthogonaal
        	
        	
-	       	projectionMatrix = transformation.getProjectionMatrixOrthogonal(120,120, z_near, z_far);
+       		
+	       	projectionMatrix = transformation.getProjectionMatrixOrthogonal(8000,8000, z_near, z_far);
 	       	shaderProgram.bind();
 	       	shaderProgram.setUniform("projectionMatrix",projectionMatrix);
 	       	shaderProgramTexture.bind();
 	       	shaderProgramTexture.setUniform("projectionMatrix", projectionMatrix);
-	       	// orthogonale projectiematrix werkt nog niet
+	    
 	       	
 	       	
 	       	
 	        
+	        glBindFramebuffer(GL_FRAMEBUFFER, framebufferTop);
+	       	clear();
+	       	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	  
+	        //TOP
+	        viewMatrix = transformation.getViewMatrix(cameraTop);
+	        for(GameItem gameItem : gameItems) {
+	        	if (gameItem instanceof GroundItem)
+	        		glDepthMask(false);
+	        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+	        	shaderProgram.bind();
+	            shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+	            shaderProgramTexture.bind();
+	            shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
 	
+	            if (gameItem.texture) {
+	        		shaderProgramTexture.bind();
+	        		gameItem.getMesh().renderCameraTopTex(framebufferTop, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+	            }
+	        	else {
+	        		shaderProgram.bind();
+	        		gameItem.getMesh().renderCameraTop(framebufferTop, imageWidth, imageHeight, window.getWidth(), window.getHeight());            
+	        	}
+	            glDepthMask(true);
+	        } 
+	        
+	        /*
+	      	projectionMatrix = transformation.getProjectionMatrixOrthogonal(120,120, z_near, z_far);
+	       	shaderProgram.bind();
+	       	shaderProgram.setUniform("projectionMatrix",projectionMatrix);
+	       	shaderProgramTexture.bind();
+	       	shaderProgramTexture.setUniform("projectionMatrix", projectionMatrix);
+	    
 	       	
+	       	
+	        
 	        //SIDE
 	        viewMatrix = transformation.getViewMatrix(cameraSide);
 	        for(GameItem gameItem : gameItems) {
@@ -389,6 +424,8 @@ public class Renderer {
 	            glDepthMask(true);
 	        } 
 	        //glViewport(0, 0, window.getWidth(), window.getHeight());
+			*/
+	        
        	}
    
        
@@ -425,6 +462,12 @@ public class Renderer {
       }
       
       if (view == "side") {
+    	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferTop);
+    	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    	  glBlitFramebuffer(0,0,imageWidth, imageHeight, 0, 0, imageWidth, imageHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    	  
+    	  
+    	  /*
     	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferSide);
     	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     	  glBlitFramebuffer(0,0,imageWidth,imageHeight/2, 0,0,imageWidth,imageHeight/2, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
@@ -432,7 +475,9 @@ public class Renderer {
     	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferTop);
     	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     	  glBlitFramebuffer(0,0,imageWidth,imageHeight/2, 0,window.getHeight()-imageHeight/2,imageWidth,window.getHeight(), GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    	  */
       }
+      
       
       if (view == "free") {
     	  

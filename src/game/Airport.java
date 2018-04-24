@@ -95,7 +95,7 @@ public class Airport {
 	
 	public void generateGameItem() {
 		Mesh airportmesh = mesh;
-		GameItem airportItem = new GameItem(airportmesh, false, true);
+		GameItem airportItem = new GameItem(airportmesh, false, true, false);
 		airportItem.setId(texture.id);
 		this.airportItem = airportItem;
 	}
