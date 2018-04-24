@@ -122,7 +122,7 @@ public class GUI {
 		
 		
 		panelValues = new JPanel();
-		panelValues.setLayout(new GridLayout(8,1));
+		panelValues.setLayout(new GridLayout(9,1));
 		Border valuesBorder = BorderFactory.createTitledBorder("Values");
 		panelValues.setBorder(valuesBorder);
 		positie = new LabelPanel("Position", panelValues);
