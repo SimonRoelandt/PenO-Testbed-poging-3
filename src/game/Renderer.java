@@ -327,8 +327,8 @@ public class Renderer {
        		//Verander naar orthogonaal
        	
        	
-       		
-	       	projectionMatrix = transformation.getProjectionMatrixOrthogonal(8000,8000, z_near, z_far);
+       		int scale = 5;
+	       	projectionMatrix = transformation.getProjectionMatrixOrthogonal(1200*scale,960*scale, z_near, z_far);
 	       	shaderProgram.bind();
 	       	shaderProgram.setUniform("projectionMatrix",projectionMatrix);
 	       	shaderProgramTexture.bind();

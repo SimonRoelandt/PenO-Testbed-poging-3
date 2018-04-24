@@ -84,6 +84,7 @@ public class Airport {
 				getEndRunway0Corner()[0],getEndRunway0Corner()[1],
 				getEndRunway1Corner()[0],getEndRunway1Corner()[1],
 				getStartRunway1Corner()[0],getStartRunway1Corner()[1],
+				0f,
 				Color.BLACK,
 				false,
 				1);

@@ -173,7 +173,9 @@ public class DummyGame implements IGameLogic {
         //gameItems = new ArrayList<GameItem>(Arrays.asList(gameItem,gameItem2,gameItem3,gameItem4, droneItem));
         
         for( Drone drone : droneController.getDrones()) {
+        	drone.visualise();
             gameItems.add(drone.getGameItem());
+            gameItems.add(drone.getIconGameItem());
         }
     	        
      //WORLD VISUAL
@@ -196,6 +198,8 @@ public class DummyGame implements IGameLogic {
        //AIRPORT VISUAL
        apController.visualise();
        gameItems.addAll(apController.getAirportItems());
+       
+       
        
        
        
@@ -249,6 +253,8 @@ public class DummyGame implements IGameLogic {
     		for(Drone drone: droneController.getDrones()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
     			drone.getGameItem().setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
+    			drone.getIconGameItem().setPosition(drone.getState().getX(), drone.hoogte , drone.getState().getZ());
+    			drone.getIconGameItem().setRotation(0f, drone.getState().getHeading(), 0f);
     		}
     		//Update chase-cameras
     		if(!droneController.isEmpty() && droneController.getDrones().get(currentDroneId) != null){

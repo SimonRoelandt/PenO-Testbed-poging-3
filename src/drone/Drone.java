@@ -1,15 +1,26 @@
  package drone;
 
+import java.awt.Color;
+
 import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Vector3f;
 
 import engine.GameItem;
+import engine.Square;
 import interfaces.AutopilotOutputs;
 import fysica.Fysica;
 import game.Airport;
+import graph.Mesh;
+import graph.Texture;
 
 
 public class Drone {
+	//Icon
+	public Texture texture;
+	public float droneIconLength = 200;
+	public float hoogte = 20f;
+	private Mesh droneIconMesh;
+	private GameItem droneIconGameItem;
 	
 	//Fysica
 	public Fysica fysica = new Fysica();
@@ -287,6 +298,36 @@ public class Drone {
 		
 	}
 	
+	public void visualise() {
+		texture = new Texture("res/droneIcon.png");
+		generateMesh();
+		generateGameItem();
+	}
+	
+	public void generateMesh() {
+		
+		Square droneIcon = new Square(this.getState().getPosition().getX()+droneIconLength/2,this.getState().getPosition().getZ()+droneIconLength/2,
+				this.getState().getPosition().getX()-droneIconLength/2,this.getState().getPosition().getZ()+droneIconLength/2,
+				this.getState().getPosition().getX()-droneIconLength/2,this.getState().getPosition().getZ()-droneIconLength/2,
+				this.getState().getPosition().getX()+droneIconLength/2,this.getState().getPosition().getZ()-droneIconLength/2,
+				hoogte,
+				Color.BLACK,
+				false,
+				1);
+		
+		Mesh droneIconMesh = new Mesh(droneIcon.positions(),null,droneIcon.indices(),droneIcon.textCoords(),this.texture);
+		this.droneIconMesh = droneIconMesh;
+
+	}
+	
+	public void generateGameItem() {
+		GameItem droneIconItem = new GameItem(droneIconMesh, false, true, true);
+		droneIconItem.setId(texture.id);
+		droneIconItem.setPosition(this.getState().getX(), hoogte, this.getState().getZ());
+		droneIconItem.setRotation(0f, this.getState().getHeading(), 0f);
+		this.droneIconGameItem = droneIconItem;
+	}
+	
 	public void setThrust(float thrust) {
 		this.getEngine().setThrust(thrust);
 	}
@@ -420,6 +461,10 @@ public class Drone {
 	
 	public GameItem getGameItem() {
 		return this.gameItem;
+	}
+	
+	public GameItem getIconGameItem() {
+		return this.droneIconGameItem;
 	}
 	
 	public int getId() {
