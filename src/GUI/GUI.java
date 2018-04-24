@@ -580,7 +580,7 @@ public class GUI {
 	}
 	
 	private class ListenForAddPackage implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e) {	
 			dummyGame.addPackage(fromAirport, toAirport);
 		}
 	}
