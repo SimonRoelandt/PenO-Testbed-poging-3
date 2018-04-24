@@ -22,11 +22,26 @@ public class PackageService {
 		System.out.println("CHECK PICKUP");
 		 for(Drone d : droneController.getDrones()){
 			 for(Airport ap : apController.getAirports()){
-				if( ap.onGate0(d.getX(), d.getZ())) System.out.println("ON GATE 0");
-				if( ap.onGate1(d.getX(), d.getZ())) System.out.println("ON GATE 1");
+				if(ap.isPackageGate0() && ap.onGate0(d.getX(), d.getZ())){
+					System.out.println("ON GATE 0 + PACKAGE AVAILABLE");
+					if(d.getState().getVelocity().length() < 1.0) pickup(d, ap, 0);
+				}
+				if(ap.isPackageGate1() && ap.onGate1(d.getX(), d.getZ())){
+					System.out.println("ON GATE 1 + PACKAGE AVAILABLE");
+					if(d.getState().getVelocity().length() < 1.0) pickup(d, ap, 1);
+				}
 			 }
 		 }
 	}
+	
+	/**
+	 * Picks up a package at the given airport and gate with the given drone.
+	 */
+	private void pickup(Drone d, Airport ap, int gate){
+		System.out.println("PICKUP!!!!");
+		ap.setPackageGate(false, gate);
+	}
+	
 	
 	/**
 	 * Create a new package deliver event from one airport to another.
