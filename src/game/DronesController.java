@@ -68,12 +68,9 @@ public class DronesController {
      * Checks if the given drone is crashed.
      */
 	public boolean checkCrash(Drone drone){
-		System.out.println("CRASH?");
 		if(drone.checkCrash()) return true;
 		else if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
-			System.out.println("ON GROUND");
 			if(onTarmac(drone)){
-				System.out.println("TARMAC");
 				return false;
 			}
 			else return true;
