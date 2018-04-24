@@ -311,7 +311,6 @@ public class GUI {
 		
 		//frame.pack();
 	
-	
 	}
 	
 	public void run() {
