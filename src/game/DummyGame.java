@@ -91,7 +91,7 @@ public class DummyGame implements IGameLogic {
         autopilotModule = new MyAutopilotModule();
         apController = new AirportController();
         droneController = new DronesController(apController);
-        packageService = new PackageService(apController);
+        packageService = new PackageService(apController,droneController);
         
         for (Drone drone : droneController.getDrones()) {
         	Camera camera = new Camera();
@@ -255,6 +255,9 @@ public class DummyGame implements IGameLogic {
     				}
     			}
     		}
+    		
+    		//Check package pick-up
+    		packageService.checkPickup();
     		
     		//Update visual drone objects
     		for(Drone drone: droneController.getDrones()){

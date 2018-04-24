@@ -5,11 +5,23 @@ import interfaces.AutopilotModule;
 public class PackageService {
 	
 	AirportController apController;
+	DronesController droneController;
 	
-	public PackageService(AirportController apC) {
+	public PackageService(AirportController apC, DronesController dC) {
 		this.apController = apC;
+		this.droneController = dC;
 	}
 	
+	/**
+	 * Check for pickup of any packages.
+	 */
+	public void checkPickup() {
+		
+	}
+	
+	/**
+	 * Create a new package deliver event from one airport to another.
+	 */
 	public void newPackage(AutopilotModule apModule, int fromAp, int toAp){
 		int fromGate = 0;
 		int toGate = 0;
@@ -28,4 +40,6 @@ public class PackageService {
 	public boolean isPackageGate(int ap, int gate){
 		return apController.getAirport(ap).isPackageGate(gate);
 	}
+
+
 }
