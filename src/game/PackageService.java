@@ -14,14 +14,16 @@ public class PackageService {
 		int fromGate = 0;
 		int toGate = 0;
 		
-		if(!isPackageGate(fromAp,0)) fromGate = 0;
 		if(!isPackageGate(fromAp,1)) fromGate = 1;
-		else return;
+		if(!isPackageGate(fromAp,0)) fromGate = 0;
+		else{
+			System.out.println("NO GATE FREE");
+			return;
+		}
 		
 		apController.deliverPackage(fromAp, fromGate, toAp, toGate);
 		apModule.deliverPackage(fromAp, fromGate, toAp, toGate);
 	}
-	
 	
 	public boolean isPackageGate(int ap, int gate){
 		return apController.getAirport(ap).isPackageGate(gate);

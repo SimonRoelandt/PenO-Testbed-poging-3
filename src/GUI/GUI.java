@@ -66,7 +66,7 @@ public class GUI {
 	
 	float xPos, yPos, zPos;
 	
-	int fromAirport, toAirport;
+	float fromAirport, toAirport;
 	
 	public GUI(DummyGame dummyGame) {
 		this.dummyGame = dummyGame;
@@ -556,19 +556,19 @@ public class GUI {
 	
 	private class ListenForFromAirport implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			fromAirport = Integer.parseInt(panelFromAirport.tf.getText());
+			fromAirport = Float.parseFloat(panelFromAirport.tf.getText());
 		}
 	}
 	
 	private class ListenForToAirport implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			toAirport = Integer.parseInt(panelToAirport.tf.getText());
+			toAirport = Float.parseFloat(panelToAirport.tf.getText());
 		}
 	}
 	
 	private class ListenForAddPackage implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			dummyGame.addPackage(fromAirport, toAirport);
+		public void actionPerformed(ActionEvent e) {	
+			dummyGame.addPackage((Math.round(fromAirport)), (Math.round(toAirport)));
 		}
 	}
 	

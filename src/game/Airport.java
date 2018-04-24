@@ -281,6 +281,7 @@ public class Airport {
 	public void setPackageGate(boolean packageGate, int id){
 		if(id == 0) setPackageGate0(packageGate);
 		if(id == 1) setPackageGate1(packageGate);
+		System.out.println("DELIVER PACKAGE AT GATE " + id);
 	}
 	
 	public boolean isPackageGate(int id){
