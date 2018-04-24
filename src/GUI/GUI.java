@@ -378,9 +378,9 @@ public class GUI {
 		aoa.labelValue.setText("(" + currentDrone.leftWing.getAngleOfAttack() + ")");
 		//aoa.labelValue.setText("(" + round(currentDrone.getAOA(),2) + ")");
 		
-		resulmoment.labelValue.setText("(" + round(currentDrone.fysica.getDroneResultingMomentInWorld(currentDrone).getX(),0) +
-				", " + round(currentDrone.fysica.getDroneResultingMomentInWorld(currentDrone).getY(),0) +
-				", " + round(currentDrone.fysica.getDroneResultingMomentInWorld(currentDrone).getZ(),0) +
+		resulmoment.labelValue.setText("(" + round(currentDrone.getState().getMoment().getX(), 0) +
+				", " + round(currentDrone.getState().getMoment().getY(),0) +
+				", " + round(currentDrone.getState().getMoment().getZ(),0) +
 				")");
 	}
 	
