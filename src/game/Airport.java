@@ -50,6 +50,10 @@ public class Airport {
 	
 	private GameItem airportItem2;
 	
+	private boolean packageGate0 = false;
+	
+	private boolean packageGate1 = false;
+	
 	// AIRPORT CONFIGURATION
 	//
 	//      l  w    l
@@ -257,4 +261,32 @@ public class Airport {
 	public GameItem getItem2() {
 		return this.airportItem2;
 	}
+
+	public boolean isPackageGate1() {
+		return packageGate1;
+	}
+
+	public void setPackageGate1(boolean packageGate1) {
+		this.packageGate1 = packageGate1;
+	}
+
+	public boolean isPackageGate0() {
+		return packageGate0;
+	}
+
+	public void setPackageGate0(boolean packageGate0) {
+		this.packageGate0 = packageGate0;
+	}
+	
+	public void setPackageGate(boolean packageGate, int id){
+		if(id == 0) setPackageGate0(packageGate);
+		if(id == 1) setPackageGate1(packageGate);
+	}
+	
+	public boolean isPackageGate(int id){
+		if(id == 0) return isPackageGate0();
+		if(id == 1) return isPackageGate1();
+		else return true;
+	}
+	
 }
