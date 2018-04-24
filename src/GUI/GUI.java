@@ -47,7 +47,7 @@ public class GUI {
 					panelFromAirport, panelToAirport;
 	GLPanel glpanel;
 	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube, buttonAddPackage;
-	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force;
+	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force, resulmoment;
 	JFileChooser fc;
 	JTabbedPane tabbedPaneGenerate;
 	JList<GameItem> list;
@@ -122,7 +122,7 @@ public class GUI {
 		
 		
 		panelValues = new JPanel();
-		panelValues.setLayout(new GridLayout(8,1));
+		panelValues.setLayout(new GridLayout(9,1));
 		Border valuesBorder = BorderFactory.createTitledBorder("Values");
 		panelValues.setBorder(valuesBorder);
 		positie = new LabelPanel("Position", panelValues);
@@ -133,6 +133,7 @@ public class GUI {
 		thrust = new LabelPanel("Thrust", panelValues);
 		force = new LabelPanel("force", panelValues);
 		aoa = new LabelPanel("Angle of Attack", panelValues);
+		resulmoment = new LabelPanel("Resulting Moment", panelValues);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
@@ -165,6 +166,7 @@ public class GUI {
 		panelmaxthrust.tf.addActionListener(new ListenForMaxThrust());
 		panelmaxaoa = addLabelTextPanelConfig("Max AOA", currentDrone.maxAOA);
 		panelmaxaoa.tf.addActionListener(new ListenForMaxAOA());
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
@@ -208,6 +210,8 @@ public class GUI {
 		frame.add(panelViews, c);
 		// tot hier
 		
+		////////////////////// IN COMMENT VOOR DEMO
+		/*
 		//random cubes
 		tabbedPaneGenerate = new JTabbedPane();
 		panelGenerate = new JPanel();
@@ -252,24 +256,29 @@ public class GUI {
 		c.gridy = 4;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(tabbedPaneGenerate, c);
+		*/
+		
+		
+		////////////////////////// TOT HIER
+		////////////////////////// als uncomment: c.gridy telkens +1 voor hieronder
 		
 		
 		//PACKAGE
 		panelAddPackage = new JPanel();
 		panelAddPackage.setLayout(new GridLayout(4,1));
-		panelFromAirport = addLabelTextPanelCustom("From Airport: " , 0f);
+		panelFromAirport = addLabelTextPanelAddPackage("From Airport: " , 0);
 		panelFromAirport.tf.addActionListener(new ListenForFromAirport());
-		panelToAirport = addLabelTextPanelCustom("To Airport: " , 0f);
+		panelToAirport = addLabelTextPanelAddPackage("To Airport: " , 0);
 		panelToAirport.tf.addActionListener(new ListenForToAirport());
 		
 
-		buttonAddPackage = addButtonPanelCustomCube("Add Package");
+		buttonAddPackage = addButtonPanelAddPackage("Add Package");
 		buttonAddPackage.button.setFocusPainted(false);
 		buttonAddPackage.button.addActionListener(new ListenForAddPackage());
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 5;
+		c.gridy = 4;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelAddPackage, c);
 		
@@ -279,7 +288,7 @@ public class GUI {
 		buttonStart.button.addActionListener(new ListenForStartButton());
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 6;
+		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		frame.add(panelStart, c);
@@ -304,7 +313,6 @@ public class GUI {
 		
 		//frame.pack();
 	
-	
 	}
 	
 	public void run() {
@@ -327,6 +335,12 @@ public class GUI {
 	}
 	public ButtonPanel addButtonPanelCustomCube(String text) {
 		return new ButtonPanel(text, panelCustomCube);
+	}
+	public ButtonPanel addButtonPanelAddPackage(String text) {
+		return new ButtonPanel(text, panelAddPackage);
+	}
+	public LabelTextPanel addLabelTextPanelAddPackage(String text, int value) {
+		return new LabelTextPanel(text, value, panelAddPackage);
 	}
 	
 	public void update() {
@@ -364,8 +378,10 @@ public class GUI {
 		aoa.labelValue.setText("(" + currentDrone.leftWing.getAngleOfAttack() + ")");
 		//aoa.labelValue.setText("(" + round(currentDrone.getAOA(),2) + ")");
 		
-		
-		
+		resulmoment.labelValue.setText("(" + round(currentDrone.getState().getMoment().getX(), 0) +
+				", " + round(currentDrone.getState().getMoment().getY(),0) +
+				", " + round(currentDrone.getState().getMoment().getZ(),0) +
+				")");
 	}
 	
 	
