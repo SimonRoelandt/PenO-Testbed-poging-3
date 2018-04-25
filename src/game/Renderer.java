@@ -243,23 +243,25 @@ public class Renderer {
         //CHASE
         if (view == "chase") {
 	        for(GameItem gameItem : gameItems) {
-	        	if (gameItem instanceof GroundItem)
-	        		glDepthMask(false);
-	        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
-	        	shaderProgram.bind();
-	        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-	        	shaderProgramTexture.bind();
-	        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
-	        	
-	        	if (gameItem.texture) {
-	        		shaderProgramTexture.bind();
-	        		gameItem.getMesh().renderTex(imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+	        	if (/*!gameItem.getRenderOnTopView()*/true){
+		        	if (gameItem instanceof GroundItem)
+		        		glDepthMask(false);
+		        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+		        	shaderProgram.bind();
+		        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+		        	shaderProgramTexture.bind();
+		        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+		        	
+		        	if (gameItem.texture) {
+		        		shaderProgramTexture.bind();
+		        		gameItem.getMesh().renderTex(imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+		        	}
+		        	else {
+		        		shaderProgram.bind();
+		        		gameItem.getMesh().render(imageWidth, imageHeight, window.getWidth(), window.getHeight());
+		        	}
+		        	glDepthMask(true);
 	        	}
-	        	else {
-	        		shaderProgram.bind();
-	        		gameItem.getMesh().render(imageWidth, imageHeight, window.getWidth(), window.getHeight());
-	        	}
-	        	glDepthMask(true);
 	        }
         }
         
@@ -270,24 +272,25 @@ public class Renderer {
        	if (view == "free") {
 	        viewMatrix = transformation.getViewMatrix(cameraFree);
 	        for(GameItem gameItem : gameItems) {
-	        	if (gameItem instanceof GroundItem)
-	        		glDepthMask(false);
-	        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
-	        	shaderProgram.bind();
-	        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-	        	shaderProgramTexture.bind();
-	        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
-	        
-	        	if (gameItem.texture) {
-	        		shaderProgramTexture.bind();
-	        		gameItem.getMesh().renderFreeTex(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+	        	if (/*!gameItem.getRenderOnTopView()*/true) {
+		        	if (gameItem instanceof GroundItem)
+		        		glDepthMask(false);
+		        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+		        	shaderProgram.bind();
+		        	shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+		        	shaderProgramTexture.bind();
+		        	shaderProgramTexture.setUniform("modelViewMatrix",modelViewMatrix);
+		        
+		        	if (gameItem.texture) {
+		        		shaderProgramTexture.bind();
+		        		gameItem.getMesh().renderFreeTex(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight(), gameItem.textureId);
+		        	}
+		        	else {
+		        		shaderProgram.bind();
+		        		gameItem.getMesh().renderFree(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight());
+		        	}
+		        	glDepthMask(true);
 	        	}
-	        	else {
-	        		shaderProgram.bind();
-	        		gameItem.getMesh().renderFree(framebufferFree, imageWidth, imageHeight, window.getWidth(), window.getHeight());
-	        	}
-	        	glDepthMask(true);
-	        	
 	        }
        	}  
         

@@ -18,7 +18,7 @@ import graph.Texture;
 public class Drone {
 	//Icon
 	public Texture texture;
-	public float droneIconLength = 200;
+	public float droneIconLength = 200f;
 	public float hoogte = 20f;
 	private Mesh droneIconMesh;
 	private GameItem droneIconGameItem;
@@ -120,6 +120,7 @@ public class Drone {
 		//SETTING POSITION AND VELOCITY STATE IN WORLD
 		State initState = new State();
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
+		initState.setHPR(new Vector3f(ap.getOrientation(),0f, 0f));
 		initState.setVelocity(velocity);
 		this.state = initState;
 	}
@@ -303,16 +304,14 @@ public class Drone {
 	
 	public void visualise() {
 		texture = new Texture("res/droneIcon.png");
-		generateMesh();
-		generateGameItem();
 	}
 	
-	public void generateMesh() {
+	public Mesh generateMesh() {
 		
-		Square droneIcon = new Square(this.getState().getPosition().getX()+droneIconLength/2,this.getState().getPosition().getZ()+droneIconLength/2,
-				this.getState().getPosition().getX()-droneIconLength/2,this.getState().getPosition().getZ()+droneIconLength/2,
-				this.getState().getPosition().getX()-droneIconLength/2,this.getState().getPosition().getZ()-droneIconLength/2,
-				this.getState().getPosition().getX()+droneIconLength/2,this.getState().getPosition().getZ()-droneIconLength/2,
+		Square droneIcon = new Square(this.getState().getX()+droneIconLength/2,this.getState().getZ()+droneIconLength/2,
+				this.getState().getX()-droneIconLength/2,this.getState().getZ()+droneIconLength/2,
+				this.getState().getX()-droneIconLength/2,this.getState().getZ()-droneIconLength/2,
+				this.getState().getX()+droneIconLength/2,this.getState().getZ()-droneIconLength/2,
 				hoogte,
 				Color.BLACK,
 				false,
@@ -320,15 +319,15 @@ public class Drone {
 		
 		Mesh droneIconMesh = new Mesh(droneIcon.positions(),null,droneIcon.indices(),droneIcon.textCoords(),this.texture);
 		this.droneIconMesh = droneIconMesh;
+		return droneIconMesh;
 
 	}
 	
-	public void generateGameItem() {
+	public GameItem generateGameItem() {
 		GameItem droneIconItem = new GameItem(droneIconMesh, false, true, true);
 		droneIconItem.setId(texture.id);
-		droneIconItem.setPosition(this.getState().getX(), hoogte, this.getState().getZ());
-		droneIconItem.setRotation(0f, this.getState().getHeading(), 0f);
 		this.droneIconGameItem = droneIconItem;
+		return droneIconGameItem;
 	}
 	
 	public void setThrust(float thrust) {
@@ -464,6 +463,10 @@ public class Drone {
 	
 	public GameItem getGameItem() {
 		return this.gameItem;
+	}
+	
+	public void setIconGameItem(GameItem gameItem) {
+		this.droneIconGameItem = gameItem;
 	}
 	
 	public GameItem getIconGameItem() {

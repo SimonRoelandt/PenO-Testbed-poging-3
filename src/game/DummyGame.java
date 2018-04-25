@@ -94,8 +94,9 @@ public class DummyGame implements IGameLogic {
         
         for (Drone drone : droneController.getDrones()) {
         	Camera camera = new Camera();
-            camera.setPosition(0, 1, 2);
-            camera.setRotation(0,0,0);
+            camera.setPosition(drone.getState().getPosition().x-2*(float)Math.sin((double)(drone.getState().getHeading())),drone.getState().getPosition().y+1,drone.getState().getPosition().z+2*(float)Math.cos((double)drone.getState().getHeading()));
+            System.out.println(camera.getPosition() + "CAMERA POSITION START");
+            camera.setRotation(0,(float)Math.toDegrees(drone.getState().getHeading()),0);
         	chaseCameras.add(camera);
         }
 
@@ -132,13 +133,21 @@ public class DummyGame implements IGameLogic {
       //DRONES VISUAL
         for( Drone drone : droneController.getDrones()) {
         	Color[] colors = {Color.RED, Color.blue};
-            Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black, false,1);
-            Mesh meshDrone = OBJLoader.loadOBJModel("p39", Color.GREEN);
+            //Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black, false,1);
+            //drone
+        	Mesh meshDrone = OBJLoader.loadOBJModel("p39", Color.GREEN);
             GameItem droneItem = new GameItem(meshDrone,false, false, false);
             droneItem.setScale(0.5f);
             droneItem.setRotation(drone.getState().getPitch(), drone.getState().getHeading(), drone.getState().getRoll()); //TODO JUIST?
-            droneItem.setPosition(drone.getState().getX(), drone.getState().getY(), drone.getState().getZ());
+            droneItem.setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
             drone.setGameItem(droneItem);
+            //Icon
+        	drone.visualise();
+            Mesh meshDroneIcon = drone.generateMesh();
+            GameItem droneIconItem = drone.generateGameItem();
+    		droneIconItem.setPosition(drone.getState().getX(), drone.hoogte, drone.getState().getZ()+drone.droneIconLength/2);
+    		droneIconItem.setRotation(0f, drone.getState().getHeading(), 0f);
+    		drone.setIconGameItem(droneIconItem);
             //droneItems.add(droneItem);
         }
 
@@ -173,7 +182,6 @@ public class DummyGame implements IGameLogic {
         //gameItems = new ArrayList<GameItem>(Arrays.asList(gameItem,gameItem2,gameItem3,gameItem4, droneItem));
         
         for( Drone drone : droneController.getDrones()) {
-        	drone.visualise();
             gameItems.add(drone.getGameItem());
             gameItems.add(drone.getIconGameItem());
         }
@@ -251,8 +259,8 @@ public class DummyGame implements IGameLogic {
     		for(Drone drone: droneController.getDrones()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
     			drone.getGameItem().setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
-    			drone.getIconGameItem().setPosition(drone.getState().getX(), drone.hoogte , drone.getState().getZ());
-    			drone.getIconGameItem().setRotation(0f, drone.getState().getHeading(), 0f);
+    			drone.getIconGameItem().setPosition(drone.getState().getX(), drone.hoogte , drone.getState().getZ()+drone.droneIconLength/2);
+    			//drone.getIconGameItem().setRotation(0f, drone.getState().getHeading(), 0f);
     		}
     		
     		
@@ -263,7 +271,7 @@ public class DummyGame implements IGameLogic {
     		for (Pakket pakket : packageService.getTakenPackages()) {
     			pakket.getPackageIconGameItem().setPosition(pakket.getDrone().getState().getPosition().getX()-pakket.getDrone().droneIconLength/2.5f,
     					pakket.hoogte, 
-    					pakket.getDrone().getState().getPosition().getZ()-pakket.getDrone().droneIconLength/1.1f);
+    					pakket.getDrone().getState().getPosition().getZ()-pakket.getDrone().droneIconLength*(-1/2f+1/1.1f));
     			pakket.getPackageIconGameItem().setScale(0.7f);
     		}
     		
@@ -275,6 +283,7 @@ public class DummyGame implements IGameLogic {
     			System.out.println(currentDroneHeading);
     			chaseCameras.get(currentDroneId).setPosition(currentDronePos.x-2*(float)Math.sin((double)(currentDroneHeading)),currentDronePos.y+1,currentDronePos.z+2*(float)Math.cos((double)currentDroneHeading));
     			chaseCameras.get(currentDroneId).setRotation(0,(float)Math.toDegrees(currentDroneHeading),0);
+    			System.out.println(chaseCameras.get(currentDroneId).getPosition() + "UPDATE CAMERA POS");
     		}
     		
     		//Clean-up crashed drones.

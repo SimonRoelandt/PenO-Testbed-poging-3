@@ -35,7 +35,6 @@ public class PackageService {
 	 * Check for pickup of any packages.
 	 */
 	public void checkPickup() {
-		System.out.println("CHECK PICKUP");
 		 for(Drone d : droneController.getDrones()){
 			 for(Airport ap : apController.getAirports()){
 				if(ap.isPackageGate0() && ap.onGate0(d.getX(), d.getZ())){
