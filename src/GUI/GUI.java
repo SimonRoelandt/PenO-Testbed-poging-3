@@ -285,6 +285,7 @@ public class GUI {
 		//startknop
 		panelStart = new JPanel();
 		buttonStart = addButtonPanelStart("start");
+		buttonStart.button.setFocusPainted(false);
 		buttonStart.button.addActionListener(new ListenForStartButton());
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;

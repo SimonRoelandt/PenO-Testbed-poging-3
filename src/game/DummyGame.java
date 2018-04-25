@@ -199,7 +199,8 @@ public class DummyGame implements IGameLogic {
        apController.visualise();
        gameItems.addAll(apController.getAirportItems());
        
-       
+       //PACKAGE VISUAL
+       packageService.visualise();
        
        
        
@@ -246,9 +247,6 @@ public class DummyGame implements IGameLogic {
     		System.out.println("");
     		droneController.completeTimePassed(autopilotModule,interval);
     		
-    		//Check package pick-up
-    		packageService.checkPickup();
-    		
     		//Update visual drone objects
     		for(Drone drone: droneController.getDrones()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
@@ -256,6 +254,20 @@ public class DummyGame implements IGameLogic {
     			drone.getIconGameItem().setPosition(drone.getState().getX(), drone.hoogte , drone.getState().getZ());
     			drone.getIconGameItem().setRotation(0f, drone.getState().getHeading(), 0f);
     		}
+    		
+    		
+    		//Check package pick-up
+    		packageService.checkPickup();
+    		
+    		//update visual packages
+    		for (Pakket pakket : packageService.getTakenPackages()) {
+    			pakket.getPackageIconGameItem().setPosition(pakket.getDrone().getState().getPosition().getX()-pakket.getDrone().droneIconLength/2.5f,
+    					pakket.hoogte, 
+    					pakket.getDrone().getState().getPosition().getZ()-pakket.getDrone().droneIconLength/1.1f);
+    			pakket.getPackageIconGameItem().setScale(0.7f);
+    		}
+    		
+    		
     		//Update chase-cameras
     		if(!droneController.isEmpty() && droneController.getDrones().get(currentDroneId) != null){
     			Vector3f currentDronePos = droneController.getDrones().get(currentDroneId).getState().getPosition();
@@ -290,7 +302,12 @@ public class DummyGame implements IGameLogic {
      * @param toAirport
      */
     public void addPackage(int fromAirport, int toAirport){
-    	packageService.newPackage(autopilotModule, fromAirport, toAirport);
+    	Pakket pakket = packageService.newPackage(autopilotModule, fromAirport, toAirport);
+    	if (pakket != null) {
+    		System.out.println("PAKKET GEADD IN GAMEITEMS");
+    		gameItems.add(pakket.getPackageIconGameItem());
+    	}
+    	
     }
     
     /**
@@ -302,7 +319,13 @@ public class DummyGame implements IGameLogic {
 		this.getGameItems().remove(d.getGameItem());
 		droneController.remove(d);
 	}
-
+    /*
+    private void removePackagItem(Package p) {
+    	gameItems.remove(p.getGameItem());
+    }
+     */
+    
+    
 	/**
 	 * Generates the given number of cubes at random (in a pre-defined area) position.
 	 * @param n

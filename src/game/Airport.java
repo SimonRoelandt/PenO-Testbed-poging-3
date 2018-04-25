@@ -48,9 +48,9 @@ public class Airport {
 	
 	private GameItem airportItem2;
 	
-	private boolean packageGate0 = false;
+	private Pakket packageGate0=null;
 	
-	private boolean packageGate1 = false;
+	private Pakket packageGate1=null;
 	
 	// AIRPORT CONFIGURATION
 	//
@@ -70,6 +70,7 @@ public class Airport {
 		setOrientation(ori);
 		setW(w);
 		setL(l);
+		this.id=id;
 	}	
 	
 	public void visualise() {
@@ -333,22 +334,30 @@ public class Airport {
 	}
 
 	public boolean isPackageGate1() {
-		return packageGate1;
+		return packageGate1!=null;
 	}
 
-	public void setPackageGate1(boolean packageGate1) {
-		this.packageGate1 = packageGate1;
-	}
-
-	public boolean isPackageGate0() {
-		return packageGate0;
-	}
-
-	public void setPackageGate0(boolean packageGate0) {
-		this.packageGate0 = packageGate0;
+	public void setPackageGate1(Pakket pakket) {
+		this.packageGate1 = pakket;
 	}
 	
-	public void setPackageGate(boolean packageGate, int id){
+	public Pakket getPackageGate1() {
+		return this.packageGate1;
+	}
+	
+	public boolean isPackageGate0() {
+		return packageGate0!=null;
+	}
+
+	public void setPackageGate0(Pakket pakket) {
+		this.packageGate0 = pakket;
+	}
+	
+	public Pakket getPackageGate0() {
+		return this.packageGate0;
+	}
+	
+	public void setPackageGate(Pakket packageGate, int id){
 		if(id == 0) setPackageGate0(packageGate);
 		if(id == 1) setPackageGate1(packageGate);
 		System.out.println("DELIVER PACKAGE AT GATE " + id);

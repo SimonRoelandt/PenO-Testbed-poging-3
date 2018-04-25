@@ -10,6 +10,7 @@ import engine.Square;
 import interfaces.AutopilotOutputs;
 import fysica.Fysica;
 import game.Airport;
+import game.Pakket;
 import graph.Mesh;
 import graph.Texture;
 
@@ -77,7 +78,7 @@ public class Drone {
 	private Airport startingAirport;
 	private int startingGate;
 	
-	private boolean carryingPackage = false;
+	private Pakket carryingPackage;
 	
 	/**
 	 * Create a new drone with the given id, at the given gate of the given airport, pointing to the given runway.
@@ -542,10 +543,10 @@ public class Drone {
 	}
 
 	public boolean isCarryingPackage() {
-		return carryingPackage;
+		return carryingPackage!=null;
 	}
 
-	public void setCarryingPackage(boolean carryingPackage) {
+	public void setCarryingPackage(Pakket carryingPackage) {
 		this.carryingPackage = carryingPackage;
 	}
 

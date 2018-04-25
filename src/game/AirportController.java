@@ -34,8 +34,10 @@ public class AirportController {
 	public AirportController() {
         Airport air0 = new Airport(0,0,0,AIRPORT_W,AIRPORT_L,0);
         Airport air1 = new Airport(0,500,0,AIRPORT_W,AIRPORT_L,1);
+        Airport air2 = new Airport(500,750,0,AIRPORT_W,AIRPORT_L,2);
         airports.add(air0);
         airports.add(air1);
+        airports.add(air2);
 	}
 	
 	/**
@@ -80,7 +82,7 @@ public class AirportController {
 		return this.airportItems;
 	}
 
-	public void deliverPackage(int fromAp, int fromGate, int toAp, int toGate) {
-		getAirport(fromAp).setPackageGate(true, fromGate);
+	public void deliverPackage(int fromAp, int fromGate, int toAp, int toGate, Pakket pakket) {
+		getAirport(fromAp).setPackageGate(pakket, fromGate);
 	}
 }
