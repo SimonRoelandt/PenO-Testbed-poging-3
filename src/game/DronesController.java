@@ -71,9 +71,13 @@ public class DronesController {
 		if(drone.checkCrash()) return true;
 		else if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
 			if(onTarmac(drone)){
+				System.out.println("TARMAC");
 				return false;
 			}
-			else return true;
+			else{
+				System.out.println("GRASS");
+				return true;
+			}
 		}
 		return false;
 	}
