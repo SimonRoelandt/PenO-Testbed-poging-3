@@ -329,6 +329,7 @@ public class DummyGame implements IGameLogic {
      */
     private void removeDrone(Drone d) {
 		this.getGameItems().remove(d.getGameItem());
+		this.getGameItems().remove(d.getIconGameItem());
 		droneController.remove(d);
 	}
     /*

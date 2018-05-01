@@ -33,7 +33,7 @@ public class AirportController {
      */
 	public AirportController() {
         Airport air0 = new Airport(0,0,(float)Math.PI/4,AIRPORT_W,AIRPORT_L,0);
-        Airport air1 = new Airport(0,500,0,AIRPORT_W,AIRPORT_L,1);
+        Airport air1 = new Airport(0,500,(float)Math.PI/2,AIRPORT_W,AIRPORT_L,1);
         Airport air2 = new Airport(1000,2000,(float)Math.PI/2,AIRPORT_W,AIRPORT_L,2);
         Airport air3 = new Airport(-2000,50,-(float)Math.PI/3,AIRPORT_W,AIRPORT_L,3);
         Airport air4 = new Airport(1500,-500,(float)Math.PI/4,AIRPORT_W,AIRPORT_L,4);
