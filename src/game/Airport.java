@@ -122,11 +122,11 @@ public class Airport {
 		
 		
 		
-		Vector vector1 = new Vector(a.getL() + (a.getW()/2),0,a.getW()); 
-		Vector vector2 = new Vector (a.getCenterToRunway0X(),0,a.getCenterToRunway0Z());
-		float radian = (float) Math.acos(Vector.scalairProd(vector1, vector2)/(Vector.norm(vector1)*Vector.norm(vector2)));
-		System.out.println("centertox: " + a.getCenterToRunway0X() + " centertoZ: " +a.getCenterToRunway0Z());
-		System.out.println("real radian" + a.getOrientation() + " calc radian: " + radian);
+//		Vector vector1 = new Vector(a.getL() + (a.getW()/2),0,a.getW()); 
+//		Vector vector2 = new Vector (a.getCenterToRunway0X(),0,a.getCenterToRunway0Z());
+//		float radian = (float) Math.acos(Vector.scalairProd(vector1, vector2)/(Vector.norm(vector1)*Vector.norm(vector2)));
+//		System.out.println("centertox: " + a.getCenterToRunway0X() + " centertoZ: " +a.getCenterToRunway0Z());
+//		System.out.println("real radian" + a.getOrientation() + " calc radian: " + radian);
  	}
 	
 	
@@ -134,10 +134,11 @@ public class Airport {
 	 * Checks if a position is on gate 0.
 	 */
 	public boolean onGate0(float x, float z){
+		float[] point = getInvertedRotatedPoint(x, z);
+		float[] a = getInvertedRotatedPoint(getStartGate0()[0], getStartGate0()[1]);
+		float[] b = getInvertedRotatedPoint(getEndGate0()[0], getEndGate0()[1]);
 		boolean onGateX = false;
 		boolean onGateZ = false;
-		float[] a = getStartGate0();
-		float[] b = getEndGate0();
 		if(a[0] < b[0]){
 			if(x >= a[0] && x <= b[0]) onGateX = true;
 		}
@@ -155,10 +156,11 @@ public class Airport {
 	 * Checks if a position is on gate 1.
 	 */
 	public boolean onGate1(float x, float z){
+		float[] point = getInvertedRotatedPoint(x, z);
+		float[] a = getInvertedRotatedPoint(getStartGate1()[0], getStartGate1()[1]);
+		float[] b = getInvertedRotatedPoint(getEndGate1()[0], getEndGate1()[1]);
 		boolean onGateX = false;
 		boolean onGateZ = false;
-		float[] a = getStartGate1();
-		float[] b = getEndGate1();
 		if(a[0] < b[0]){
 			if(x >= a[0] && x <= b[0]) onGateX = true;
 		}
