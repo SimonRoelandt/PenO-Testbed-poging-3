@@ -221,6 +221,11 @@ public class Airport {
 
 		return new float []{rotatedX, rotatedZ};
 	}
+	
+	public float[] getMiddleGate(int gate) {
+		if(gate == 0) return getMiddleGate0();
+		else return getMiddleGate1();
+	}
 
 	/**
 	 * Gets the start position corner of gate 0.
