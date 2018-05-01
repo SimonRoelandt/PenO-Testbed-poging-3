@@ -145,7 +145,7 @@ public class DummyGame implements IGameLogic {
         	drone.visualise();
             Mesh meshDroneIcon = drone.generateMesh();
             GameItem droneIconItem = drone.generateGameItem();
-    		droneIconItem.setPosition(drone.getState().getX(), drone.hoogte, drone.getState().getZ()+drone.droneIconLength/2);
+    		droneIconItem.setPosition(drone.getState().getX(), drone.hoogte, drone.getState().getZ());
     		droneIconItem.setRotation(0f, drone.getState().getHeading(), 0f);
     		drone.setIconGameItem(droneIconItem);
             //droneItems.add(droneItem);
@@ -172,11 +172,12 @@ public class DummyGame implements IGameLogic {
         gameItem3.setPosition(10, 10, 0);
         gameItem3.setRotation(34f, 53f, 45f);
         gameItem2.setPosition(0, 10 , -100);
-        gameItem.setPosition(0, 5, -50);
+        gameItem.setPosition(1000, 50, 2000);
+        gameItem.setScale(10f);
         //gameItem.setPosition(0, -30, -100);
         //gameItem.setPosition(0, 0, -50);
         //gameItem.setPosition(0, 38, -200);
-        gameItem.setRotation(-60f, 20f, 40f);
+        //gameItem.setRotation(-60f, 20f, 40f);
         
         gameItems = new ArrayList<GameItem>();
         //gameItems = new ArrayList<GameItem>(Arrays.asList(gameItem,gameItem2,gameItem3,gameItem4, droneItem));
@@ -185,6 +186,7 @@ public class DummyGame implements IGameLogic {
             gameItems.add(drone.getGameItem());
             gameItems.add(drone.getIconGameItem());
         }
+      
     	        
      //WORLD VISUAL
 
@@ -259,7 +261,7 @@ public class DummyGame implements IGameLogic {
     		for(Drone drone: droneController.getDrones()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
     			drone.getGameItem().setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
-    			drone.getIconGameItem().setPosition(drone.getState().getX(), drone.hoogte , drone.getState().getZ()+drone.droneIconLength/2);
+    			drone.getIconGameItem().setPosition(drone.getState().getX(), drone.hoogte , drone.getState().getZ());
     			//drone.getIconGameItem().setRotation(0f, drone.getState().getHeading(), 0f);
     		}
     		
