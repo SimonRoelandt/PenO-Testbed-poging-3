@@ -30,7 +30,7 @@ public class DronesController {
 	public DronesController(AirportController apController){
 		this.apController = apController;
 		addDrone(new Drone(0,apController.getAirports().get(0), 1, 0));
-//    	addDrone(new Drone(1,apController.getAirports().get(1), 0, 0));
+//    	addDrone(new Drone(1,apController.getAirports().get(0), 0, 0));
 //    	addDrone(new Drone(2,apController.getAirports().get(4), 0, 0));
 	}
 	
