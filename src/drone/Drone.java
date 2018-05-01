@@ -308,10 +308,10 @@ public class Drone {
 	
 	public Mesh generateMesh() {
 		
-		Square droneIcon = new Square(this.getState().getX()+droneIconLength/2,this.getState().getZ()+droneIconLength/2,
-				this.getState().getX()-droneIconLength/2,this.getState().getZ()+droneIconLength/2,
-				this.getState().getX()-droneIconLength/2,this.getState().getZ()-droneIconLength/2,
-				this.getState().getX()+droneIconLength/2,this.getState().getZ()-droneIconLength/2,
+		Square droneIcon = new Square(droneIconLength/2,droneIconLength/2,
+				-droneIconLength/2,droneIconLength/2,
+				-droneIconLength/2,-droneIconLength/2,
+				droneIconLength/2,-droneIconLength/2,
 				hoogte,
 				Color.BLACK,
 				false,

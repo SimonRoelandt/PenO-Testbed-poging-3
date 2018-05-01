@@ -32,12 +32,12 @@ public class AirportController {
      * Creates a new airportController with a number of airports.
      */
 	public AirportController() {
-        Airport air0 = new Airport(0,0,0,AIRPORT_W,AIRPORT_L,0);
+        Airport air0 = new Airport(0,0,(float)Math.PI/4,AIRPORT_W,AIRPORT_L,0);
         Airport air1 = new Airport(0,500,0,AIRPORT_W,AIRPORT_L,1);
-        Airport air2 = new Airport(1000,2000,(float)Math.PI,AIRPORT_W,AIRPORT_L,2);
-        Airport air3 = new Airport(-2000,50,-(float)Math.PI,AIRPORT_W,AIRPORT_L,3);
-        Airport air4 = new Airport(1500,-500,(float)Math.PI,AIRPORT_W,AIRPORT_L,4);
-        Airport air5 = new Airport(-500,-1000,-(float)Math.PI,AIRPORT_W,AIRPORT_L,5);
+        Airport air2 = new Airport(1000,2000,(float)Math.PI/2,AIRPORT_W,AIRPORT_L,2);
+        Airport air3 = new Airport(-2000,50,-(float)Math.PI/3,AIRPORT_W,AIRPORT_L,3);
+        Airport air4 = new Airport(1500,-500,(float)Math.PI/4,AIRPORT_W,AIRPORT_L,4);
+        Airport air5 = new Airport(-500,-1000,-(float)Math.PI/5,AIRPORT_W,AIRPORT_L,5);
         airports.add(air0);
         airports.add(air1);
         airports.add(air2);
