@@ -5,6 +5,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -92,7 +93,7 @@ public class DummyGame implements IGameLogic {
         droneController = new DronesController(apController);
         packageService = new PackageService(apController,droneController);
         
-        for (Drone drone : droneController.getDrones()) {
+        for (Drone drone : droneController.getDrones().values()) {
         	Camera camera = new Camera();
             camera.setPosition(drone.getState().getPosition().x-2*(float)Math.sin((double)(drone.getState().getHeading())),drone.getState().getPosition().y+1,drone.getState().getPosition().z+2*(float)Math.cos((double)drone.getState().getHeading()));
             System.out.println(camera.getPosition() + "CAMERA POSITION START");
@@ -131,7 +132,7 @@ public class DummyGame implements IGameLogic {
         droneController.defineDrones(renderer,autopilotModule);
         
       //DRONES VISUAL
-        for( Drone drone : droneController.getDrones()) {
+        for( Drone drone : droneController.getDrones().values()) {
         	Color[] colors = {Color.RED, Color.blue};
             //Balk droneVisual = new Balk(drone.getState().getX()-0.5f, drone.getState().getY()-0.5f, drone.getState().getZ()-0.5f, 1f, 1f, 1f, Color.black, false,1);
             //drone
@@ -182,7 +183,7 @@ public class DummyGame implements IGameLogic {
         gameItems = new ArrayList<GameItem>();
         //gameItems = new ArrayList<GameItem>(Arrays.asList(gameItem,gameItem2,gameItem3,gameItem4, droneItem));
         
-        for( Drone drone : droneController.getDrones()) {
+        for( Drone drone : droneController.getDrones().values()) {
             gameItems.add(drone.getGameItem());
             gameItems.add(drone.getIconGameItem());
         }
@@ -258,7 +259,7 @@ public class DummyGame implements IGameLogic {
     		droneController.completeTimePassed(autopilotModule,interval);
     		
     		//Update visual drone objects
-    		for(Drone drone: droneController.getDrones()){
+    		for(Drone drone: droneController.getDrones().values()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
     			drone.getGameItem().setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
     			drone.getIconGameItem().setPosition(drone.getState().getX(), drone.hoogte , drone.getState().getZ());
@@ -290,11 +291,11 @@ public class DummyGame implements IGameLogic {
     		
     		//Clean-up crashed drones.
     		ArrayList<Drone> toRemove = new ArrayList<Drone>();
-    		for(Drone d : droneController.getDrones()){
+    		for(Drone d : droneController.getDrones().values()){
     	 		//Crash on ground
     			if(droneController.checkCrash(d)) toRemove.add(d);
     			//Crash between two drones
-    			for(Drone d2 : droneController.getDrones()){
+    			for(Drone d2 : droneController.getDrones().values()){
     				if(!d.equals(d2) && droneController.checkCrash(d,d2)){
     					toRemove.add(d);
     					toRemove.add(d2);
@@ -412,7 +413,9 @@ public class DummyGame implements IGameLogic {
     }
     @Override
     public void render(Window window) throws Exception {
-        renderer.render(window, chaseCameras.get(currentDroneId), cameraFree, cameraPlane, cameraSide, cameraTop, gameItems);
+    	List<GameItem> gameItemsCopy = new ArrayList<GameItem>(gameItems);
+    	Collections.copy(gameItemsCopy, gameItems);
+        renderer.render(window, chaseCameras.get(currentDroneId), cameraFree, cameraPlane, cameraSide, cameraTop, gameItemsCopy);
     }
     
     public float totTime(){

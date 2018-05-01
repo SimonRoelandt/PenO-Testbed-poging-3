@@ -1,6 +1,12 @@
 package game;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.lwjgl.util.vector.Vector3f;
+
 import engine.GameItem;
 import engine.Square;
 import graph.Mesh;
@@ -161,21 +167,24 @@ public class Airport {
 	 * Checks if a position is on the airport.
 	 */
 	public boolean onAirport(float x, float z){
+		float[] point = getInvertedRotatedPoint(x, z);
+		float[] a = getInvertedRotatedPoint(getStartRunway0Corner()[0], getStartRunway0Corner()[1]);
+		float[] b = getInvertedRotatedPoint(getEndRunway1Corner()[0], getEndRunway1Corner()[1]);
+
 		boolean onAirportX = false;
 		boolean onAirportZ = false;
-		float[] a = getStartRunway0Corner();
-		float[] b = getEndRunway1Corner();
 		if(a[0] < b[0]){
-			if(x >= a[0] && x <= b[0]) onAirportX = true;
+			if(point[0] >= a[0] && point[0] <= b[0]) onAirportX = true;
 		}
-		else if(x <= a[0] && x >= b[0]) onAirportX = true;
+		else if(point[0] <= a[0] && point[0] >= b[0]) onAirportX = true;
 		
 		if(a[1] < b[1]){
-			if(z >= a[1] && z <= b[1]) onAirportZ = true;
+			if(point[1] >= a[1] && point[1] <= b[1]) onAirportZ = true;
 		}
-		else if(z <= a[1] && z >= b[1]) onAirportZ = true;
+		else if(point[1] <= a[1] && point[1] >= b[1]) onAirportZ = true;
 		
 		return (onAirportX && onAirportZ);
+		
 	}
 	
 	/**
@@ -190,6 +199,18 @@ public class Airport {
 		return new float []{rotatedX, rotatedZ};
 	}
 	
+	/**
+	 * Calculates invertedrotated position of a position according to the orientation.
+	 */
+	public float[] getInvertedRotatedPoint(float x, float z){
+		float angle = -getOrientation();
+		
+		float rotatedX = (float) (getX() + (x  * Math.cos(angle)) - (z * Math.sin(angle)));
+		float rotatedZ = (float) (getZ() + (x  * Math.sin(angle)) + (z * Math.cos(angle)));
+
+		return new float []{rotatedX, rotatedZ};
+	}
+
 	/**
 	 * Gets the start position corner of gate 0.
 	 */
