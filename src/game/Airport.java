@@ -1,6 +1,8 @@
 package game;
 
 import java.awt.Color;
+
+import autopilotLibrary.Vector;
 import engine.GameItem;
 import engine.Square;
 import graph.Mesh;
@@ -103,17 +105,24 @@ public class Airport {
 	}
 	
 	//FOR TESTING
-	/*
 	public static void main(String[] args) {
-		Airport a = new Airport(200,200,(float) Math.PI/2, 30, 60, 0);
+		Airport a = new Airport(200,200,(float) (2*Math.PI/2), 30, 60, 0);
 		
 		float[] cord = a.getStartRunway0Corner();
-		System.out.println("X0start: " + cord[0] + " Y0start: " + cord[1]);
+		System.out.println("X0start: " + cord[0] + " Z0start: " + cord[1]);
 		
-		float[] cord1 = a.getEndRunway0Corner();
-		System.out.println("X0end: " + cord1[0] + " Y0end: " + cord1[1]);
+		float[] cord1 = a.getEndRunway1Corner();
+		System.out.println("X1end: " + cord1[0] + " Z1end: " + cord1[1]);
+		
+		
+		
+		Vector vector1 = new Vector(a.getL() + (a.getW()/2),0,a.getW()); 
+		Vector vector2 = new Vector (a.getCenterToRunway0X(),0,a.getCenterToRunway0Z());
+		float radian = (float) Math.acos(Vector.scalairProd(vector1, vector2)/(Vector.norm(vector1)*Vector.norm(vector2)));
+		System.out.println("centertox: " + a.getCenterToRunway0X() + " centertoZ: " +a.getCenterToRunway0Z());
+		System.out.println("real radian" + a.getOrientation() + " calc radian: " + radian);
  	}
-	*/
+	
 	
 	/**
 	 * Checks if a position is on gate 0.
@@ -262,7 +271,7 @@ public class Airport {
 	 * 	(to middle of runway 0)
 	 */
 	public float getCenterToRunway0X(){
-		return getX() - getRotatedPoint(-((getL()/2) + (getW()/2)), -getW())[0];
+		return getX() -  getStartRunway0Corner()[0];
 	}
 	
 	/**

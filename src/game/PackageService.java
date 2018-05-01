@@ -24,8 +24,6 @@ public class PackageService {
 	private List<Pakket> takenPackages = new ArrayList<Pakket>();
 	private Pakket pickedUpPackage;
 	
-	
-	
 	public PackageService(AirportController apC, DronesController dC) {
 		this.apController = apC;
 		this.droneController = dC;
