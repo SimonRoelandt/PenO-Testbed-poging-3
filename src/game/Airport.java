@@ -140,14 +140,14 @@ public class Airport {
 		boolean onGateX = false;
 		boolean onGateZ = false;
 		if(a[0] < b[0]){
-			if(x >= a[0] && x <= b[0]) onGateX = true;
+			if(point[0] >= a[0] && point[0] <= b[0]) onGateX = true;
 		}
-		else if(x <= a[0] && x >= b[0]) onGateX = true;
+		else if(point[0] <= a[0] && point[0] >= b[0]) onGateX = true;
 		
 		if(a[1] < b[1]){
-			if(z >= a[1] && z <= b[1]) onGateZ = true;
+			if(point[1] >= a[1] && point[1] <= b[1]) onGateZ = true;
 		}
-		else if(z <= a[1] && z >= b[1]) onGateZ = true;
+		else if(point[1] <= a[1] && point[1] >= b[1]) onGateZ = true;
 		
 		return (onGateX && onGateZ);
 	}
@@ -162,14 +162,14 @@ public class Airport {
 		boolean onGateX = false;
 		boolean onGateZ = false;
 		if(a[0] < b[0]){
-			if(x >= a[0] && x <= b[0]) onGateX = true;
+			if(point[0] >= a[0] && point[0] <= b[0]) onGateX = true;
 		}
-		else if(x <= a[0] && x >= b[0]) onGateX = true;
+		else if(point[0] <= a[0] && point[0] >= b[0]) onGateX = true;
 		
 		if(a[1] < b[1]){
-			if(z >= a[1] && z <= b[1]) onGateZ = true;
+			if(point[1] >= a[1] && point[1] <= b[1]) onGateZ = true;
 		}
-		else if(z <= a[1] && z >= b[1]) onGateZ = true;
+		else if(point[1] <= a[1] && point[1] >= b[1]) onGateZ = true;
 		
 		return (onGateX && onGateZ);
 	}
