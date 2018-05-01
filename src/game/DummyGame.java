@@ -96,7 +96,6 @@ public class DummyGame implements IGameLogic {
         for (Drone drone : droneController.getDrones().values()) {
         	Camera camera = new Camera();
             camera.setPosition(drone.getState().getPosition().x-2*(float)Math.sin((double)(drone.getState().getHeading())),drone.getState().getPosition().y+1,drone.getState().getPosition().z+2*(float)Math.cos((double)drone.getState().getHeading()));
-            System.out.println(camera.getPosition() + "CAMERA POSITION START");
             camera.setRotation(0,(float)Math.toDegrees(drone.getState().getHeading()),0);
         	chaseCameras.add(camera);
         }
@@ -283,10 +282,9 @@ public class DummyGame implements IGameLogic {
     		if(!droneController.isEmpty() && droneController.getDrones().get(currentDroneId) != null){
     			Vector3f currentDronePos = droneController.getDrones().get(currentDroneId).getState().getPosition();
     			float currentDroneHeading = droneController.getDrones().get(currentDroneId).getState().getHeading();
-    			System.out.println(currentDroneHeading);
     			chaseCameras.get(currentDroneId).setPosition(currentDronePos.x-2*(float)Math.sin((double)(currentDroneHeading)),currentDronePos.y+1,currentDronePos.z+2*(float)Math.cos((double)currentDroneHeading));
     			chaseCameras.get(currentDroneId).setRotation(0,(float)Math.toDegrees(currentDroneHeading),0);
-    			System.out.println(chaseCameras.get(currentDroneId).getPosition() + "UPDATE CAMERA POS");
+
     		}
     		
     		//Clean-up crashed drones.
