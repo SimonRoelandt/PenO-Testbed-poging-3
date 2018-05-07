@@ -260,7 +260,7 @@ public class DummyGame implements IGameLogic {
     		//Update visual drone objects
     		for(Drone drone: droneController.getDrones().values()){
     			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
-    			drone.getGameItem().setRotation((float)(drone.getPitch()*Math.cos(drone.getHeading())-drone.getRoll()*Math.sin(drone.getHeading())), drone.getHeading(), (float)(drone.getPitch()*Math.sin(drone.getHeading())+drone.getRoll()*Math.cos(drone.getHeading())));
+    			drone.getGameItem().setRotation((float)(drone.getPitch()*Math.cos(drone.getHeading())+drone.getRoll()*Math.sin(drone.getHeading())), drone.getHeading(), (float)(drone.getPitch()*Math.sin(drone.getHeading())-drone.getRoll()*Math.cos(drone.getHeading())));
     			drone.getIconGameItem().setPosition(drone.getState().getX(), drone.hoogte , drone.getState().getZ());
     			//drone.getIconGameItem().setRotation(0f, drone.getState().getHeading(), 0f);
     		}
