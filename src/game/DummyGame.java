@@ -139,13 +139,13 @@ public class DummyGame implements IGameLogic {
             GameItem droneItem = new GameItem(meshDrone,false, false, false);
             droneItem.setScale(0.5f);
             droneItem.setRotation(drone.getState().getPitch(), drone.getState().getHeading(), drone.getState().getRoll()); //TODO JUIST?
-            droneItem.setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
+            droneItem.setPosition(drone.getState().getPosition().getX(), drone.getState().getPosition().getY()-1, drone.getState().getPosition().getZ());
             drone.setGameItem(droneItem);
             //Icon
         	drone.visualise();
             Mesh meshDroneIcon = drone.generateMesh();
             GameItem droneIconItem = drone.generateGameItem();
-    		droneIconItem.setPosition(drone.getState().getX(), drone.hoogte, drone.getState().getZ()+drone.droneIconLength/2);
+    		droneIconItem.setPosition(drone.getState().getPosition().getX(), drone.hoogte, drone.getState().getPosition().getZ()+drone.droneIconLength/2);
     		droneIconItem.setRotation(0f, drone.getState().getHeading(), 0f);
     		drone.setIconGameItem(droneIconItem);
             //droneItems.add(droneItem);
@@ -257,9 +257,31 @@ public class DummyGame implements IGameLogic {
     		
     		//Update visual drone objects
     		for(Drone drone: droneController.getDrones()){
-    			drone.getGameItem().setPosition(drone.getState().getX(), drone.getState().getY()-1, drone.getState().getZ());
-    			drone.getGameItem().setRotation(drone.getPitch(), drone.getHeading(), drone.getRoll());
-    			drone.getIconGameItem().setPosition(drone.getState().getX(), drone.hoogte , drone.getState().getZ()+drone.droneIconLength/2);
+    			drone.getGameItem().setPosition(drone.getState().getPosition().getX(), drone.getState().getPosition().getY()-1, drone.getState().getPosition().getZ());
+    			
+    			Vector3f hpr = new Vector3f(drone.getPitch(), drone.getHeading(), drone.getRoll());
+    			
+    			float h = drone.getHeading();
+    			float p = drone.getPitch();
+    			float r= drone.getRoll();
+    			
+    			float sinh = (float) Math.sin(h);
+    			float cosh = (float) Math.cos(h);
+    			
+    			float sinp = (float) Math.sin(p);
+    			float cosp = (float) Math.cos(p);
+    			
+    			float rotX = p*cosh + r*sinh*cosp;
+    			float rotY = -r*sinp + h ;
+    			float rotZ = -p*sinh + r*cosh*cosp;
+    			
+    			Vector3f v = new Vector3f(rotX, rotY, rotZ);
+    			//Vector3f v = drone.p.convertToWorld(drone, v);
+    			System.out.println("rot is: " + rotX + " " + rotY + " " + rotZ + "p is " + p + " and sinh is:" + sinh);
+
+     			drone.getGameItem().setRotation((float)(drone.getPitch()*Math.cos(drone.getHeading())+drone.getRoll()*Math.sin(drone.getHeading())), drone.getHeading(), (float)(drone.getPitch()*Math.sin(drone.getHeading())-drone.getRoll()*Math.cos(drone.getHeading())));
+
+    			drone.getIconGameItem().setPosition(drone.getState().getPosition().getX(), drone.hoogte , drone.getState().getPosition().getZ()+drone.droneIconLength/2);
     			//drone.getIconGameItem().setRotation(0f, drone.getState().getHeading(), 0f);
     		}
     		

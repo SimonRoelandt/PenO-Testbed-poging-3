@@ -130,9 +130,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f leftWheelForce = drone.getLeftWheel().getDronePartForce(prevV);
 		Vector3f rightWheelForce = drone.getRightWheel().getDronePartForce(prevV);
 		
-		print("FRONT WHEEL FORCE IS: " + frontWheelForce, 150);
-		print("LEFT WHEEL FORCE IS: " + leftWheelForce, 150);
-		print("RIGHT WHEEL FORCE IS: " + rightWheelForce, 150);
+		print("FRONT WHEEL FORCE IS: " + frontWheelForce, 50);
+		print("LEFT WHEEL FORCE IS: " + leftWheelForce, 50);
+		print("RIGHT WHEEL FORCE IS: " + rightWheelForce, 50);
 
 
 
@@ -148,7 +148,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		v.setX(0f);
 		v.setY(0f);
-		print("TOTAL FORCE ON DRONE is " + v, 150);
+		print("TOTAL FORCE ON DRONE is " + v, 50);
 		return v;
 	}
 	
@@ -210,14 +210,25 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 			}
 			
 			Vector3f moment = this.getMoment(posVectorInWorld, forceVector);
-			print(" MOMENT of dronepart at "+ posVector + " IS: " + moment, 40);		
+			
+			if(part instanceof Wheel){
+				Wheel wheel = (Wheel) part;
+				Boolean isground = wheel.isGround();
+				Boolean isCrash = wheel.checkCrash();
+				Vector3f bf = wheel.getBf();
+				
+				print(" MOMENT of dronepart at "+ posVector + "whith bforce " + bf + " IS: " + moment, 140);		
+			}
+			
 
 			momentVector = sum(momentVector, moment);
 			
 		}
 		
-		drone.getState().setMoment(momentVector);
-		print("RESULTING MOMENT IS: " + momentVector, 40);	
+		momentVector.setX(0);
+		momentVector.setY(3000f);
+		//drone.setMoment(momentVector);
+		print("RESULTING MOMENT IS: " + momentVector, 140);	
 		//return(new Vector3f(00000.0f,50000.0f,0.0f));
 		return momentVector;
 	}

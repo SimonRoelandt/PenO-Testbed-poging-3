@@ -1,6 +1,7 @@
 package drone;
 
 import org.lwjgl.util.vector.Vector3f;
+import java.lang.Math.*;
 
 /**
  * 
@@ -59,7 +60,7 @@ public class Wheel extends DronePart {
 	 * Checks if the tire is on the ground.
 	 */
 	public boolean isGround(){
-		if(getAbsolutePositionInWorld().getY() <= getTyreRadius() + 0.0002) return true;
+		if(getAbsolutePositionInWorld().getY() <= getTyreRadius() + 0.005) return true;
 		else return false;
 	}
 	
@@ -81,6 +82,9 @@ public class Wheel extends DronePart {
 			if(time == 0.0) return new Vector3f(0,0,0);
 			float force = Math.abs((this.getTyreSlope()*D) 
 						+ this.getDampSlope()*(D-lastD)/time);
+			
+			//WORKAROUND
+			//return new Vector3f(0f, 1569.5907f, 0f);
 			return new Vector3f(0,force,0);
 		}
 		else return new Vector3f(0,0,0);
@@ -94,11 +98,27 @@ public class Wheel extends DronePart {
 			return new Vector3f(0,0,0);
 		}
 		if(isGround() ){
-			float x_speed = this.getDrone().getState().getVelocity().length(); // TODO draaining rond y-as meerekening
-			float scalar = this.getWheelForce().length()*this.getMaxWrijvingsCoeff()*x_speed;
-			float heading = getDrone().getHeading();
-			//System.out.println("WRIJVINGFORCE" + new Vector3f((float) (scalar*Math.sin(heading)),0.0f,(float) (scalar*Math.cos(heading))));
-			return new Vector3f((float) (scalar*Math.sin(heading)),0.0f,(float) (scalar*Math.cos(heading)));
+			Vector3f speed = this.getDrone().getState().getVelocity();
+			Vector3f convertedSpeed = this.getDrone().p.convertToDroneCords(this.getDrone(), speed);
+			
+			float xComponent = convertedSpeed.getX();
+			float max = this.getMaxWrijvingsCoeff();
+			float N = this.getWheelForce().length();
+			
+			float frictionScalar = xComponent*max*N;
+			
+			Vector3f friction = new  Vector3f(-frictionScalar,0.0f,0f);
+			Vector3f fInWorld = this.getDrone().p.convertToWorld(this.getDrone(), friction);
+			
+			this.getDrone().p.print("world speed is:" + speed + " so xComp of drone is: " + xComponent
+			+ " so friction force according to drone is " + friction + " so in world is :" + fInWorld, 105);
+			
+			return fInWorld;
+			
+			//return new Vector3f((float) (scalar*Math.sin(heading)),0.0f,(float) -(scalar*Math.cos(heading)));
+			
+			//return new Vector3f(0,0,0);
+			
 		}
 		
 		else {
@@ -109,16 +129,48 @@ public class Wheel extends DronePart {
 	/**
 	 * Gets the total brake force in the right directions: a factor of the previous total force of the drone.
 	 */
+	
+	private Vector3f brakeForce = new Vector3f();
+	
+	public void setBF(Vector3f v) {
+		this.brakeForce = v;
+	}
+	
+	public Vector3f getBf() {
+		return this.brakeForce;
+	}
 	public Vector3f getTotBrakeForce(Vector3f prevTotForce){
-		float brake = this.getBrakeForce();
-		float heading = getDrone().getHeading();	
-		double factor = (brake/this.getMaxRem());
-					
-		double xForce = -factor*prevTotForce.x*Math.sin(heading);
-		double zForce = -factor*prevTotForce.z*Math.cos(heading);
+	
+		float requestedBrakeForce = this.getBrakeForce();
+
+		Vector3f speed = this.getDrone().getState().getVelocity();
+		Vector3f convertedSpeed = this.getDrone().p.convertToDroneCords(this.getDrone(), speed);
+		
+		
+		
+			
+		//DIT MOET ZOIETS ZIJN
+		
+		
+		
+		///CLEAN
+		
+		float brakeForceNeeded = this.getDrone().tempTurningForce;
+		float actualBrakeForce = Math.signum(brakeForceNeeded)*Math.min(Math.abs(brakeForceNeeded), requestedBrakeForce);
+
+		Vector3f brakeForceInDroneCords = new Vector3f(0f, 0f, actualBrakeForce);
+		Vector3f brakeForceInWorld = this.getDrone().p.convertToWorld(this.getDrone(), brakeForceInDroneCords);
+		
+		
+		this.getDrone().p.print("--Brakef in drone is: " + brakeForceInDroneCords + " so in world is :" +
+				brakeForceInWorld, 140);
 				
-		Vector3f brakeForce = new Vector3f((float)xForce/3,0.0f,(float)zForce/3);
-		return brakeForce;
+		
+		this.setBF(brakeForceInWorld);
+
+		return brakeForceInWorld;
+		//wat is dit?
+				
 	}
 	
 	@Override
@@ -137,6 +189,18 @@ public class Wheel extends DronePart {
 			return total;
 		}
 		else return new Vector3f(0,0,0);
+	}
+	
+	
+	public Vector3f getAbsolutePositionInWorld() {
+		Vector3f sum = new Vector3f(0,0,0);
+		Vector3f relPosInWorld = this.getDrone().p.convertToWorld(this.getDrone(), this.getRelativePosition());
+		Vector3f dronePos = this.getDrone().getState().getPosition();
+		
+		Vector3f.add(relPosInWorld, dronePos, sum);
+		
+		return sum;
+
 	}
 	
 //------------GETTERS/SETTERS--------------------------------------------	

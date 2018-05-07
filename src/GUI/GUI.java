@@ -47,7 +47,7 @@ public class GUI {
 					panelFromAirport, panelToAirport;
 	GLPanel glpanel;
 	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube, buttonAddPackage;
-	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force, resulmoment;
+	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force, resulmoment, brakeForces;
 	JFileChooser fc;
 	JTabbedPane tabbedPaneGenerate;
 	JList<GameItem> list;
@@ -134,6 +134,8 @@ public class GUI {
 		force = new LabelPanel("force", panelValues);
 		aoa = new LabelPanel("Angle of Attack", panelValues);
 		resulmoment = new LabelPanel("Resulting Moment", panelValues);
+		brakeForces = new LabelPanel("BRAKE FORCES", panelValues);
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
@@ -359,9 +361,9 @@ public class GUI {
 				", " + round(currentDrone.getState().getVelocity().y,2)+ 
 				", " + round(currentDrone.getState().getVelocity().z,2) + 
 				")");
-		versnelling.labelValue.setText("(" + round(currentDrone.fysica.accelerationInWorld.x,2) +
-				", " + round(currentDrone.fysica.accelerationInWorld.y,2)+ 
-				", " + round(currentDrone.fysica.accelerationInWorld.z,2) + 
+		versnelling.labelValue.setText("(" + round(currentDrone.p.getAcceleration().x,2) +
+				", " + round(currentDrone.p.getAcceleration().y,2)+ 
+				", " + round(currentDrone.p.getAcceleration().z,2) + 
 				")");
 		inclinatie.labelValue.setText("(" + round(currentDrone.getLeftWingInclination(),2) + 
 				", " + round(currentDrone.getRightWingInclination(),2) + 
@@ -371,18 +373,23 @@ public class GUI {
 		
 		thrust.labelValue.setText("(" + round(currentDrone.engine.getThrustScalar(),5) + ")");
 
-		force.labelValue.setText("(" + round(currentDrone.fysica.totalForceOnDroneInWorld.getX(),0) +
-				", " + round(currentDrone.fysica.totalForceOnDroneInWorld.getY(),0) +
-				", " + round(currentDrone.fysica.totalForceOnDroneInWorld.getZ(),0) +
+		force.labelValue.setText("(" + round(currentDrone.p.getForce().getX(),0) +
+				", " + round(currentDrone.p.getForce().getY(),0) +
+				", " + round(currentDrone.p.getForce().getZ(),0) +
 				")");
 		
 		aoa.labelValue.setText("(" + currentDrone.leftWing.getAngleOfAttack() + ")");
 		//aoa.labelValue.setText("(" + round(currentDrone.getAOA(),2) + ")");
 		
-		resulmoment.labelValue.setText("(" + round(currentDrone.getState().getMoment().getX(), 0) +
-				", " + round(currentDrone.getState().getMoment().getY(),0) +
-				", " + round(currentDrone.getState().getMoment().getZ(),0) +
+		resulmoment.labelValue.setText("(" + round(currentDrone.p.getMoment().getX(), 0) +
+				", " + round(currentDrone.p.getMoment().getY(),0) +
+				", " + round(currentDrone.p.getMoment().getZ(),0) +
 				")");
+		
+		brakeForces.labelValue.setText("(" +round(currentDrone.getState().getHPRrates().getX(), 4) +
+				", " + round(currentDrone.getState().getHPRrates().getY(), 4) +
+				", " + round(currentDrone.getState().getHPRrates().getZ(), 4)
+				);
 	}
 	
 	

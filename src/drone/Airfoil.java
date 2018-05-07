@@ -42,7 +42,7 @@ public class Airfoil extends DronePart {
 
 		Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared * this.getLiftSlope()), 
 				normal);
-				
+		
 		return liftForce;
 	}
 	

@@ -9,6 +9,7 @@ import engine.GameItem;
 import engine.Square;
 import interfaces.AutopilotOutputs;
 import fysica.Fysica;
+import Physics.DronePhysics;
 import game.Airport;
 import game.Pakket;
 import graph.Mesh;
@@ -38,8 +39,9 @@ public class Drone {
 	public Wheel rightWheel;
 	
 	//Wheel waarden
-	public final float wheelY = -1.12f;
-	public float frontWheelZ = -2.079f;
+	public float wheelY = 0f; //-1.12f;
+	//changed this
+	public float frontWheelZ = -1.918f;
 	public float rearWheelZ = 0.959f;
 	public float rearWheelX = 1.24f;
 	public float wheelRadius = 0.2f;
@@ -80,6 +82,10 @@ public class Drone {
 	
 	private Pakket carryingPackage;
 	
+	public DronePhysics p = new DronePhysics();
+	
+	
+	public float tempTurningForce = 400000f;
 	/**
 	 * Create a new drone with the given id, at the given gate of the given airport, pointing to the given runway.
 	 * @param id
@@ -93,9 +99,9 @@ public class Drone {
 		setStartingAirport(ap);
 		setStartingGate(gate);
 		
-		float xPos = ap.getMiddleGate0()[0];
+		float xPos = 0;
 		float yPos = Y_START_POS;
-		float zPos = ap.getMiddleGate0()[1];
+		float zPos = 0;
 		
 		Vector3f velocity = new Vector3f(0,0,0);
 		
@@ -120,7 +126,8 @@ public class Drone {
 		//SETTING POSITION AND VELOCITY STATE IN WORLD
 		State initState = new State();
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
-		initState.setHPR(new Vector3f(ap.getOrientation(),0f, 0f));
+		
+		initState.setHPR(new Vector3f((float) 0, (float) 0, (float) 0));
 		initState.setVelocity(velocity);
 		this.state = initState;
 	}
@@ -173,12 +180,11 @@ public class Drone {
 		System.out.println("======================== - UPDATE DRONE - ==================================");
 		System.out.println("========================================================================");
 		
-        float scaledThrust = Math.max(0,Math.min(this.maxThrust, outputs.getThrust()));
-        scaledThrust = scaledThrust*3;
+        float scaledThrust = 200; //Math.min(tempTurningForce, outputs.getThrust());
         
         //OM TE TESTEN LATER WEGDOEN:
         
-		this.fysica.print("UPDATE with time= " +time, 10);
+		this.fysica.print("UPDATE with time= " +time, 1400);
 		this.fysica.print("Autopilot outputs are: " 
 		+ "\n scaled thrust:" + scaledThrust
 		+ "\n thrust:" +  outputs.getThrust()
@@ -190,70 +196,24 @@ public class Drone {
 		+ "\n LEFT BRAKE FORECE: " + outputs.getLeftBrakeForce() 
 		+ "\n RIGHT BRAKE FORECE: " + outputs.getRightBrakeForce(), 
 		
-		40);
-
+		1600);
  
-        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
-        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
+        this.getLeftWing().updateInclinationAngle((float) (Math.PI/12));
+        this.getRightWing().updateInclinationAngle((float) (Math.PI/12));
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
         this.getEngine().setThrust(scaledThrust);
 
         
-        this.frontWheel.update(outputs.getFrontBrakeForce(), time);
-	    this.leftWheel.update(outputs.getLeftBrakeForce(), time);
-	    this.rightWheel.update(outputs.getRightBrakeForce(), time);
-	    
-
+        this.frontWheel.update(0, time);
+	    this.leftWheel.update(0, time);
+	    this.rightWheel.update(0, time);
         
         //UPDATE STATE
       
-        State newState = new State();
-        
-        Vector3f newVelocity = fysica.getNewVelocityInWorld(this, time);
- 
-        if(newVelocity.getZ()>0) {
-        	newVelocity = new Vector3f(0,0,0);
-        }
-        newState.setVelocity(fysica.getNewVelocityInWorld(this, time));
-        
-        newState.setPosition(fysica.getNewPositionInWorld(this, time));
-        
-        newState.setAngularRotation(fysica.getNewAngularVelocityInWorld(this, time));
-        
-        float newHeading = this.getHeading() + (this.getHeadingVel() * time);
-		this.fysica.print("-- NEW HEADING IS:" + newHeading, 30);
-		
-		float newPitch = this.getPitch() + this.getPitchVel() * time;
-		this.fysica.print("-- NEW PITCH IS:" + time + " . " + this.getPitchVel()  + " = " + newPitch, 30);
-		
-		float newRoll = this.getRoll() + this.getRollVel() * time;
-		this.fysica.print("-- NEW ROLL IS:" + time + " . " + this.getRollVel() +  " = " + newRoll, 30);
-		
-		
-		newHeading = this.fysica.clean(newHeading);
-		newPitch = this.fysica.clean(newPitch);
-		newRoll = this.fysica.clean(newRoll);
-
-		//UPDATE STATE->HPR
-        Vector3f hpr = new Vector3f(newHeading, newPitch, newRoll);
-        newState.setHPR(hpr);
-		
-		
-		//UPDATE STATE->HPRRATES
-		
-		float newHeadingRate = fysica.getNewHeadingRate(this, time);
-		this.fysica.print("-- NEW HEADINGRATE IS:" + newHeadingRate, 30);
-		
-		float newPitchRate = fysica.getNewPitchRate(this, time);
-		this.fysica.print("-- NEW PITCHRATE IS:" + newPitchRate, 30);
-		
-		float newRollRate = fysica.getNewRollRate(this, time);
-		this.fysica.print("-- NEW ROLLRATE IS:" + newRollRate, 30);
-		
-		Vector3f hprRates = new Vector3f(newHeadingRate, newPitchRate, newRollRate);
-		newState.setHPRrates(hprRates);
+        State newState = p.getNewState(this, time);
         this.state = newState;
+        
 
 	}
 	
@@ -308,10 +268,10 @@ public class Drone {
 	
 	public Mesh generateMesh() {
 		
-		Square droneIcon = new Square(this.getState().getX()+droneIconLength/2,this.getState().getZ()+droneIconLength/2,
-				this.getState().getX()-droneIconLength/2,this.getState().getZ()+droneIconLength/2,
-				this.getState().getX()-droneIconLength/2,this.getState().getZ()-droneIconLength/2,
-				this.getState().getX()+droneIconLength/2,this.getState().getZ()-droneIconLength/2,
+		Square droneIcon = new Square(droneIconLength/2,droneIconLength/2,
+				-droneIconLength/2,droneIconLength/2,
+				-droneIconLength/2,-droneIconLength/2,
+				droneIconLength/2,-droneIconLength/2,
 				hoogte,
 				Color.BLACK,
 				false,
@@ -381,11 +341,11 @@ public class Drone {
 
 	public float getPitch() {
 		return this.getState().getPitch();
-	}
+		}
 
 	public float getRoll() {		
 		return this.getState().getRoll();
-	}
+		}
 	
 	public float getHeadingVel() {	
 		return this.getState().getHeadingRate();
@@ -534,15 +494,15 @@ public class Drone {
 	}
 	
 	public float getX(){
-		return getState().getX();
+		return getState().getPosition().getX();
 	}
 	
 	public float getY(){
-		return getState().getY();
+		return getState().getPosition().getY();
 	}
 	
 	public float getZ(){
-		return getState().getZ();
+		return getState().getPosition().getZ();
 	}
 
 	public boolean isCarryingPackage() {

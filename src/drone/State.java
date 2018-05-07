@@ -4,6 +4,15 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class State {
 	
+	private Vector3f position;
+	private Vector3f hpr = new Vector3f(0,0,0);
+	private Vector3f hprRates = new Vector3f(0,0,0);;
+
+	private Vector3f velocity;
+	
+	private Vector3f angularOrientation;
+	private Vector3f angularRotation;	
+	
 	public State() {
 		
 	}
@@ -16,31 +25,12 @@ public class State {
 	public void setPosition(Vector3f position) {
 		this.position = position;
 	}
-	
-	public float getX(){
-		return getPosition().getX();
-	}
-	
-	public float getY(){
-		return getPosition().getY();
-	}
-	
-	public float getZ(){
-		return getPosition().getZ();
-	}
-	
-	
+
+
 	//DRONE MOMENT
 	
 	Vector3f moment = new Vector3f();
 	
-	public Vector3f getMoment() {
-		return this.moment;
-	}
-	
-	public void setMoment(Vector3f moment) {
-		this.moment = moment;
-	}
 	
 	
 	//VELOCITY
@@ -64,7 +54,12 @@ public class State {
 	//ANGULAR HPR
 	
 	public Vector3f getHPR() {
-		return this.hpr;
+		
+		Vector3f hpr = this.hpr;
+		//hpr.setY(0f);
+		//hpr.setZ(0f);
+		
+		return hpr;
 	}
 	
 	public void setHPR(Vector3f hpr) {
@@ -87,26 +82,26 @@ public class State {
 	
 	//ANGULAR HPR rates
 	
-		public Vector3f getHPRrates() {
-			return  this.hprRates;
-		}
-		
-		public void setHPRrates(Vector3f hprRates) {
-			this.hprRates = hprRates;
-		}
-		
-		public float getHeadingRate(){
-			return getHPRrates().getX();
-		}
-		
-		public float getPitchRate(){
-			return getHPRrates().getY();
-		}
-		
-		public float getRollRate(){
-			return getHPRrates().getZ();
-		}
+	public Vector3f getHPRrates() {
+		return  this.hprRates;
+	}
 	
+	public void setHPRrates(Vector3f hprRates) {
+		this.hprRates = hprRates;
+	}
+	
+	public float getHeadingRate(){
+		return getHPRrates().getX();
+	}
+	
+	public float getPitchRate(){
+		return getHPRrates().getY();
+	}
+	
+	public float getRollRate(){
+		return getHPRrates().getZ();
+	}
+
 	
 	
 	//ANGULAR ROTATION
@@ -120,12 +115,5 @@ public class State {
 	}
 
 
-	private Vector3f position;
-	private Vector3f hpr = new Vector3f(0,0,0);
-	private Vector3f hprRates = new Vector3f(0,0,0);;
-
-	private Vector3f velocity;
 	
-	private Vector3f angularOrientation;
-	private Vector3f angularRotation;	
 }

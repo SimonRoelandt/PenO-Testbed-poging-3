@@ -27,8 +27,8 @@ public class DronesController {
 	public DronesController(AirportController apController){
 		this.apController = apController;
 		addDrone(new Drone(0,apController.getAirports().get(0), 0, 0));
-    	addDrone(new Drone(1,apController.getAirports().get(1), 0, 0));
-    	addDrone(new Drone(2,apController.getAirports().get(4), 0, 0));
+    	//addDrone(new Drone(1,apController.getAirports().get(1), 0, 0));
+    	//addDrone(new Drone(2,apController.getAirports().get(4), 0, 0));
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class DronesController {
 	 */
 	private boolean onTarmac(Drone drone){
 		for (Airport ap : apController.getAirports()){
-			if(ap.onAirport(drone.getState().getX(), drone.getState().getZ())){
+			if(ap.onAirport(drone.getState().getPosition().getX(), drone.getState().getPosition().getZ())){
 				return true;
 			}
 		}
@@ -113,9 +113,9 @@ public class DronesController {
 		for(Drone drone : getDrones()){
 			Inputs input = new Inputs(
 	        		renderer.getPixelsarray(),
-	        		drone.getState().getX(),
-	        		drone.getState().getY(),
-	        		drone.getState().getZ(),
+	        		drone.getState().getPosition().getX(),
+	        		drone.getState().getPosition().getY(),
+	        		drone.getState().getPosition().getZ(),
 
 	        		drone.getHeading(),
 	        		drone.getPitch(),
