@@ -98,10 +98,11 @@ public class Drone {
 		setId(id);
 		setStartingAirport(ap);
 		setStartingGate(gate);
-		
-		float xPos = 0;
+
+		float xPos = ap.getMiddleGate(gate)[0];
 		float yPos = Y_START_POS;
-		float zPos = 0;
+
+		float zPos = ap.getMiddleGate(gate)[1];
 		
 		Vector3f velocity = new Vector3f(0,0,0);
 		
@@ -180,7 +181,7 @@ public class Drone {
 		System.out.println("======================== - UPDATE DRONE - ==================================");
 		System.out.println("========================================================================");
 		
-        float scaledThrust = 200; //Math.min(tempTurningForce, outputs.getThrust());
+        float scaledThrust = tempTurningForce; //Math.min(tempTurningForce, outputs.getThrust());
         
         //OM TE TESTEN LATER WEGDOEN:
         
@@ -207,7 +208,7 @@ public class Drone {
         
         this.frontWheel.update(0, time);
 	    this.leftWheel.update(0, time);
-	    this.rightWheel.update(0, time);
+	    this.rightWheel.update(tempTurningForce, time);
         
         //UPDATE STATE
       
@@ -511,6 +512,10 @@ public class Drone {
 
 	public void setCarryingPackage(Pakket carryingPackage) {
 		this.carryingPackage = carryingPackage;
+	}
+	
+	public Pakket getCarryingPackage() {
+		return this.carryingPackage;
 	}
 
 }

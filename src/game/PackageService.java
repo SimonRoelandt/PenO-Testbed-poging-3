@@ -23,8 +23,7 @@ public class PackageService {
 	private List<Pakket> freePackages = new ArrayList<Pakket>();
 	private List<Pakket> takenPackages = new ArrayList<Pakket>();
 	private Pakket pickedUpPackage;
-	
-	
+	private Pakket deliveredPackage;
 	
 	public PackageService(AirportController apC, DronesController dC) {
 		this.apController = apC;
@@ -35,7 +34,7 @@ public class PackageService {
 	 * Check for pickup of any packages.
 	 */
 	public void checkPickup() {
-		 for(Drone d : droneController.getDrones()){
+		 for(Drone d : droneController.getDrones().values()){
 			 for(Airport ap : apController.getAirports()){
 				if(ap.isPackageGate0() && ap.onGate0(d.getX(), d.getZ())){
 					System.out.println("ON GATE 0 + PACKAGE AVAILABLE");
@@ -56,6 +55,33 @@ public class PackageService {
 	}
 	
 	/**
+	 * Check for pickup of any deliveries.
+	 */
+	public boolean checkDelivery() {
+		 for(Drone d : droneController.getDrones().values()){
+			 if (d.getCarryingPackage()!= null) {
+				 for(Airport ap : apController.getAirports()){
+					if(d.getCarryingPackage().airport == ap.getId() && ap.onGate0(d.getX(), d.getZ())){
+						if(d.getState().getVelocity().length() < 1.0) {
+							System.out.println("PACKAGE DELIVERED ON GATE 0");
+							deliver(d, d.getCarryingPackage());
+							return true;
+						}
+					}
+					if(d.getCarryingPackage().airport == ap.getId() && ap.onGate1(d.getX(), d.getZ())){
+						if(d.getState().getVelocity().length() < 1.0) {
+							System.out.println("PACKAGE DELIVERED ON GATE 1");
+							deliver(d, d.getCarryingPackage());
+							return true;
+						}
+					}
+				 }
+			 }
+		 }
+		 return false;
+	}
+	
+	/**
 	 * Picks up a package at the given airport and gate with the given drone.
 	 */
 	private void pickup(Drone d, Airport ap, int gate, Pakket pakket){
@@ -68,12 +94,20 @@ public class PackageService {
 		takenPackages.add(pakket);
 	}
 	
-	
+	/**
+	 * Delivers a package
+	 */
+	private void deliver(Drone d, Pakket pakket) {
+		System.out.println("DELIVERY!!!!");
+		deliveredPackage = pakket;
+		d.setCarryingPackage(null);
+		takenPackages.remove(pakket);
+	}
 	/**
 	 * Create a new package deliver event from one airport to another.
 	 */
 	public Pakket newPackage(AutopilotModule apModule, int fromAp, int toAp){
-		Pakket pakket = new Pakket();
+		Pakket pakket = new Pakket(0,0,toAp);
 		
 		int fromGate = 0;
 		int toGate = 0;
@@ -136,6 +170,10 @@ public class PackageService {
 	
 	public Pakket getPickedUpPackage() {
 		return pickedUpPackage;
+	}
+	
+	public Pakket getDeliveredPackage() {
+		return deliveredPackage;
 	}
 	
 	public boolean isPackageGate(int ap, int gate){

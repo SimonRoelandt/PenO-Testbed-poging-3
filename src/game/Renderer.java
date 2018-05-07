@@ -243,7 +243,7 @@ public class Renderer {
         //CHASE
         if (view == "chase") {
 	        for(GameItem gameItem : gameItems) {
-	        	if (/*!gameItem.getRenderOnTopView()*/true){
+	        	if (!gameItem.getRenderOnTopView()){
 		        	if (gameItem instanceof GroundItem)
 		        		glDepthMask(false);
 		        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
@@ -272,7 +272,7 @@ public class Renderer {
        	if (view == "free") {
 	        viewMatrix = transformation.getViewMatrix(cameraFree);
 	        for(GameItem gameItem : gameItems) {
-	        	if (/*!gameItem.getRenderOnTopView()*/true) {
+	        	if (!gameItem.getRenderOnTopView()) {
 		        	if (gameItem instanceof GroundItem)
 		        		glDepthMask(false);
 		        	Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);

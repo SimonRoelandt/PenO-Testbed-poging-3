@@ -71,7 +71,7 @@ public class GUI {
 	public GUI(DummyGame dummyGame) {
 		this.dummyGame = dummyGame;
 		this.dronesController = this.dummyGame.droneController;
-		this.drones = this.dronesController.getDrones();
+		this.drones = new ArrayList<Drone>(this.dronesController.getDrones().values());
 		currentDrone = drones.get(0);
 		droneAmount = drones.size();
 

@@ -19,7 +19,7 @@ public class AirportController {
 	/**
 	 * The W value of airports - depends on take-off/landing length - 2W = length of runway.
 	 */
-    private final float AIRPORT_W = 175;
+    private final float AIRPORT_W = 250;
     /**
      * The L value of airports - depends on landing accuracy - 1L = width of runway.
      */
@@ -34,16 +34,17 @@ public class AirportController {
 	public AirportController() {
         Airport air0 = new Airport(0,0,0,AIRPORT_W,AIRPORT_L,0);
         Airport air1 = new Airport(0,-2300,0,AIRPORT_W,AIRPORT_L,1);
-        Airport air2 = new Airport(1000,2000,(float)Math.PI,AIRPORT_W,AIRPORT_L,2);
-        Airport air3 = new Airport(-2000,50,-(float)Math.PI,AIRPORT_W,AIRPORT_L,3);
-        Airport air4 = new Airport(1500,-500,(float)Math.PI,AIRPORT_W,AIRPORT_L,4);
-        Airport air5 = new Airport(-500,-1000,-(float)Math.PI,AIRPORT_W,AIRPORT_L,5);
+        Airport air2 = new Airport(1000,2000,(float)Math.PI/2,AIRPORT_W,AIRPORT_L,2);
+        Airport air3 = new Airport(-2000,50,-(float)Math.PI/3,AIRPORT_W,AIRPORT_L,3);
+        Airport air4 = new Airport(1500,-500,(float)Math.PI/4,AIRPORT_W,AIRPORT_L,4);
+        Airport air5 = new Airport(-500,-1000,-(float)Math.PI/5,AIRPORT_W,AIRPORT_L,5);
         airports.add(air0);
         airports.add(air1);
         /*airports.add(air2);
         airports.add(air3);
         airports.add(air4);
         airports.add(air5);*/
+
 	}
 	
 	/**

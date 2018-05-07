@@ -1,34 +1,31 @@
 package game;
 
-import java.awt.Color;
-
 import drone.Drone;
 import engine.GameItem;
-import engine.Square;
-import graph.Mesh;
-import graph.Texture;
 
 public class Pakket{
 	
 	public float hoogte = 30f;
 	private GameItem packageIconGameItem;
 	private Drone drone;
+	public int airport;
 	
 	float x,z;
-	public Pakket(float x,float z){
+	public Pakket(float x,float z, int airport){
 		this.x = x;
 		this.z = z;
+		this.airport = airport;
 	}
 	
 	public Pakket() {
 		
 	}
+	
 	public Pakket(float[] pos){
 		this.x = pos[0];
 		this.z = pos[1];
 	}
 
-	
 	public GameItem getPackageIconGameItem() {
 		return this.packageIconGameItem;
 	}

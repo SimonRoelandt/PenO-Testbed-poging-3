@@ -108,7 +108,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	//TOTAL DRONE FORCES --------------------------------------------------------------
 	
 	public void print(Object obj, int priority){
-		if(priority >= 100){
+		if(priority >= 10000){
 			System.out.println("PRINTLOG: "+ obj);
 		}
 	}
@@ -146,7 +146,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		totalForceOnDroneInWorld = v;
 		
-		v.setX(0f);
+		//v.setX(0f);
 		v.setY(0f);
 		print("TOTAL FORCE ON DRONE is " + v, 50);
 		return v;

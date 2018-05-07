@@ -1,6 +1,9 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.lwjgl.util.vector.Vector3f;
 import drone.Drone;
 import interfaces.AutopilotModule;
@@ -18,7 +21,7 @@ public class DronesController {
 	/**
 	 * List of all drones.
 	 */
-	private ArrayList<Drone> drones = new ArrayList<Drone>();
+	private Map<Integer,Drone> drones = new HashMap<Integer, Drone>();
 	/**
 	 * The airportController of the world.
 	 */
@@ -26,16 +29,17 @@ public class DronesController {
 	
 	public DronesController(AirportController apController){
 		this.apController = apController;
-		addDrone(new Drone(0,apController.getAirports().get(0), 0, 0));
-    	//addDrone(new Drone(1,apController.getAirports().get(1), 0, 0));
-    	//addDrone(new Drone(2,apController.getAirports().get(4), 0, 0));
+
+		addDrone(new Drone(0,apController.getAirports().get(0), 1, 0));
+//    	addDrone(new Drone(1,apController.getAirports().get(0), 0, 0));
+//    	addDrone(new Drone(2,apController.getAirports().get(4), 0, 0));
 	}
 	
 	/**
 	 * Defines the drones to the given autopilotModule.
 	 */
 	public void defineDrones(Renderer renderer, AutopilotModule apModule){
-		for(Drone drone : getDrones()){
+		for(Drone drone : getDrones().values()){
 			Config config = new Config(drone.getGravity(), drone.getWingX(), drone.getTailSize(), drone.getEngineMass(),
 				drone.getWingMass(), drone.getTailMass(), drone.getMaxThrust(), drone.getMaxAOA(),
 				drone.getWingLiftSlope(), drone.getHorStabLiftSlope(), drone.getVerStabLiftSlope(),
@@ -110,7 +114,7 @@ public class DronesController {
 	 * Starts a time passed for every drone in the given autopilotModule.
 	 */
 	public void startTimePassed(AutopilotModule autopilotModule, Renderer renderer, float time){
-		for(Drone drone : getDrones()){
+		for(Drone drone : getDrones().values()){
 			Inputs input = new Inputs(
 	        		renderer.getPixelsarray(),
 	        		drone.getState().getPosition().getX(),
@@ -130,7 +134,7 @@ public class DronesController {
 	 * Completes a time passed for every drone in the given autopilotModule.
 	 */
 	public void completeTimePassed(AutopilotModule autopilotModule, float time){
-		for(Drone drone : getDrones()){
+		for(Drone drone : getDrones().values()){
 			AutopilotOutputs output = autopilotModule.completeTimeHasPassed(drone.getId());
 			drone.update(output, time);
 		}
@@ -141,15 +145,15 @@ public class DronesController {
 	 * @param d
 	 */
 	public void remove(Drone d) {
-		this.getDrones().remove(d);
+		this.getDrones().remove(d.getId());
 	}
 	
-	public ArrayList<Drone> getDrones() {
+	public Map<Integer, Drone> getDrones() {
 		return drones;
 	}
 	
 	public void addDrone(Drone d){
-		drones.add(d);
+		drones.put(d.getId(), d);
 	}
 
 	public AirportController getApController() {

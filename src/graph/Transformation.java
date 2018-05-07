@@ -65,7 +65,8 @@ public class Transformation {
 		Vector3f rotation = gameItem.getRotation();
 	    modelViewMatrix.setIdentity();
 	    modelViewMatrix.translate(gameItem.getPosition()).
-	    				rotate((float)Math.toRadians(-rotation.z), new Vector3f(0,0,1)).
+
+						rotate((float)Math.toRadians(-rotation.z), new Vector3f(0,0,1)).
 	    				rotate((float)Math.toRadians(-rotation.x), new Vector3f(1,0,0)).
 	    				rotate((float)Math.toRadians(-rotation.y), new Vector3f(0,1,0)).
 	    				scale(new Vector3f(gameItem.getScale(),gameItem.getScale(),gameItem.getScale()));
