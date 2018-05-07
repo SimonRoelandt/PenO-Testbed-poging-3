@@ -146,7 +146,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		totalForceOnDroneInWorld = v;
 		
-		v.setX(0f);
+		//v.setX(0f);
 		v.setY(0f);
 		print("TOTAL FORCE ON DRONE is " + v, 150);
 		return v;
