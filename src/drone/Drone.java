@@ -552,5 +552,9 @@ public class Drone {
 	public void setCarryingPackage(Pakket carryingPackage) {
 		this.carryingPackage = carryingPackage;
 	}
+	
+	public Pakket getCarryingPackage() {
+		return this.carryingPackage;
+	}
 
 }

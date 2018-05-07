@@ -269,6 +269,12 @@ public class DummyGame implements IGameLogic {
     		//Check package pick-up
     		packageService.checkPickup();
     		
+    		//Check package delivery
+    		if (packageService.checkDelivery()) {
+        		//remove delivered packages
+        		gameItems.remove(packageService.getDeliveredPackage().getPackageIconGameItem());
+    		}
+    		
     		//update visual packages
     		for (Pakket pakket : packageService.getTakenPackages()) {
     			pakket.getPackageIconGameItem().setPosition(pakket.getDrone().getState().getPosition().getX()-pakket.getDrone().droneIconLength/2.5f,
@@ -276,6 +282,8 @@ public class DummyGame implements IGameLogic {
     					pakket.getDrone().getState().getPosition().getZ()-pakket.getDrone().droneIconLength*(-1/2f+1/1.1f));
     			pakket.getPackageIconGameItem().setScale(0.7f);
     		}
+    		
+
     		
     		
     		//Update chase-cameras
