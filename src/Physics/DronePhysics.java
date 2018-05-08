@@ -42,6 +42,22 @@ public class DronePhysics {
 		
 		Vector3f resultMoment = this.getDroneResultingMomentInWorld(drone, time);
 		
+		
+		//TEMP FIX
+		// WHEN DRONE ON GROUND, NO PITCH MOMENT
+		if(drone.getFrontWheel().isGround() && drone.getRightWheel().isGround() && drone.getLeftWheel().isGround()) {
+			Vector3f resultMomentInDrone = this.convertToDroneCords(drone, resultMoment);
+			resultMomentInDrone.setX(0f);
+			resultMoment = this.convertToWorld(drone, resultMomentInDrone);
+				
+		}
+		
+		
+		
+		//resultMoment = this.convertToWorld(drone, (this.convertToDroneCords(drone, resultMoment).setX(0f)));
+		
+		this.setMoment(resultMoment);
+		
 		//Gebruik dit om Moment te testen 
 	
 		/*

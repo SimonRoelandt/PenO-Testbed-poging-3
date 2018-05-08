@@ -39,7 +39,7 @@ public class Drone {
 	public Wheel rightWheel;
 	
 	//Wheel waarden
-	public float wheelY = 0f; //-1.12f;
+	public float wheelY = -1.12f;
 	//changed this
 	public float frontWheelZ = -1.918f;
 	public float rearWheelZ = 0.959f;
@@ -127,7 +127,7 @@ public class Drone {
 		State initState = new State();
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
 		
-		initState.setHPR(new Vector3f((float) 0, (float) 0, (float) 0));
+		initState.setHPR(new Vector3f((float) Math.PI/2, (float) 0, (float) 0));
 		initState.setVelocity(velocity);
 		this.state = initState;
 	}
