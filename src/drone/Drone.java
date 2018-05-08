@@ -103,10 +103,10 @@ public class Drone {
 		setStartingAirport(ap);
 		setStartingGate(gate);
 
-		float xPos = ap.getMiddleGate(gate)[0];
+		float xPos = ap.getEndRunway0Middle()[0];
 		float yPos = Y_START_POS;
 
-		float zPos = ap.getMiddleGate(gate)[1];
+		float zPos = ap.getEndRunway0Middle()[1];
 		
 		Vector3f velocity = new Vector3f(0,0,0);
 		
@@ -131,8 +131,8 @@ public class Drone {
 		//SETTING POSITION AND VELOCITY STATE IN WORLD
 		State initState = new State();
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
-		
-		initState.setHPR(new Vector3f((float) 0f, (float) 0, (float) 0));
+
+		initState.setHPR(new Vector3f((float) 0, (float) 0, (float) 0));
 		initState.setVelocity(velocity);
 		this.state = initState;
 	}
@@ -203,13 +203,13 @@ public class Drone {
 		
 		1600);
  
-        this.getLeftWing().updateInclinationAngle(0);
-        this.getRightWing().updateInclinationAngle(0);
+        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
+        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
         
         
-        this.getEngine().setThrust(200);
+        this.getEngine().setThrust(outputs.getThrust());
 
         //THIS IS FOR TEMP TURNING
         this.frontWheel.update(0,time);
@@ -220,9 +220,6 @@ public class Drone {
         brakeForces.setX(outputs.getFrontBrakeForce());
         brakeForces.setY(outputs.getLeftBrakeForce());
         brakeForces.setZ(outputs.getRightBrakeForce());
-
-
-
         
         //UPDATE STATE
       
