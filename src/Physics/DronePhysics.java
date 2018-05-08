@@ -45,9 +45,9 @@ public class DronePhysics {
 		//Gebruik dit om Moment te testen 
 	
 		/*
-		Vector3f MomentVectorAccToDrone = new Vector3f(0,6000,0);
+		Vector3f MomentVectorAccToDrone = new Vector3f(60000,0,0);
 		resultMoment = this.convertToWorld(drone, MomentVectorAccToDrone);
-		*/
+		 */
 		
 		Vector3f angularAcc = this.getAngularAccelerationInWorld(drone, time, resultMoment);
 		

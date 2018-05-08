@@ -203,7 +203,7 @@ public class Drone {
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
-        this.getEngine().setThrust(scaledThrust);
+        this.getEngine().setThrust(outputs.getThrust());
 
         //THIS IS FOR TEMP TURNING
         this.frontWheel.update(outputs.getFrontBrakeForce(),time);
