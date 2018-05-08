@@ -52,8 +52,6 @@ public class DronePhysics {
 				
 		}
 		
-		
-		
 		//resultMoment = this.convertToWorld(drone, (this.convertToDroneCords(drone, resultMoment).setX(0f)));
 		
 		this.setMoment(resultMoment);

@@ -198,17 +198,17 @@ public class Drone {
 		
 		1600);
  
-        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
-        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
+        this.getLeftWing().updateInclinationAngle(0);
+        this.getRightWing().updateInclinationAngle(0);
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
         
         
-        this.getEngine().setThrust(tempTurningForce);
+        this.getEngine().setThrust(0);
 
         //THIS IS FOR TEMP TURNING
         this.frontWheel.update(0,time);
-	    this.leftWheel.update(tempTurningForce, time);
+	    this.leftWheel.update(0, time);
 	    this.rightWheel.update(0, time);
         
         //UPDATE STATE
