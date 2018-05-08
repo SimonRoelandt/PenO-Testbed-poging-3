@@ -132,7 +132,7 @@ public class Drone {
 		State initState = new State();
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
 		
-		initState.setHPR(new Vector3f((float) Math.PI/2, (float) 0, (float) 0));
+		initState.setHPR(new Vector3f((float) 0, (float) 0, (float) 0));
 		initState.setVelocity(velocity);
 		this.state = initState;
 	}
@@ -202,19 +202,18 @@ public class Drone {
 		+ "\n RIGHT BRAKE FORECE: " + outputs.getRightBrakeForce(), 
 		
 		1600);
- 
-        this.getLeftWing().updateInclinationAngle(0);
-        this.getRightWing().updateInclinationAngle(0);
+        this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
+        this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
         
         
-        this.getEngine().setThrust(200);
+        this.getEngine().setThrust(outputs.getThrust());
 
         //THIS IS FOR TEMP TURNING
-        this.frontWheel.update(0,time);
-	    this.leftWheel.update(0, time);
-	    this.rightWheel.update(30000, time);
+        this.frontWheel.update(outputs.getFrontBrakeForce(),time);
+	    this.leftWheel.update(outputs.getLeftBrakeForce(), time);
+	    this.rightWheel.update(outputs.getRightBrakeForce(), time);
 	    
 	    //voor weergave in gui
         brakeForces.setX(outputs.getFrontBrakeForce());
