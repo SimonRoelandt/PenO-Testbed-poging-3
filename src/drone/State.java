@@ -56,9 +56,6 @@ public class State {
 	public Vector3f getHPR() {
 		
 		Vector3f hpr = this.hpr;
-		//hpr.setY(0f);
-		//hpr.setZ(0f);
-		
 		return hpr;
 	}
 	
@@ -77,7 +74,6 @@ public class State {
 	public float getRoll(){
 		return getHPR().getZ();
 	}
-	
 	
 	
 	//ANGULAR HPR rates
@@ -101,7 +97,6 @@ public class State {
 	public float getRollRate(){
 		return getHPRrates().getZ();
 	}
-
 	
 	
 	//ANGULAR ROTATION

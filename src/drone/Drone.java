@@ -204,7 +204,7 @@ public class Drone {
 		+ "\n RIGHT BRAKE FORECE: " + outputs.getRightBrakeForce(), 
 		
 		1600);
- 
+
         this.getLeftWing().updateInclinationAngle(outputs.getLeftWingInclination());
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
@@ -256,7 +256,7 @@ public class Drone {
 
 	//INERTIA MATRIX
 	
-	private Matrix3f getInertiaMatrix(){
+	public Matrix3f getInertiaMatrix(){
 		return this.inertiaMatrix;
 	}
 	
@@ -264,14 +264,20 @@ public class Drone {
 		
 		Matrix3f inertiaMatrix = this.getInertiaMatrix();
 		
-		Matrix3f conversionMatrix = this.fysica.getRotationMatrix(this);
+		Matrix3f conversionMatrix = this.p.getRotationMatrix(this);
 		Matrix3f conversionMatrixInverted = new Matrix3f();
 		Matrix3f.transpose(conversionMatrix, conversionMatrixInverted);
 		
 		Matrix3f inertiaMatrixInWorld = new Matrix3f();
-		Matrix3f.mul(conversionMatrix, inertiaMatrix, inertiaMatrixInWorld);
-		Matrix3f.mul(inertiaMatrixInWorld, conversionMatrixInverted, inertiaMatrixInWorld);
 		
+		Matrix3f.mul(conversionMatrix, inertiaMatrix, inertiaMatrixInWorld);
+		//Matrix3f.mul(inertiaMatrixInWorld, conversionMatrixInverted, inertiaMatrixInWorld);
+		
+		System.out.println(inertiaMatrix);
+		System.out.println("---");
+
+		System.out.println(inertiaMatrixInWorld);
+
 		return inertiaMatrixInWorld;
 		
 	}
