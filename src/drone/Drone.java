@@ -134,7 +134,7 @@ public class Drone {
 		
 		//initState.setHPR(new Vector3f((float) 0, (float)  Math.PI/2, (float) 0));
 		//initState.setHPR(new Vector3f((float) 0, (float)  0, (float) 0));
-		initState.setHPR(new Vector3f((float)  Math.PI/2, (float)  0, (float) 0));
+		//initState.setHPR(new Vector3f((float)  Math.PI/2, (float)  0, (float) 0));
 		//initState.setHPR(new Vector3f((float) 0, (float) 0, (float)  Math.PI/2));
 		
 		initState.setVelocity(velocity);
