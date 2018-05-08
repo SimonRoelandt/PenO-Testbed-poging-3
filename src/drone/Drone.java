@@ -84,6 +84,11 @@ public class Drone {
 	
 	public DronePhysics p = new DronePhysics();
 	
+
+	//voor gui brake forces
+	public Vector3f brakeForces = new Vector3f(0,0,0);
+	
+	
 	public float tempTurningForce = 400000f;
 	/**
 	 * Create a new drone with the given id, at the given gate of the given airport, pointing to the given runway.
@@ -207,9 +212,17 @@ public class Drone {
         this.getEngine().setThrust(0);
 
         //THIS IS FOR TEMP TURNING
-        this.frontWheel.update(0,time);
-	    this.leftWheel.update(0, time);
-	    this.rightWheel.update(0, time);
+        this.frontWheel.update(outputs.getFrontBrakeForce(),time);
+	    this.leftWheel.update(outputs.getLeftBrakeForce(), time);
+	    this.rightWheel.update(outputs.getRightBrakeForce(), time);
+	    
+	    //voor weergave in gui
+        brakeForces.setX(outputs.getFrontBrakeForce());
+        brakeForces.setY(outputs.getLeftBrakeForce());
+        brakeForces.setZ(outputs.getRightBrakeForce());
+
+
+
         
         //UPDATE STATE
       

@@ -20,6 +20,7 @@ public class State {
 	//POSITION
 	public Vector3f getPosition() {
 		return this.position;
+		//return new Vector3f(0,20,0);
 	}
 	
 	public void setPosition(Vector3f position) {

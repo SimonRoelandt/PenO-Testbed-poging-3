@@ -386,9 +386,9 @@ public class GUI {
 				", " + round(currentDrone.p.getMoment().getZ(),0) +
 				")");
 		
-		brakeForces.labelValue.setText("(" +round(currentDrone.getState().getHPRrates().getX(), 4) +
-				", " + round(currentDrone.getState().getHPRrates().getY(), 4) +
-				", " + round(currentDrone.getState().getHPRrates().getZ(), 4)
+		brakeForces.labelValue.setText("(" +round(currentDrone.brakeForces.x, 4) +
+				", " + round(currentDrone.brakeForces.y, 4) +
+				", " + round(currentDrone.brakeForces.z, 4)
 				);
 	}
 	

@@ -51,7 +51,7 @@ public class DummyGame implements IGameLogic {
     
     public final Camera cameraTop;
     
-    private static final float CAMERA_POS_STEP = 1f;
+    private static final float CAMERA_POS_STEP = 0.1f;
     
     private ArrayList<GameItem> gameItems = new ArrayList<GameItem>();
     

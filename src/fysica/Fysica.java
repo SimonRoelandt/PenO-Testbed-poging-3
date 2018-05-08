@@ -112,7 +112,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 			System.out.println("PRINTLOG: "+ obj);
 		}
 	}
-	
+	/*
 	public Vector3f getTotalForceOnDroneInWorld(Drone drone, float time) {
 		print("TOTAL FORCE CALC ", 50);
 		
@@ -172,7 +172,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 
 		return v;
 	}
-	
+	*/
 	public Vector3f getNewPositionInWorld(Drone drone, float time) {
 		
 		Vector3f droneVelocityInWorld = drone.getState().getVelocity();
