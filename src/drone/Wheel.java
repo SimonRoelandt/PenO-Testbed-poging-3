@@ -99,6 +99,7 @@ public class Wheel extends DronePart {
 		}
 		if(isGround() ){
 			Vector3f speed = this.getDrone().getState().getVelocity();
+			speed = this.getAbsoluteVelocityInWorld();
 			Vector3f convertedSpeed = this.getDrone().p.convertToDroneCords(this.getDrone(), speed);
 			
 			float xComponent = convertedSpeed.getX();
@@ -210,6 +211,19 @@ public class Wheel extends DronePart {
 		
 		return sum;
 
+	}
+	
+	public Vector3f getAbsoluteVelocityInWorld() {
+		
+		Vector3f droneVel = this.getDrone().getState().getVelocity();
+		Vector3f relVelInDrone = new Vector3f(0,0,this.getDrone().getState().getAngularRotation().getY()*this.getRelativePosition().getX());
+		
+		Vector3f relVelInWorld = this.getDrone().p.convertToWorld(getDrone(), relVelInDrone);
+		
+		Vector3f sum = new Vector3f();
+		sum.add(droneVel, relVelInWorld, sum);
+		
+		return sum;
 	}
 	
 //------------GETTERS/SETTERS--------------------------------------------	

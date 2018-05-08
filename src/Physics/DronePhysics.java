@@ -49,12 +49,10 @@ public class DronePhysics {
 			Vector3f resultMomentInDrone = this.convertToDroneCords(drone, resultMoment);
 			resultMomentInDrone.setX(0f);
 			resultMomentInDrone.setZ(0f);
-			resultMoment = this.convertToWorld(drone, resultMomentInDrone);
-				
+			resultMoment = this.convertToWorld(drone, resultMomentInDrone);		
 		}
 		
-		//resultMoment = this.convertToWorld(drone, (this.convertToDroneCords(drone, resultMoment).setX(0f)));
-		
+		//resultMoment = new Vector3f(0,0,0);
 		this.setMoment(resultMoment);
 		
 		//Gebruik dit om Moment te testen 
@@ -350,8 +348,6 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	
 	public Vector3f getResultingMoment() {
 		
-		Vector3f moment = new Vector3f(0,0,0);
-		this.moment = moment;
 		return moment;
 	}
 	
@@ -373,9 +369,13 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Matrix3f inverseMomentOfInertia = (Matrix3f) momentOfInertia.invert();
 		
 		Matrix3f.transform(inverseMomentOfInertia,MomentDiff,angularAcceleration);
+		
+
+		
 		print("RESULTING ANG ACC IS" + angularAcceleration, 30);
 	
 		return angularAcceleration; 	
+		
 	}
 	
 	public Vector3f getImpulseMoment(Drone drone){

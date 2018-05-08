@@ -132,7 +132,7 @@ public class Drone {
 		State initState = new State();
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
 		
-		initState.setHPR(new Vector3f((float) Math.PI/2, (float) 0, (float) 0));
+		initState.setHPR(new Vector3f((float) 0f, (float) 0, (float) 0));
 		initState.setVelocity(velocity);
 		this.state = initState;
 	}
@@ -214,7 +214,7 @@ public class Drone {
         //THIS IS FOR TEMP TURNING
         this.frontWheel.update(0,time);
 	    this.leftWheel.update(0, time);
-	    this.rightWheel.update(30000, time);
+	    this.rightWheel.update(200, time);
 	    
 	    //voor weergave in gui
         brakeForces.setX(outputs.getFrontBrakeForce());
@@ -257,7 +257,7 @@ public class Drone {
 
 	//INERTIA MATRIX
 	
-	private Matrix3f getInertiaMatrix(){
+	public Matrix3f getInertiaMatrix(){
 		return this.inertiaMatrix;
 	}
 	
@@ -265,14 +265,20 @@ public class Drone {
 		
 		Matrix3f inertiaMatrix = this.getInertiaMatrix();
 		
-		Matrix3f conversionMatrix = this.fysica.getRotationMatrix(this);
+		Matrix3f conversionMatrix = this.p.getRotationMatrix(this);
 		Matrix3f conversionMatrixInverted = new Matrix3f();
 		Matrix3f.transpose(conversionMatrix, conversionMatrixInverted);
 		
 		Matrix3f inertiaMatrixInWorld = new Matrix3f();
-		Matrix3f.mul(conversionMatrix, inertiaMatrix, inertiaMatrixInWorld);
-		Matrix3f.mul(inertiaMatrixInWorld, conversionMatrixInverted, inertiaMatrixInWorld);
 		
+		Matrix3f.mul(conversionMatrix, inertiaMatrix, inertiaMatrixInWorld);
+		//Matrix3f.mul(inertiaMatrixInWorld, conversionMatrixInverted, inertiaMatrixInWorld);
+		
+		System.out.println(inertiaMatrix);
+		System.out.println("---");
+
+		System.out.println(inertiaMatrixInWorld);
+
 		return inertiaMatrixInWorld;
 		
 	}
