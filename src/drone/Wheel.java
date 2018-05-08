@@ -156,14 +156,15 @@ public class Wheel extends DronePart {
 		
 		
 		Vector3f prevTotForceInDrone = this.getDrone().p.convertToDroneCords(getDrone(), prevTotForce);
-		float prevTotForceZ = prevTotForce.getZ();		
-		
+		this.getDrone().p.print(prevTotForce + " is prevtotforce, in dronecords is " +  prevTotForceInDrone, 4000);
+		float prevTotForceZ = prevTotForceInDrone.getZ();		
 		
 		
 		
 		///CLEAN
 		
 		float brakeForceNeeded = this.getDrone().tempTurningForce;
+		brakeForceNeeded = -prevTotForceZ;
 		float actualBrakeForce = Math.signum(brakeForceNeeded)*Math.min(Math.abs(brakeForceNeeded), requestedBrakeForce);
 
 		Vector3f brakeForceInDroneCords = new Vector3f(0f, 0f, actualBrakeForce);

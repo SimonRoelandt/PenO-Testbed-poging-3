@@ -135,7 +135,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		print("RIGHT WHEEL FORCE IS: " + rightWheelForce, 50);
 
 
-
+/*
 		v = sum(drone.getFrontWheel().getDronePartForce(prevV),v);
 		v = sum(drone.getLeftWheel().getDronePartForce(prevV),v);
 		v = sum(drone.getRightWheel().getDronePartForce(prevV),v);

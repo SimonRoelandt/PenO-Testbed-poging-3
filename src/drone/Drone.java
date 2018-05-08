@@ -84,7 +84,6 @@ public class Drone {
 	
 	public DronePhysics p = new DronePhysics();
 	
-	
 	public float tempTurningForce = 400000f;
 	/**
 	 * Create a new drone with the given id, at the given gate of the given airport, pointing to the given runway.
@@ -203,12 +202,14 @@ public class Drone {
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
-        this.getEngine().setThrust(outputs.getThrust());
+        
+        
+        this.getEngine().setThrust(tempTurningForce);
 
         //THIS IS FOR TEMP TURNING
-        this.frontWheel.update(outputs.getFrontBrakeForce(),time);
-	    this.leftWheel.update(outputs.getLeftBrakeForce(), time);
-	    this.rightWheel.update(outputs.getRightBrakeForce(), time);
+        this.frontWheel.update(0,time);
+	    this.leftWheel.update(tempTurningForce, time);
+	    this.rightWheel.update(0, time);
         
         //UPDATE STATE
       
