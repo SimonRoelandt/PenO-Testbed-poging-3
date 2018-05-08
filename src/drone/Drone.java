@@ -212,9 +212,9 @@ public class Drone {
         this.getEngine().setThrust(outputs.getThrust());
 
         //THIS IS FOR TEMP TURNING
-        this.frontWheel.update(outputs.getFrontBrakeForce(),time);
-	    this.leftWheel.update(outputs.getLeftBrakeForce(), time);
-	    this.rightWheel.update(outputs.getRightBrakeForce(), time);
+        this.frontWheel.update(0,time);
+	    this.leftWheel.update(0, time);
+	    this.rightWheel.update(30000, time);
 	    
 	    //voor weergave in gui
         brakeForces.setX(outputs.getFrontBrakeForce());
