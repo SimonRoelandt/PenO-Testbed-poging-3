@@ -269,6 +269,20 @@ public class Airport {
 		return getRotatedPoint(0,getW()/2);
 	}
 	
+	public float[] getStartingPosGate0(){
+		return getRotatedPoint(0,-getW()/2 -2*getW()/5);
+	}
+	
+	public float[] getStartingPosGate1(){
+		return getRotatedPoint(0,getW()/2 +2*getW()/5);
+	}
+	
+	public float[] getStartingPosGate(int gate){
+		if(gate == 0) return getStartingPosGate0();
+		else if(gate == 1) return getStartingPosGate1();
+		else return null;	
+	}
+	
 	/**
 	 * Gets start of runway 0 corner (bottom left).
 	 */
@@ -336,6 +350,13 @@ public class Airport {
 	 */
 	public float getCenterToRunway0Z(){
 		return getZ() - getStartRunway0Corner()[1];
+	}
+
+	public float getCenterToRunway1X(){
+		return getX() +  getStartRunway1Corner()[0];
+	}
+	public float getCenterToRunway1Z(){
+		return getZ() - getStartRunway1Corner()[1];
 	}
 	
 	public int getId() {
@@ -432,6 +453,19 @@ public class Airport {
 		if(id == 0) return isPackageGate0();
 		if(id == 1) return isPackageGate1();
 		else return true;
+	}
+	
+	public float[] centerToRunway(int id){
+		if(id == 0) return new float[]{getCenterToRunway0X(),getCenterToRunway0Z()};
+		if(id == 1) return new float[]{getCenterToRunway1X(),getCenterToRunway1Z()};
+		else return null;
+	}
+	
+	public float getRadians (float centerToRunway0x, float centerToRunway0z){
+		Vector vector1 = new Vector(getL() + (getW()/2),0,getW()); 
+		Vector vector2 = new Vector (centerToRunway0x,0,centerToRunway0z);
+		float radian = (float) Math.acos(Math.round(Vector.scalairProd(vector1, vector2)/(Vector.norm(vector1)*Vector.norm(vector2))));
+		return radian;
 	}
 	
 }
