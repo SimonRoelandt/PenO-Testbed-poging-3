@@ -41,13 +41,12 @@ public class DronePhysics {
 		nextState.setVelocity(this.getNewVelocityInWorld(drone, time));
 		
 		Vector3f resultMoment = this.getDroneResultingMomentInWorld(drone, time);
-		
 		//Gebruik dit om Moment te testen 
 	
-		/*
-		Vector3f MomentVectorAccToDrone = new Vector3f(60000,0,0);
+		
+		Vector3f MomentVectorAccToDrone = new Vector3f(600000,0,0);
 		resultMoment = this.convertToWorld(drone, MomentVectorAccToDrone);
-		 */
+		 
 		
 		Vector3f angularAcc = this.getAngularAccelerationInWorld(drone, time, resultMoment);
 		

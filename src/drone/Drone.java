@@ -84,6 +84,9 @@ public class Drone {
 	
 	public DronePhysics p = new DronePhysics();
 	
+	//voor gui brake forces
+	public Vector3f brakeForces = new Vector3f(0,0,0);
+	
 	
 	public float tempTurningForce = 400000f;
 	/**
@@ -128,7 +131,11 @@ public class Drone {
 		State initState = new State();
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
 		
-		initState.setHPR(new Vector3f((float) 0, (float) 0, (float) 0));
+		//initState.setHPR(new Vector3f((float) 0, (float)  Math.PI/2, (float) 0));
+		//initState.setHPR(new Vector3f((float) 0, (float)  0, (float) 0));
+		initState.setHPR(new Vector3f((float)  Math.PI/2, (float)  0, (float) 0));
+		//initState.setHPR(new Vector3f((float) 0, (float) 0, (float)  Math.PI/2));
+		
 		initState.setVelocity(velocity);
 		this.state = initState;
 	}
@@ -209,6 +216,11 @@ public class Drone {
         this.frontWheel.update(outputs.getFrontBrakeForce(),time);
 	    this.leftWheel.update(outputs.getLeftBrakeForce(), time);
 	    this.rightWheel.update(outputs.getRightBrakeForce(), time);
+	    
+	    //voor weergave in gui
+        brakeForces.setX(outputs.getFrontBrakeForce());
+        brakeForces.setY(outputs.getLeftBrakeForce());
+        brakeForces.setZ(outputs.getRightBrakeForce());
         
         //UPDATE STATE
       
