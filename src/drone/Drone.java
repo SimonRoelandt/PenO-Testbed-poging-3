@@ -84,10 +84,13 @@ public class Drone {
 	
 	public DronePhysics p = new DronePhysics();
 	
+<<<<<<< HEAD
 	//voor gui brake forces
 	public Vector3f brakeForces = new Vector3f(0,0,0);
 	
 	
+=======
+>>>>>>> branch 'master' of https://github.com/SimonRoelandt/PenO-Testbed-poging-3.git
 	public float tempTurningForce = 400000f;
 	/**
 	 * Create a new drone with the given id, at the given gate of the given airport, pointing to the given runway.
@@ -210,9 +213,12 @@ public class Drone {
         this.getRightWing().updateInclinationAngle(outputs.getRightWingInclination());
         this.getHorStabilizator().updateInclinationAngle(outputs.getHorStabInclination());
         this.getVerStabilizator().updateInclinationAngle(outputs.getVerStabInclination());
-        this.getEngine().setThrust(outputs.getThrust());
+        
+        
+        this.getEngine().setThrust(tempTurningForce);
 
         //THIS IS FOR TEMP TURNING
+<<<<<<< HEAD
         this.frontWheel.update(outputs.getFrontBrakeForce(),time);
 	    this.leftWheel.update(outputs.getLeftBrakeForce(), time);
 	    this.rightWheel.update(outputs.getRightBrakeForce(), time);
@@ -221,6 +227,11 @@ public class Drone {
         brakeForces.setX(outputs.getFrontBrakeForce());
         brakeForces.setY(outputs.getLeftBrakeForce());
         brakeForces.setZ(outputs.getRightBrakeForce());
+=======
+        this.frontWheel.update(0,time);
+	    this.leftWheel.update(tempTurningForce, time);
+	    this.rightWheel.update(0, time);
+>>>>>>> branch 'master' of https://github.com/SimonRoelandt/PenO-Testbed-poging-3.git
         
         //UPDATE STATE
       
