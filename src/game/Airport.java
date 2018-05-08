@@ -275,23 +275,51 @@ public class Airport {
 	public float[] getStartRunway0Corner(){
 		return getRotatedPoint(-(getL()+(getW()/2)), -getW());
 	}
+	public float[] getStartRunway0Corner2(){
+		return getRotatedPoint(-(getL()+(getW()/2))+(getL()/2), -getW()+getL());
+	}
+	public float[] getStartRunway0Middle() {
+		return getRotatedPoint(-(getL()+(getW()/2))+(getL()/4),-getW()+(getL()/2));
+	}
+	
 	/**
 	 * Gets end of runway 0 corner (top left).
 	 */
 	public float[] getEndRunway0Corner(){
 		return getRotatedPoint(-(getL()+(getW()/2)), getW());
 	}
+	public float[] getEndRunway0Corner2(){
+		return getRotatedPoint(-(getL()+(getW()/2))+getL()/2, getW()-getL());
+	}
+	public float[] getEndRunway0Middle() {
+		return getRotatedPoint(-(getL()+(getW()/2))+getL()/4,getW()-(getL()/2));
+	}
+	
+	
 	/**
 	 * Gets start of runway 1 corner (bottom right).
 	 */
 	public float[] getStartRunway1Corner(){
 		return getRotatedPoint((getL()+(getW()/2)), -getW());
 	}
+	public float[] getStartRunway1Corner2(){
+		return getRotatedPoint((getL()+(getW()/2))-getL()/2, -getW()+getL());
+	}
+	public float[] getStartRunway1Middle() {
+		return getRotatedPoint((getL()+(getW()/2))-getL()/4,-getW()+getL()/2);
+	}
+	
 	/**
 	 * Gets end of runway 1 corner (top right).
 	 */
 	public float[] getEndRunway1Corner(){
 		return getRotatedPoint((getL()+(getW()/2)), getW());
+	}
+	public float[] getEndRunway1Corner2(){
+		return getRotatedPoint((getL()+(getW()/2))-getL()/2, getW()-getL());
+	}
+	public float[] getEndRunway1Middle() {
+		return getRotatedPoint((getL()+(getW()/2))-getL()/4,getW()-getL()/2);
 	}
 	
 	/**
