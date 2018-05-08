@@ -48,6 +48,7 @@ public class DronePhysics {
 		if(drone.getFrontWheel().isGround() && drone.getRightWheel().isGround() && drone.getLeftWheel().isGround()) {
 			Vector3f resultMomentInDrone = this.convertToDroneCords(drone, resultMoment);
 			resultMomentInDrone.setX(0f);
+			resultMomentInDrone.setZ(0f);
 			resultMoment = this.convertToWorld(drone, resultMomentInDrone);
 				
 		}
@@ -67,6 +68,7 @@ public class DronePhysics {
 		
 		Vector3f angularVel = this.getNewAngularVelocityInWorld(drone, time, angularAcc);
 		
+		nextState.setAngularRotation(angularVel);
 		Vector3f hprRates = this.getHPRVelocity(drone, time, angularVel);
 				
 		this.print("HPRrates are: " + hprRates, 1800);

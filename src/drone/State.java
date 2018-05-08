@@ -11,7 +11,7 @@ public class State {
 	private Vector3f velocity;
 	
 	private Vector3f angularOrientation;
-	private Vector3f angularRotation;	
+	private Vector3f angularRotation = new Vector3f(0,0,0);	
 	
 	public State() {
 		
@@ -20,7 +20,6 @@ public class State {
 	//POSITION
 	public Vector3f getPosition() {
 		return this.position;
-		//return new Vector3f(0,20,0);
 	}
 	
 	public void setPosition(Vector3f position) {
@@ -107,8 +106,7 @@ public class State {
 	
 	//ANGULAR ROTATION
 	public Vector3f getAngularRotation() {
-		return new Vector3f();
-		//return this.angularRotation;
+		return this.angularRotation;
 	}
 	
 	public void setAngularRotation(Vector3f angularRotation) {
