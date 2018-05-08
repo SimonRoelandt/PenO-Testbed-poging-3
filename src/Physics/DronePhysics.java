@@ -41,10 +41,14 @@ public class DronePhysics {
 		nextState.setVelocity(this.getNewVelocityInWorld(drone, time));
 		
 		Vector3f resultMoment = this.getDroneResultingMomentInWorld(drone, time);
-		Vector3f rMdrone = this.convertToDroneCords(drone, resultMoment);
 		
-		this.print(resultMoment + "rMdrone is: " + rMdrone, 20000);
-
+		//Gebruik dit om Moment te testen 
+	
+		/*
+		Vector3f MomentVectorAccToDrone = new Vector3f(0,6000,0);
+		resultMoment = this.convertToWorld(drone, MomentVectorAccToDrone);
+		*/
+		
 		Vector3f angularAcc = this.getAngularAccelerationInWorld(drone, time, resultMoment);
 		
 		Vector3f angularVel = this.getNewAngularVelocityInWorld(drone, time, angularAcc);
@@ -211,22 +215,22 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f prevV = v;
 		
 		
-		Vector3f frontWheelForce = drone.getFrontWheel().getDronePartForce(prevV);
-		Vector3f leftWheelForce = drone.getLeftWheel().getDronePartForce(prevV);
-		Vector3f rightWheelForce = drone.getRightWheel().getDronePartForce(prevV);
+		Vector3f frontWheelForce = drone.getFrontWheel().getDronePartForce(prevV, time);
+		Vector3f leftWheelForce = drone.getLeftWheel().getDronePartForce(prevV, time);
+		Vector3f rightWheelForce = drone.getRightWheel().getDronePartForce(prevV, time);
 		
 		print("FRONT WHEEL FORCE IS: " + frontWheelForce, 1600);
 		print("LEFT WHEEL FORCE IS: " + leftWheelForce, 50);
 		print("RIGHT WHEEL FORCE IS: " + rightWheelForce, 50);
 
 
-		v = sum(drone.getFrontWheel().getDronePartForce(prevV),v);
-		v = sum(drone.getLeftWheel().getDronePartForce(prevV),v);
-		v = sum(drone.getRightWheel().getDronePartForce(prevV),v);
+		v = sum(drone.getFrontWheel().getDronePartForce(prevV, time),v);
+		v = sum(drone.getLeftWheel().getDronePartForce(prevV, time),v);
+		v = sum(drone.getRightWheel().getDronePartForce(prevV, time),v);
 		
-		drone.getFrontWheel().setPrevWheelForce(drone.getFrontWheel().getDronePartForce(prevV));
-		drone.getLeftWheel().setPrevWheelForce(drone.getLeftWheel().getDronePartForce(prevV));
-		drone.getRightWheel().setPrevWheelForce(drone.getRightWheel().getDronePartForce(prevV));
+		drone.getFrontWheel().setPrevWheelForce(drone.getFrontWheel().getDronePartForce(prevV,time));
+		drone.getLeftWheel().setPrevWheelForce(drone.getLeftWheel().getDronePartForce(prevV, time));
+		drone.getRightWheel().setPrevWheelForce(drone.getRightWheel().getDronePartForce(prevV, time));
 				
 		print("TOTAL FORCE ON DRONE is " + v, 1600);
 		this.force = v;

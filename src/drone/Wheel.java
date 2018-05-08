@@ -139,17 +139,25 @@ public class Wheel extends DronePart {
 	public Vector3f getBf() {
 		return this.brakeForce;
 	}
-	public Vector3f getTotBrakeForce(Vector3f prevTotForce){
+	public Vector3f getTotBrakeForce(Vector3f prevTotForce, float time){
 	
 		float requestedBrakeForce = this.getBrakeForce();
 
 		Vector3f speed = this.getDrone().getState().getVelocity();
 		Vector3f convertedSpeed = this.getDrone().p.convertToDroneCords(this.getDrone(), speed);
-		
-		
-		
+				
 			
-		//DIT MOET ZOIETS ZIJN
+		//CALC NEEDED FORCE FOR ZERO
+		
+		Vector3f speedInDrone = this.getDrone().p.convertToDroneCords(getDrone(), this.getDrone().getState().getVelocity());
+		float speedInDroneZ = speedInDrone.getZ();
+		
+		if(Math.abs(speedInDroneZ) <= 0.01f) speedInDroneZ = 0f;
+		
+		
+		Vector3f prevTotForceInDrone = this.getDrone().p.convertToDroneCords(getDrone(), prevTotForce);
+		float prevTotForceZ = prevTotForce.getZ();		
+		
 		
 		
 		
@@ -181,11 +189,11 @@ public class Wheel extends DronePart {
 	/**
 	 * Gets the total wheel part force: wheel force, friction force and brake force.
 	 */
-	public Vector3f getDronePartForce(Vector3f prevTotForce) {
+	public Vector3f getDronePartForce(Vector3f prevTotForce, float time) {
 		if(isGround()){
 			Vector3f total = new Vector3f(0,0,0);
 			Vector3f.add(this.getWheelForce(), this.getWrijvingForce(), total);
-			Vector3f.add(total, getTotBrakeForce(prevTotForce), total);
+			Vector3f.add(total, getTotBrakeForce(prevTotForce, time), total);
 			return total;
 		}
 		else return new Vector3f(0,0,0);
