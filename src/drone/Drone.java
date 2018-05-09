@@ -102,11 +102,17 @@ public class Drone {
 		setId(id);
 		setStartingAirport(ap);
 		setStartingGate(gate);
+		
 
-		float xPos = ap.getStartingPosGate(gate)[0];
+		float xPos = ap.getStartRunway0Middle()[0];
 		float yPos = Y_START_POS;
-
-		float zPos = ap.getStartingPosGate(gate)[1];
+		float zPos = ap.getStartRunway0Middle()[1];
+		
+		//TEMP -> gate maakt enkel uit voor positie
+		if(pointingToRunway == 1){
+			xPos = ap.getEndRunway1Middle()[0];
+			zPos = ap.getEndRunway1Middle()[1];
+		}
 		
 		Vector3f velocity = new Vector3f(0,0,0);
 		
@@ -131,9 +137,11 @@ public class Drone {
 		//SETTING POSITION AND VELOCITY STATE IN WORLD
 		State initState = new State();
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
+		
 		float ori = 0;
-		if(pointingToRunway == 0) ori =  (float) (-Math.PI/2);
-		else if (pointingToRunway == 1) ori = (float) (Math.PI/2);
+		if(pointingToRunway == 0) ori =  (float) (-Math.PI/2) + ap.getOrientation();
+		else if (pointingToRunway == 1) ori = (float) (Math.PI/2) + ap.getOrientation();
+		
 		initState.setHPR(new Vector3f(ori, (float) 0, (float) 0));
 		initState.setVelocity(velocity);
 		this.state = initState;
