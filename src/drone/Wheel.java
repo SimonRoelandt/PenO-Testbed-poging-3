@@ -162,13 +162,15 @@ public class Wheel extends DronePart {
 		
 		
 		
-		///CLEAN
+		///NEW BRAKE FORCE FOR ZOLTAN
+		float velComponent = speedInDroneZ*this.getDrone().getTotalMass() / time;
 		
-		float brakeForceNeeded = this.getDrone().tempTurningForce;
-		brakeForceNeeded = -prevTotForceZ;
+		float brakeForceNeeded = Math.abs(velComponent + prevTotForceZ) >= 1 ? - (velComponent + prevTotForceZ) : 0;
+		
 		float actualBrakeForce = Math.signum(brakeForceNeeded)*Math.min(Math.abs(brakeForceNeeded), requestedBrakeForce);
 
 		Vector3f brakeForceInDroneCords = new Vector3f(0f, 0f, actualBrakeForce);
+
 		Vector3f brakeForceInWorld = this.getDrone().p.convertToWorld(this.getDrone(), brakeForceInDroneCords);
 		
 		
