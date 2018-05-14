@@ -142,6 +142,7 @@ public class Drone {
 		if(pointingToRunway == 0) ori =  (float) (-Math.PI/2) + ap.getOrientation();
 		else if (pointingToRunway == 1) ori = (float) (Math.PI/2) + ap.getOrientation();
 		
+		ori = 0;
 		initState.setHPR(new Vector3f(ori, (float) 0, (float) 0));
 		initState.setVelocity(velocity);
 		this.state = initState;

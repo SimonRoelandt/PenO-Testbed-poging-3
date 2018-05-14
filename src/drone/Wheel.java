@@ -173,7 +173,6 @@ public class Wheel extends DronePart {
 
 		Vector3f brakeForceInWorld = this.getDrone().p.convertToWorld(this.getDrone(), brakeForceInDroneCords);
 		
-		
 		this.getDrone().p.print("--Brakef in drone is: " + brakeForceInDroneCords + " so in world is :" +
 				brakeForceInWorld, 140);
 				
