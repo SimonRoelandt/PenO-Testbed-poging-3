@@ -101,6 +101,7 @@ public class State {
 	
 	//ANGULAR ROTATION
 	public Vector3f getAngularRotation() {
+		//Dit is testbed Zoltan
 		return new Vector3f();
 	}
 	
