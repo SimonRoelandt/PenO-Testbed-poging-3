@@ -101,7 +101,7 @@ public class State {
 	
 	//ANGULAR ROTATION
 	public Vector3f getAngularRotation() {
-		return this.angularRotation;
+		return new Vector3f();
 	}
 	
 	public void setAngularRotation(Vector3f angularRotation) {
