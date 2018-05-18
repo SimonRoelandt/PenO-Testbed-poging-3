@@ -2,11 +2,10 @@ package drone;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import fysica.Fysica;
+import Physics.*;
 
 public abstract class DronePart {
 	
-	Fysica fysica = new Fysica();
 	Drone drone;
 	float mass;
 	Vector3f relativePostion;
@@ -29,15 +28,15 @@ public abstract class DronePart {
 	 */
 	public Vector3f getAbsolutePositionInWorld(){
 		Vector3f droneCenterPositionInWorld = this.getDrone().getState().getPosition();
-		Vector3f relativePositionInWorld = fysica.convertToWorld(this.getDrone(), this.getRelativePosition());		
-		return fysica.sum(droneCenterPositionInWorld, relativePositionInWorld);
+		Vector3f relativePositionInWorld = this.getDrone().p.convertToWorld(this.getDrone(), this.getRelativePosition());		
+		return this.getDrone().p.sum(droneCenterPositionInWorld, relativePositionInWorld);
 	}
 	
 	/**
 	 * Gets the gravitation force of the drone part.
 	 */
 	public Vector3f getGravitationForceInWorld() {
-		float gravitationForce = (float) (this.getMass() * Fysica.gravity);
+		float gravitationForce = (float) (this.getMass() * this.getDrone().p.gravity);
 		return new Vector3f(0,-gravitationForce,0);
 	}
 	
@@ -50,7 +49,7 @@ public abstract class DronePart {
 	 * Converts the drone part force to the world coordinates. 
 	 */
 	public Vector3f getDronePartForceInWorld() {
-		return fysica.convertToWorld(this.getDrone(), getDronePartForce());
+		return this.getDrone().p.convertToWorld(this.getDrone(), getDronePartForce());
 	}
 	
 	/**
@@ -58,7 +57,7 @@ public abstract class DronePart {
 	 */
 	public Vector3f getTotalForceInWorld(float time) {	
 		Vector3f dronePartForceInWorld = getDronePartForceInWorld();
-		Vector3f totalForce = fysica.sum(dronePartForceInWorld, getGravitationForceInWorld());
+		Vector3f totalForce = this.getDrone().p.sum(dronePartForceInWorld, getGravitationForceInWorld());
 		return totalForce;
 	}
 	

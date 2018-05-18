@@ -135,12 +135,12 @@ public class Drone {
 		this.setInertiaMatrix();
 		
 		//SETTING POSITION AND VELOCITY STATE IN WORLD
-		State initState = new State();
+		State initState = new State(this);
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
 		
 		float ori = 0;
-		if(pointingToRunway == 0) ori =  (float) (-Math.PI/2) + ap.getOrientation();
-		else if (pointingToRunway == 1) ori = (float) (Math.PI/2) + ap.getOrientation();
+		//if(pointingToRunway == 0) ori =  (float) (-Math.PI/2) + ap.getOrientation();
+		//else if (pointingToRunway == 1) ori = (float) (Math.PI/2) + ap.getOrientation();
 		
 		initState.setHPR(new Vector3f(ori, (float) 0, (float) 0));
 		initState.setVelocity(velocity);
@@ -167,7 +167,7 @@ public class Drone {
 		this.setInertiaMatrix();
 		
 		//SETTING POSITION AND VELOCITY STATE IN WORLD
-		State initState = new State();
+		State initState = new State(this);
 		initState.setPosition(new Vector3f(xPos, yPos, zPos));
 		initState.setVelocity(velocity);
 		this.state = initState;

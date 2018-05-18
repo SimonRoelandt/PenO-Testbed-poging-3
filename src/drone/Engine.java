@@ -30,7 +30,11 @@ public class Engine extends DronePart{
 	
 	@Override
 	public Vector3f getDronePartForce() {
-		return this.getThrust();
+		Vector3f t = this.getThrust();
+
+		return t;
+		//return this.getDrone().p.convertToWorld(getDrone(), t);
+
 	}
 	
 	public float getThrustScalar() {

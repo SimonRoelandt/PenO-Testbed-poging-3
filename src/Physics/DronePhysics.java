@@ -36,7 +36,7 @@ public class DronePhysics {
 	
 	
 	public State getNewState(Drone drone, float time) {
-		State nextState = new State();
+		State nextState = new State(drone);
 		nextState.setPosition(this.getNewPositionInWorld(drone, time));
 		nextState.setVelocity(this.getNewVelocityInWorld(drone, time));
 		
@@ -363,8 +363,8 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f term = new Vector3f();
 		Vector3f.cross(angularVelocity, impulsmoment, term);
 		
-		Vector3f MomentDiff = droneResultingMoment; // sum(droneResultingMoment, product(-1,term));
-		
+		Vector3f MomentDiff = sum(droneResultingMoment, product(-1,term));
+		MomentDiff = droneResultingMoment;
 		Matrix3f momentOfInertia = drone.getIneriaMatrixInWorld();
 		Matrix3f inverseMomentOfInertia = (Matrix3f) momentOfInertia.invert();
 		
@@ -427,11 +427,11 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 //		float pitchRate =  wx*cosh + wz*sinh;
 //		float rollRate = wz*cosh/cosp - wx*sinh/cosp;
 		
-		float headingRate =- (wy - wz*cosh*sinp/cosp +wx*sinp*sinh/(cosp));
-		float pitchRate = (wx*cosh + wz*sinh);
+		float headingRate = (wy + wz*cosh*sinp/cosp +wx*sinp*sinh/(cosp));
+		float pitchRate = 0; //(wx*cosh - wz*sinh);
 		
 	//	float rollRate = (wz*cosh/cosp + wx*sinh/cosp);
-		float rollRate = (wz*cosh/cosp - wx*sinh/cosp);
+		float rollRate = (wz*cosh/cosp + wx*sinh/cosp);
 		
 		return new Vector3f(headingRate, pitchRate, rollRate);
 	}

@@ -1,6 +1,9 @@
 package drone;
 
 import org.lwjgl.util.vector.Vector3f;
+
+import Physics.DronePhysics;
+
 import java.lang.*;
 
 public class Airfoil extends DronePart {
@@ -9,16 +12,20 @@ public class Airfoil extends DronePart {
 	private boolean vertical;	
 	private Vector3f attackVector = new Vector3f(0,0,0);
 	private float liftslope;
+	DronePhysics fysica;
 	
 	
 	public Airfoil(float inclination, float mass, boolean vertical, float liftslope,Vector3f relativePosition,Drone drone) {		
+		setDrone(drone);
+
 		setInclination(inclination);
 		setMass(mass);
 		setVertical(vertical);
 		setLiftslope(liftslope);
 		setAttackVector(inclination);
-		setDrone(drone);
 		setRelativePosition(relativePosition);
+		fysica = this.getDrone().p;
+
 		
 	}
 	
@@ -38,25 +45,25 @@ public class Airfoil extends DronePart {
 		/*Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared), 
 				fysica.product(this.getLiftSlope(),normal));*/
 		
-		this.fysica.print("OUTPUT LIFT FORCE:", 3000);
-		this.fysica.print("AOA: " + angleOfAttack, 3000);
-		this.fysica.print("Speedsquared: " + speedSquared, 3000);
+		this.getDrone().p.print("OUTPUT LIFT FORCE:", 3000);
+		this.getDrone().p.print("AOA: " + angleOfAttack, 3000);
+		this.getDrone().p.print("Speedsquared: " + speedSquared, 3000);
 
-		Vector3f liftForce = fysica.product((float)(angleOfAttack *speedSquared * this.getLiftSlope()), 
+		Vector3f liftForce = this.getDrone().p.product((float)(angleOfAttack *speedSquared * this.getLiftSlope()), 
 				normal);
 		
 		return liftForce;
 	}
 	
 	public float getAngleOfAttack() {
-		Vector3f normal = this.fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
+		Vector3f normal = this.getDrone().p.crossProduct(this.getAxisVector(),this.getAttackVector());
 		Vector3f airspeed = this.getVelocityAirfoil();
 		Vector3f axis = this.getAxisVector();
 		
-		Vector3f projectedAirspeed = fysica.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
+		Vector3f projectedAirspeed = this.getDrone().p.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
 		
-		float angleOfAttack = (float) -Math.atan2(fysica.scalarProduct(projectedAirspeed,normal), 
-				fysica.scalarProduct(projectedAirspeed,this.getAttackVector()));
+		float angleOfAttack = (float) -Math.atan2(this.getDrone().p.scalarProduct(projectedAirspeed,normal), 
+				this.getDrone().p.scalarProduct(projectedAirspeed,this.getAttackVector()));
 		
 		return angleOfAttack;
 	}
@@ -110,7 +117,7 @@ public class Airfoil extends DronePart {
 	}
 	
 	public void setInclination(float incl) {
-		this.inclination = fysica.clean(incl);
+		this.inclination = this.getDrone().p.clean(incl);
 	}
 	
 	public float getInclination() {

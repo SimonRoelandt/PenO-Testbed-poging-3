@@ -13,8 +13,15 @@ public class State {
 	private Vector3f angularOrientation;
 	private Vector3f angularRotation = new Vector3f(0,0,0);	
 	
-	public State() {
-		
+	private Drone drone;
+	
+	
+	public State(Drone drone) {
+		this.drone = drone;
+	}
+	
+	public Drone getDrone() {
+		return this.drone;
 	}
 	
 	//POSITION
@@ -56,6 +63,7 @@ public class State {
 	public Vector3f getHPR() {
 		
 		Vector3f hpr = this.hpr;
+		//hpr.setX(0);
 		return hpr;
 	}
 	
@@ -101,7 +109,10 @@ public class State {
 	
 	//ANGULAR ROTATION
 	public Vector3f getAngularRotation() {
-		return this.angularRotation;
+		if(drone.getFrontWheel().isGround() && drone.getRightWheel().isGround() && drone.getLeftWheel().isGround()) {
+			return new Vector3f();
+		}
+		else return this.angularRotation;
 	}
 	
 	public void setAngularRotation(Vector3f angularRotation) {
