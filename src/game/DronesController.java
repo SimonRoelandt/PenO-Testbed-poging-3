@@ -30,8 +30,8 @@ public class DronesController {
 	public DronesController(AirportController apController){
 		this.apController = apController;
 
-		addDrone(new Drone(0,apController.getAirports().get(0), 1, 1));
-//    	addDrone(new Drone(1,apController.getAirports().get(0), 0, 0));
+		addDrone(new Drone(0,apController.getAirports().get(0), 0, 1));
+    	//addDrone(new Drone(1,apController.getAirports().get(0), 1, 0));
     	
 //    	addDrone(new Drone(2,apController.getAirports().get(4), 0, 0));
 //    	addDrone(new Drone(4,apController.getAirports().get(4), 1, 1));
@@ -77,7 +77,10 @@ public class DronesController {
      * Checks if the given drone is crashed.
      */
 	public boolean checkCrash(Drone drone){
-		if(drone.checkCrash()) return true;
+		if(drone.checkCrash()){
+			System.out.println("Drone self crash");
+			return true;
+		}
 		else if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
 			if(onTarmac(drone)){
 				System.out.println("TARMAC");

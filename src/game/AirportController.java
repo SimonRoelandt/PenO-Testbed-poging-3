@@ -23,7 +23,7 @@ public class AirportController {
     /**
      * The L value of airports - depends on landing accuracy - 1L = width of runway.
      */
-    private final float AIRPORT_L = 50;
+    private final float AIRPORT_L = 100;
 	
     public List<GameItem> airportItems = new ArrayList<GameItem>();
     

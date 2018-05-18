@@ -1,6 +1,7 @@
 package drone;
 
 import org.lwjgl.util.vector.Vector3f;
+import java.lang.*;
 
 public class Airfoil extends DronePart {
 
@@ -24,23 +25,24 @@ public class Airfoil extends DronePart {
 	public Vector3f getLiftForce() {
 		Vector3f normal = fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
 		Vector3f airspeed = this.getVelocityAirfoil();
+		airspeed = this.getDrone().p.convertToDroneCords(getDrone(), airspeed);
 		Vector3f axis = this.getAxisVector();
 			
 		Vector3f projectedAirspeed = fysica.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
 		
 		float angleOfAttack = getAngleOfAttack();
 		
-		float speedSquared = Math.min(10e22f, projectedAirspeed.lengthSquared());
+		float speedSquared = Math.min(10e2f, projectedAirspeed.lengthSquared());
 		speedSquared = projectedAirspeed.lengthSquared(); 
 		
 		/*Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared), 
 				fysica.product(this.getLiftSlope(),normal));*/
 		
-		this.fysica.print("OUTPUT LIFT FORCE:", 30);
-		this.fysica.print("AOA: " + angleOfAttack, 30);
-		this.fysica.print("Speedsquared: " + speedSquared, 30);
+		this.fysica.print("OUTPUT LIFT FORCE:", 3000);
+		this.fysica.print("AOA: " + angleOfAttack, 3000);
+		this.fysica.print("Speedsquared: " + speedSquared, 3000);
 
-		Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared * this.getLiftSlope()), 
+		Vector3f liftForce = fysica.product((float)(angleOfAttack *speedSquared * this.getLiftSlope()), 
 				normal);
 		
 		return liftForce;
@@ -104,7 +106,7 @@ public class Airfoil extends DronePart {
 	}
 	
 	public Vector3f getAttackVector() {
-		return this.attackVector;
+		return this.getDrone().p.convertToWorld(getDrone(), attackVector);
 	}
 	
 	public void setInclination(float incl) {
