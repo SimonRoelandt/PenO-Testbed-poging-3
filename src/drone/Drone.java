@@ -114,6 +114,9 @@ public class Drone {
 			zPos = ap.getEndRunway1Middle()[1];
 		}
 		
+		xPos = ap.getMiddleGate(gate)[0];
+		zPos = ap.getMiddleGate(gate)[1];
+		
 		Vector3f velocity = new Vector3f(0,0,0);
 		
 		//TODO ROTATIE VAN DRONE AFHANKELIJK VAN AIRPORT ORIENTATIE!!
@@ -142,7 +145,7 @@ public class Drone {
 		if(pointingToRunway == 0) ori =  (float) (-Math.PI/2) + ap.getOrientation();
 		else if (pointingToRunway == 1) ori = (float) (Math.PI/2) + ap.getOrientation();
 		
-		ori = 0;
+		//ori = (float) (Math.PI);
 		initState.setHPR(new Vector3f(ori, (float) 0, (float) 0));
 		initState.setVelocity(velocity);
 		this.state = initState;

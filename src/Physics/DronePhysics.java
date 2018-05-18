@@ -211,18 +211,18 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	//DRONE FORCES --------------------------------------------------------------
 	
 	public void print(Object obj, int priority){
-		if(priority >= 4000){
+		if(priority >= 4300){
 			System.out.println("PRINTLOG: "+ obj);
 		}
 	}
 	
 	public Vector3f getTotalForceOnDroneInWorld(Drone drone, float time) {
-		print("TOTAL FORCE CALC ", 50);
+		print("TOTAL FORCE CALC ", 4500);
 		
 		DronePart[] partArray = drone.getDroneParts();
 		Vector3f v = new Vector3f(0,0,0);
 		for (DronePart part: partArray) {
-			print("TOTAL FORCE of dronepart at  " + part.getRelativePosition() +" is " + part.getTotalForceInWorld(time), 50);
+			print("TOTAL FORCE of dronepart at  " + part.getRelativePosition() +" is " + part.getTotalForceInWorld(time), 4500);
 			v = sum(part.getTotalForceInWorld(time), v);
 		}
 		
@@ -233,9 +233,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		Vector3f leftWheelForce = drone.getLeftWheel().getDronePartForce(prevV, time);
 		Vector3f rightWheelForce = drone.getRightWheel().getDronePartForce(prevV, time);
 		
-		print("FRONT WHEEL FORCE IS: " + frontWheelForce, 1600);
-		print("LEFT WHEEL FORCE IS: " + leftWheelForce, 50);
-		print("RIGHT WHEEL FORCE IS: " + rightWheelForce, 50);
+		print("FRONT WHEEL FORCE IS: " + frontWheelForce, 4500);
+		print("LEFT WHEEL FORCE IS: " + leftWheelForce, 4500);
+		print("RIGHT WHEEL FORCE IS: " + rightWheelForce, 4500);
 
 
 		v = sum(drone.getFrontWheel().getDronePartForce(prevV, time),v);
@@ -246,7 +246,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		drone.getLeftWheel().setPrevWheelForce(drone.getLeftWheel().getDronePartForce(prevV, time));
 		drone.getRightWheel().setPrevWheelForce(drone.getRightWheel().getDronePartForce(prevV, time));
 				
-		print("TOTAL FORCE ON DRONE is " + v, 1600);
+		print("TOTAL FORCE ON DRONE is " + v, 4500);
 		this.force = v;
 		return v;
 	}
