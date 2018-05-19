@@ -117,6 +117,7 @@ public class Drone {
 		xPos = ap.getMiddleGate(gate)[0];
 		zPos = ap.getMiddleGate(gate)[1];
 		
+
 		Vector3f velocity = new Vector3f(0,0,0);
 		
 		//TODO ROTATIE VAN DRONE AFHANKELIJK VAN AIRPORT ORIENTATIE!!
