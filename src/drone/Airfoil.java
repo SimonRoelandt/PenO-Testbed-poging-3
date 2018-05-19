@@ -49,14 +49,26 @@ public class Airfoil extends DronePart {
 	}
 	
 	public float getAngleOfAttack() {
-		Vector3f normal = this.fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
-		Vector3f airspeed = this.getVelocityAirfoil();
+		Vector3f normal = this.getDrone().p.crossProduct(this.getAxisVector(),this.getAttackVector());
+		Vector3f normalInWorld = this.getDrone().p.convertToWorld(getDrone(), normal);
+		
+		
+		Vector3f attackVector = this.getAttackVector();
+		Vector3f attackVectorInWorld = this.getDrone().p.convertToWorld(getDrone(), attackVector);
+		
 		Vector3f axis = this.getAxisVector();
+		Vector3f axisVectorInWorld = this.getDrone().p.convertToWorld(getDrone(), axis);
+
 		
-		Vector3f projectedAirspeed = fysica.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
+		Vector3f airspeed = this.getVelocityAirfoil();
 		
-		float angleOfAttack = (float) -Math.atan2(fysica.scalarProduct(projectedAirspeed,normal), 
-				fysica.scalarProduct(projectedAirspeed,this.getAttackVector()));
+		
+		Vector3f projectedAirspeed = this.getDrone().p.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axisVectorInWorld, airspeed)/axisVectorInWorld.lengthSquared(), axisVectorInWorld));
+		//projectedAirspeed = this.getProjectedAirspeed();
+		
+		
+		float angleOfAttack = (float) -Math.atan2(this.getDrone().p.scalarProduct(projectedAirspeed,normalInWorld), 
+				this.getDrone().p.scalarProduct(projectedAirspeed,attackVectorInWorld));
 		
 		return angleOfAttack;
 	}
@@ -106,7 +118,7 @@ public class Airfoil extends DronePart {
 	}
 	
 	public Vector3f getAttackVector() {
-		return this.getDrone().p.convertToWorld(getDrone(), attackVector);
+		return this.attackVector;
 	}
 	
 	public void setInclination(float incl) {
