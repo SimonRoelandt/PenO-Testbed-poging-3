@@ -428,7 +428,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 //		float rollRate = wz*cosh/cosp - wx*sinh/cosp;
 		
 		float headingRate = (wy + wz*cosh*sinp/cosp +wx*sinp*sinh/(cosp));
-		float pitchRate = 0; //(wx*cosh - wz*sinh);
+		float pitchRate = (wx*cosh - wz*sinh);
 		
 	//	float rollRate = (wz*cosh/cosp + wx*sinh/cosp);
 		float rollRate = (wz*cosh/cosp + wx*sinh/cosp);

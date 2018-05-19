@@ -31,19 +31,16 @@ public class Airfoil extends DronePart {
 	
 	public Vector3f getLiftForce() {
 		Vector3f normal = fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
-		Vector3f airspeed = this.getVelocityAirfoil();
-		airspeed = this.getDrone().p.convertToDroneCords(getDrone(), airspeed);
+		//airspeed = this.getDrone().p.convertToDroneCords(getDrone(), airspeed);
 		Vector3f axis = this.getAxisVector();
+		axis = this.getDrone().p.convertToWorld(getDrone(), axis);
 			
-		Vector3f projectedAirspeed = fysica.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
-		
+		Vector3f projectedAirspeed = this.getProjectedAirspeed();
+				
 		float angleOfAttack = getAngleOfAttack();
 		
 		float speedSquared = Math.min(10e2f, projectedAirspeed.lengthSquared());
 		speedSquared = projectedAirspeed.lengthSquared(); 
-		
-		/*Vector3f liftForce = fysica.product((float)(angleOfAttack * speedSquared), 
-				fysica.product(this.getLiftSlope(),normal));*/
 		
 		this.getDrone().p.print("OUTPUT LIFT FORCE:", 3000);
 		this.getDrone().p.print("AOA: " + angleOfAttack, 3000);
@@ -55,15 +52,32 @@ public class Airfoil extends DronePart {
 		return liftForce;
 	}
 	
+	public Vector3f getProjectedAirspeed() {
+		Vector3f airspeed = this.getVelocityAirfoil();
+		Vector3f axis = this.getAxisVector();
+		axis = this.getDrone().p.convertToWorld(getDrone(), axis);
+			
+		Vector3f projectedAirspeed = fysica.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
+		return projectedAirspeed;
+	}
+	
 	public float getAngleOfAttack() {
 		Vector3f normal = this.getDrone().p.crossProduct(this.getAxisVector(),this.getAttackVector());
+		Vector3f normalInWorld = this.getDrone().p.convertToWorld(getDrone(), normal);
+		
+		
+		Vector3f attackVector = this.getAttackVector();
+		Vector3f attackVectorInWorld = this.getDrone().p.convertToWorld(getDrone(), attackVector);
+		
 		Vector3f airspeed = this.getVelocityAirfoil();
 		Vector3f axis = this.getAxisVector();
 		
 		Vector3f projectedAirspeed = this.getDrone().p.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
+		projectedAirspeed = this.getProjectedAirspeed();
 		
-		float angleOfAttack = (float) -Math.atan2(this.getDrone().p.scalarProduct(projectedAirspeed,normal), 
-				this.getDrone().p.scalarProduct(projectedAirspeed,this.getAttackVector()));
+		
+		float angleOfAttack = (float) -Math.atan2(this.getDrone().p.scalarProduct(projectedAirspeed,normalInWorld), 
+				this.getDrone().p.scalarProduct(projectedAirspeed,attackVectorInWorld));
 		
 		return angleOfAttack;
 	}
