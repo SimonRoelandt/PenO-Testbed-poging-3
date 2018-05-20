@@ -13,6 +13,7 @@ public class Airfoil extends DronePart {
 	private Vector3f attackVector = new Vector3f(0,0,0);
 	private float liftslope;
 	DronePhysics fysica;
+	public Vector3f liftForce = new Vector3f(0,0,0);
 	
 	
 	public Airfoil(float inclination, float mass, boolean vertical, float liftslope,Vector3f relativePosition,Drone drone) {		

@@ -33,7 +33,6 @@ public class Engine extends DronePart{
 		Vector3f t = this.getThrust();
 
 		return t;
-		//return this.getDrone().p.convertToWorld(getDrone(), t);
 
 	}
 	

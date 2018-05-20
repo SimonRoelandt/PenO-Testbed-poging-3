@@ -126,7 +126,7 @@ public class DronePhysics {
 		Matrix3f I = new Matrix3f();
 		I.setIdentity();
 		
-		
+		/*
 		Matrix3f conversionMatrix = new Matrix3f();
 		conversionMatrix.setIdentity();
 
@@ -144,7 +144,15 @@ public class DronePhysics {
 		conversionMatrix.m20 =          (float) (cos(heading)*sin(pitch)*sin(roll) - cos(roll)*sin(heading));
 		conversionMatrix.m21 =           (float) (sin(heading)*sin(roll)+cos(heading)*cos(roll)*sin(pitch));
 		conversionMatrix.m22 =            (float) (cos(heading)*cos(pitch));
-	     
+	     */
+		
+		Matrix3f conversionMatrix = Rotation_matrix_Roll(roll);
+		Matrix3f.mul(Rotation_matrix_Pitch(pitch), Rotation_matrix_Roll(roll), conversionMatrix);
+		Matrix3f.mul(Rotation_matrix_Heading(heading), conversionMatrix, conversionMatrix);
+		/*
+		Matrix3f.mul(Rotation_matrix_Roll(roll), Rotation_matrix_Heading(heading), conversionMatrix);
+		Matrix3f.mul(conversionMatrix, Rotation_matrix_Pitch(pitch), conversionMatrix);
+		*/
 		return conversionMatrix;
 	}
 	
@@ -168,7 +176,6 @@ public class DronePhysics {
 		float heading = drone.getHeading();
 		float pitch = drone.getPitch();
 		float roll = drone.getRoll();
-		
 		 
 		c.m00 =       (float) (cos(heading)*cos(roll) + sin(heading)*sin(pitch)*sin(roll));
 		c.m01 =			(float) (cos(pitch)*sin(roll));
@@ -188,29 +195,11 @@ public class DronePhysics {
 	
 	public Vector3f convertToDroneCords(Drone drone, Vector3f worldVector){
 	
-		//Matrix3f conversionMatrixInverse = (Matrix3f) getRotationMatrix(drone).invert();
-		//Matrix3f conversionMatrixInverse = (Matrix3f) getRotationMatrix(drone).transpose();
+		Matrix3f conversionMatrixInverse = new Matrix3f();
+		Matrix3f.transpose(this.getRotationMatrix(drone), conversionMatrixInverse);
 
-		
-		Matrix3f c = new Matrix3f();
-		float heading = drone.getHeading();
-		float pitch = drone.getPitch();
-		float roll = drone.getRoll();
-		
-		 
-		c.m00 =       (float) (cos(heading)*cos(roll) + sin(heading)*sin(pitch)*sin(roll));
-		c.m01 =			(float) (cos(pitch)*sin(roll));
-		c.m02 =			(float) (cos(heading)*sin(pitch)*sin(roll) - cos(roll)*sin(heading));
-		c.m10 =            (float) (cos(roll)*sin(heading)*sin(pitch) - cos(heading)*sin(roll));
-		c.m11 =            (float) (cos(pitch)*cos(roll));
-		c.m12 =            (float) (sin(heading)*sin(roll) + cos(heading)*cos(roll)*sin(pitch));
-	                
-		c.m20 =           (float) (cos(pitch)*sin(heading));
-		c.m21 =            (float)(-sin(pitch));
-		c.m22 =            (float)(cos(heading)*cos(pitch));
-	                
 		Vector3f droneVector = new Vector3f();
-		Matrix3f.transform(c,worldVector,droneVector);
+		Matrix3f.transform(conversionMatrixInverse,worldVector,droneVector);
 		
 		return droneVector;
 	}
@@ -240,9 +229,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 			new_matrix.m02=(float) 0;
 			new_matrix.m10=(float) 0;
 			new_matrix.m11=(float) Math.cos(pitch);
-			new_matrix.m12=(float) -Math.sin(pitch);
+			new_matrix.m12=(float) Math.sin(pitch);
 			new_matrix.m20=(float) 0;
-			new_matrix.m21=(float) Math.sin(pitch);
+			new_matrix.m21=(float) -Math.sin(pitch);
 			new_matrix.m22=(float) Math.cos(pitch);
 			
 			return new_matrix;
@@ -253,9 +242,9 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		Matrix3f new_matrix = new Matrix3f();
 		new_matrix.m00=(float) Math.cos(roll);
-		new_matrix.m01=(float) -Math.sin(roll);
+		new_matrix.m01=(float) Math.sin(roll);
 		new_matrix.m02=(float) 0;
-		new_matrix.m10=(float) Math.sin(roll);
+		new_matrix.m10=(float) -Math.sin(roll);
 		new_matrix.m11=(float) Math.cos(roll);
 		new_matrix.m12=(float) 0;
 		new_matrix.m20=(float) 0;
@@ -311,7 +300,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 		
 		v = this.convertToDroneCords(drone, v);
 		print(" vv is " + v, 1);
-		v.setX(0f);
+		//v.setX(0f);
 		
 		v = this.convertToWorld(drone, v);
 		print(" vvv is " + v, 1);
