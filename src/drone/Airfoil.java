@@ -32,9 +32,6 @@ public class Airfoil extends DronePart {
 	public Vector3f getLiftForce() {
 		Vector3f normal = fysica.crossProduct(this.getAxisVector(),this.getAttackVector());
 		//airspeed = this.getDrone().p.convertToDroneCords(getDrone(), airspeed);
-		Vector3f axis = this.getAxisVector();
-		axis = this.getDrone().p.convertToWorld(getDrone(), axis);
-			
 		Vector3f projectedAirspeed = this.getProjectedAirspeed();
 				
 		float angleOfAttack = getAngleOfAttack();
@@ -48,7 +45,7 @@ public class Airfoil extends DronePart {
 
 		Vector3f liftForce = this.getDrone().p.product((float)(angleOfAttack *speedSquared * this.getLiftSlope()), 
 				normal);
-		
+
 		return liftForce;
 	}
 	
@@ -65,16 +62,10 @@ public class Airfoil extends DronePart {
 		Vector3f normal = this.getDrone().p.crossProduct(this.getAxisVector(),this.getAttackVector());
 		Vector3f normalInWorld = this.getDrone().p.convertToWorld(getDrone(), normal);
 		
-		
 		Vector3f attackVector = this.getAttackVector();
 		Vector3f attackVectorInWorld = this.getDrone().p.convertToWorld(getDrone(), attackVector);
 		
-		Vector3f airspeed = this.getVelocityAirfoil();
-		Vector3f axis = this.getAxisVector();
-		
-		Vector3f projectedAirspeed = this.getDrone().p.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
-		projectedAirspeed = this.getProjectedAirspeed();
-		
+		Vector3f projectedAirspeed = this.getProjectedAirspeed();
 		
 		float angleOfAttack = (float) -Math.atan2(this.getDrone().p.scalarProduct(projectedAirspeed,normalInWorld), 
 				this.getDrone().p.scalarProduct(projectedAirspeed,attackVectorInWorld));
@@ -84,7 +75,7 @@ public class Airfoil extends DronePart {
 	
 	private Vector3f getVelocityAirfoil() {
 		Vector3f angularVelocity = this.getDrone().getState().getAngularRotation();
-		Vector3f relativeDistance = fysica.convertToWorld(this.getDrone(), this.getRelativePosition());
+		Vector3f relativeDistance = this.getDrone().p.convertToWorld(this.getDrone(), this.getRelativePosition());
 		Vector3f relSpeed = new Vector3f();
 		Vector3f.cross(angularVelocity, relativeDistance, relSpeed);
 		
@@ -127,7 +118,7 @@ public class Airfoil extends DronePart {
 	}
 	
 	public Vector3f getAttackVector() {
-		return this.getDrone().p.convertToWorld(getDrone(), attackVector);
+		return attackVector;
 	}
 	
 	public void setInclination(float incl) {

@@ -195,6 +195,11 @@ public class Drone {
 		System.out.println("======================== - UPDATE DRONE - ==================================");
 		System.out.println("========================================================================");
 		
+		System.out.println("DRONE TO WORLD");
+		System.out.println(this.p.getRotationMatrix(this));
+
+		System.out.println(this.p.wtd(this));
+
         float scaledThrust = tempTurningForce; //Math.min(tempTurningForce, outputs.getThrust());
         
         //OM TE TESTEN LATER WEGDOEN:
@@ -222,14 +227,14 @@ public class Drone {
         this.getEngine().setThrust(outputs.getThrust());
 
         //THIS IS FOR TEMP TURNING
-        this.frontWheel.update(outputs.getFrontBrakeForce(),time);
-	    this.leftWheel.update(outputs.getLeftBrakeForce(), time);
-	    this.rightWheel.update(outputs.getRightBrakeForce(), time);
+        this.frontWheel.update(0,time);
+	    this.leftWheel.update(0, time);
+	    this.rightWheel.update(0, time);
 	    
 	    //voor weergave in gui
-        brakeForces.setX(outputs.getFrontBrakeForce());
-        brakeForces.setY(outputs.getLeftBrakeForce());
-        brakeForces.setZ(outputs.getRightBrakeForce());
+        brakeForces.setX(0);
+        brakeForces.setY(0);
+        brakeForces.setZ(0);
         
         //UPDATE STATE
       
@@ -273,20 +278,18 @@ public class Drone {
 		Matrix3f inertiaMatrix = this.getInertiaMatrix();
 		
 		Matrix3f conversionMatrix = this.p.getRotationMatrix(this);
-		Matrix3f conversionMatrixInverted = new Matrix3f();
-		Matrix3f.transpose(conversionMatrix, conversionMatrixInverted);
+		
 		
 		Matrix3f inertiaMatrixInWorld = new Matrix3f();
 		
 		Matrix3f.mul(conversionMatrix, inertiaMatrix, inertiaMatrixInWorld);
 		//Matrix3f.mul(inertiaMatrixInWorld, conversionMatrixInverted, inertiaMatrixInWorld);
 		
-		System.out.println(inertiaMatrix);
-		System.out.println("---");
-
-		System.out.println(inertiaMatrixInWorld);
+		this.p.print("IN WORLD" + inertiaMatrixInWorld, 6000);
+		this.p.print("IN" + inertiaMatrix, 6000);
 
 		return inertiaMatrixInWorld;
+		
 		
 	}
 	

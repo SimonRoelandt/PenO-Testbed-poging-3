@@ -52,6 +52,13 @@ public abstract class DronePart {
 		return this.getDrone().p.convertToWorld(this.getDrone(), getDronePartForce());
 	}
 	
+	public Vector3f getTotalForce(float time) {	
+		Vector3f dronePartForce = getDronePartForce();
+		Vector3f gravityOnDrone = this.getDrone().p.convertToDroneCords(getDrone(), getGravitationForceInWorld());
+		Vector3f totalForce = this.getDrone().p.sum(dronePartForce, gravityOnDrone);
+		return totalForce;
+	}
+	
 	/**
 	 * Gets the total force on the drone part.
 	 */
