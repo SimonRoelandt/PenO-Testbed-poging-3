@@ -291,7 +291,7 @@ public class GUI {
 		buttonStart.button.addActionListener(new ListenForStartButton());
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 5;
+		c.gridy = 2;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		frame.add(panelStart, c);

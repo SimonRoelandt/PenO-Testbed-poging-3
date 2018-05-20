@@ -196,9 +196,9 @@ public class Drone {
 	 */
 	public void update(AutopilotOutputs outputs,float time){
 		
-		System.out.println("========================================================================");
-		System.out.println("======================== - UPDATE DRONE - ==================================");
-		System.out.println("========================================================================");
+//		System.out.println("========================================================================");
+//		System.out.println("======================== - UPDATE DRONE - ==================================");
+//		System.out.println("========================================================================");
 		
         float scaledThrust = tempTurningForce; //Math.min(tempTurningForce, outputs.getThrust());
         
@@ -286,10 +286,10 @@ public class Drone {
 		Matrix3f.mul(conversionMatrix, inertiaMatrix, inertiaMatrixInWorld);
 		//Matrix3f.mul(inertiaMatrixInWorld, conversionMatrixInverted, inertiaMatrixInWorld);
 		
-		System.out.println(inertiaMatrix);
-		System.out.println("---");
-
-		System.out.println(inertiaMatrixInWorld);
+//		System.out.println(inertiaMatrix);
+//		System.out.println("---");
+//
+//		System.out.println(inertiaMatrixInWorld);
 
 		return inertiaMatrixInWorld;
 		

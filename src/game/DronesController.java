@@ -31,9 +31,9 @@ public class DronesController {
 		this.apController = apController;
 
 		addDrone(new Drone(0,apController.getAirports().get(0), 0, 1));
-    	//addDrone(new Drone(1,apController.getAirports().get(0), 1, 0));
+    	addDrone(new Drone(1,apController.getAirports().get(0), 1, 0));
     	
-//    	addDrone(new Drone(2,apController.getAirports().get(4), 0, 0));
+//    	addDrone(new Drone(2,apController.getAirports().get(2), 0, 0));
 //    	addDrone(new Drone(4,apController.getAirports().get(4), 1, 1));
 //    	addDrone(new Drone(3,apController.getAirports().get(3), 0, 1));
 //    	addDrone(new Drone(5,apController.getAirports().get(3), 1, 0));
@@ -83,7 +83,7 @@ public class DronesController {
 		}
 		else if(drone.getLeftWheel().isGround() || drone.getRightWheel().isGround() || drone.getFrontWheel().isGround()){
 			if(onTarmac(drone)){
-				System.out.println("TARMAC");
+				//System.out.println("TARMAC");
 				return false;
 			}
 			else{

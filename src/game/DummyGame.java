@@ -255,7 +255,6 @@ public class DummyGame implements IGameLogic {
     		
     		//Update Drones
     		droneController.startTimePassed(autopilotModule,renderer,totTime());
-    		System.out.println("");
     		droneController.completeTimePassed(autopilotModule,interval);
     		
     		//Update visual drone objects
