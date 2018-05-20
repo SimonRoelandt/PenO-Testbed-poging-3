@@ -85,13 +85,15 @@ public class PackageService {
 	 * Picks up a package at the given airport and gate with the given drone.
 	 */
 	private void pickup(Drone d, Airport ap, int gate, Pakket pakket){
-		System.out.println("PICKUP!!!!");
-		pickedUpPackage = pakket;
-		ap.setPackageGate(null, gate);
-		d.setCarryingPackage(pakket);
-		pakket.setDrone(d);
-		freePackages.remove(pakket);
-		takenPackages.add(pakket);
+		if(d.getCarryingPackage() == null){
+			System.out.println("PICKUP!!!!");
+			pickedUpPackage = pakket;
+			ap.setPackageGate(null, gate);
+			d.setCarryingPackage(pakket);
+			pakket.setDrone(d);
+			freePackages.remove(pakket);
+			takenPackages.add(pakket);
+		}
 	}
 	
 	/**
