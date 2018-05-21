@@ -157,7 +157,7 @@ public class PackageService {
 				hoogte,
 				Color.BLACK,
 				true,
-				1);
+				1,0,0);
 		
 		Mesh packageIconMesh = new Mesh(packageIcon.positions(),null,packageIcon.indices(),packageIcon.textCoords(),this.texture);
 		this.packageIconMesh = packageIconMesh;

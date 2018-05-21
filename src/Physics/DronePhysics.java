@@ -211,7 +211,7 @@ public Matrix3f Rotation_matrix_Heading(float heading){
 	//DRONE FORCES --------------------------------------------------------------
 	
 	public void print(Object obj, int priority){
-		if(priority >= 4300){
+		if(priority >= 5000){
 			System.out.println("PRINTLOG: "+ obj);
 		}
 	}
