@@ -18,7 +18,7 @@ public class GameEngine implements Runnable {
     
     private final MouseInput mouseInput;
     
-    private static int versnelling = 8;
+    private static int versnelling = 1;
     
     public static void setVersnelling(int getal) {
     	versnelling = getal;

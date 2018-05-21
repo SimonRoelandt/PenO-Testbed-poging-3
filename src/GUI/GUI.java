@@ -27,6 +27,7 @@ import org.lwjgl.util.vector.Vector3f;
 import drone.Airfoil;
 import drone.Drone;
 import drone.Engine;
+import engine.GameEngine;
 import engine.GameItem;
 
 import javax.swing.*;
@@ -40,11 +41,11 @@ public class GUI {
 	JButton buttonPlane, buttonChase, buttonSide, buttonFree;
 	int buttonClicked;				
 	JPanel panelViews, panelConfig, panelValues, panelStart, panelGenerate, panelCustomCube, panelRemove, panelChooseDrone,
-			panelAddPackage;
+			panelAddPackage, panelVersnelling;
 	JLabel label1, label2;
 	JTextField textfield1, textfield2;
 	LabelTextPanel panelWingX, paneltailsize, panelenginemass, panelwingmass, paneltailmass, panelmaxthrust, panelmaxaoa, panelXPos, panelYPos, panelZPos,
-					panelFromAirport, panelToAirport;
+					panelFromAirport, panelToAirport, panelVersnellingInput;
 	GLPanel glpanel;
 	ButtonPanel buttonStart, buttonGenerate, buttonChooseFile, buttonCustomCube, buttonAddPackage;
 	LabelPanel positie, hpr, snelheid, versnelling, inclinatie, aoa, thrust, force, resulmoment, brakeForces;
@@ -278,20 +279,40 @@ public class GUI {
 		buttonAddPackage.button.setFocusPainted(false);
 		buttonAddPackage.button.addActionListener(new ListenForAddPackage());
 		
+		Border packageBorder = BorderFactory.createTitledBorder("Packages");
+		panelAddPackage.setBorder(packageBorder);
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 4;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelAddPackage, c);
 		
+		//versnelling
+		panelVersnelling = new JPanel();
+		panelVersnellingInput = addLabelTextPanelVersnelling("Speedup" , 1);
+		panelVersnellingInput.tf.addActionListener(new ListenForVersnelling());
+		
+		Border versnellingBorder = BorderFactory.createTitledBorder("Speedup");
+		panelVersnelling.setBorder(versnellingBorder);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 5;
+		c.insets = new Insets(20,0,0,0); 
+		frame.add(panelVersnelling, c);
+		
 		//startknop
 		panelStart = new JPanel();
 		buttonStart = addButtonPanelStart("start");
 		buttonStart.button.setFocusPainted(false);
 		buttonStart.button.addActionListener(new ListenForStartButton());
+		
+		
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		frame.add(panelStart, c);
@@ -344,6 +365,10 @@ public class GUI {
 	}
 	public LabelTextPanel addLabelTextPanelAddPackage(String text, int value) {
 		return new LabelTextPanel(text, value, panelAddPackage);
+	}
+	
+	public LabelTextPanel addLabelTextPanelVersnelling(String text, int value) {
+		return new LabelTextPanel(text, value, panelVersnelling);
 	}
 	
 	public void update() {
@@ -593,6 +618,13 @@ public class GUI {
 	private class ListenForAddPackage implements ActionListener {
 		public void actionPerformed(ActionEvent e) {	
 			dummyGame.addPackage(fromAirport, toAirport);
+		}
+	}
+	
+	private class ListenForVersnelling implements ActionListener {
+		public void actionPerformed(ActionEvent e) {	
+			int versnelling = Integer.parseInt(panelVersnellingInput.tf.getText());
+			GameEngine.setVersnelling(versnelling);
 		}
 	}
 	

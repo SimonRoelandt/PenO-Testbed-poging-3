@@ -222,7 +222,7 @@ public class DummyGame implements IGameLogic {
        //PACKAGE VISUAL
        packageService.visualise();
        
-       GameEngine.setVersnelling(10);
+       
        
        
     }

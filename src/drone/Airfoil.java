@@ -27,9 +27,13 @@ public class Airfoil extends DronePart {
 		Vector3f airspeed = this.getVelocityAirfoil();
 		airspeed = this.getDrone().p.convertToDroneCords(getDrone(), airspeed);
 		Vector3f axis = this.getAxisVector();
-			
-		Vector3f projectedAirspeed = fysica.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
 		
+//INDIEN NIET WERKT, doe dit in comment...
+		Vector3f axisInWorld = this.getDrone().p.convertToWorld(getDrone(), axis);
+		Vector3f projectedAirspeed = fysica.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axisInWorld, airspeed)/axisInWorld.lengthSquared(), axisInWorld));
+//.. EN DIT UIT COMMENT
+//		Vector3f projectedAirspeed = fysica.sum(airspeed,fysica.product(-1*fysica.scalarProduct(axis, airspeed)/axis.lengthSquared(), axis));
+
 		float angleOfAttack = getAngleOfAttack();
 		
 		float speedSquared = Math.min(10e2f, projectedAirspeed.lengthSquared());
