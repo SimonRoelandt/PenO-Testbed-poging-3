@@ -219,7 +219,7 @@ public class GUI {
 		// tot hier
 		
 		////////////////////// IN COMMENT VOOR DEMO
-		/*
+		
 		//random cubes
 		tabbedPaneGenerate = new JTabbedPane();
 		panelGenerate = new JPanel();
@@ -264,7 +264,7 @@ public class GUI {
 		c.gridy = 4;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(tabbedPaneGenerate, c);
-		*/
+		
 		
 		
 		////////////////////////// TOT HIER
@@ -286,7 +286,7 @@ public class GUI {
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 5;
 		c.insets = new Insets(20,0,0,0); 
 		frame.add(panelAddPackage, c);
 		
@@ -297,7 +297,7 @@ public class GUI {
 		buttonStart.button.addActionListener(new ListenForStartButton());
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 5;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		frame.add(panelStart, c);
