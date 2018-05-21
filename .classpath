@@ -2,7 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL"/>
-	<classpathentry kind="lib" path="C:/Users/lionel/Desktop/PO/a/AutopilotDraaien.jar"/>
+	<classpathentry kind="lib" path="C:/Users/simon/git/AutopilotDraaien.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL_UTIL"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
