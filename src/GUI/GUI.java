@@ -101,7 +101,7 @@ public class GUI {
 
 		for (Drone drone : drones) {
 			int count = drones.indexOf(drone);
-			JButton button = new JButton("Drone " + (count));
+			JButton button = new JButton("Drone " + (count+1));
 			button.setFocusPainted(false);
 			buttonDrones.add(button);
 			button.addActionListener(new ListenForDrone(count));
