@@ -274,7 +274,8 @@ public class DummyGame implements IGameLogic {
     			drone.getIconGameItem().setPosition(drone.getState().getPosition().getX(), drone.hoogte , drone.getState().getPosition().getZ());
     			drone.getIconGameItem().setRotation(0f, drone.getState().getHeading(), 0f);
     			drone.getIdGameItem().setPosition(drone.getState().getPosition().getX()-drone.droneIconLength/2.5f, 2*drone.hoogte, drone.getState().getPosition().getZ()+drone.droneIconLength/2.5f);
-    			}
+    			
+    		}
     		
     		
     		//Check package pick-up
