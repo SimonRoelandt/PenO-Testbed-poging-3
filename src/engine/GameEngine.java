@@ -17,6 +17,12 @@ public class GameEngine implements Runnable {
     private final IGameLogic gameLogic;
     
     private final MouseInput mouseInput;
+    
+    private static int versnelling = 8;
+    
+    public static void setVersnelling(int getal) {
+    	versnelling = getal;
+    }
 
     public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic) throws Exception {
         gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
@@ -69,7 +75,11 @@ public class GameEngine implements Runnable {
             
             int render = 0;
             while (accumulator >= interval) {
-                update(interval);
+                for (int i  = 0; i<versnelling; i++) {
+                	update(interval);
+                }
+          
+                
                 input();
             
                 if(render == 2){

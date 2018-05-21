@@ -16,6 +16,7 @@ import GUI.GUI;
 import drone.Drone;
 import engine.Balk;
 import engine.CubeLoader;
+import engine.GameEngine;
 import engine.GameItem;
 import engine.Ground;
 import engine.IGameLogic;
@@ -143,12 +144,19 @@ public class DummyGame implements IGameLogic {
             drone.setGameItem(droneItem);
             //Icon
         	drone.visualise();
-            Mesh meshDroneIcon = drone.generateMesh();
-            GameItem droneIconItem = drone.generateGameItem();
+            Mesh meshDroneIcon = drone.generateIconMesh();
+            GameItem droneIconItem = drone.generateIconGameItem();
+            Mesh meshDroneId = drone.generateIdMesh();
+            GameItem droneIdItem = drone.generateIdGameItem();
 
     		droneIconItem.setPosition(drone.getState().getPosition().getX(), drone.hoogte, drone.getState().getPosition().getZ());
     		droneIconItem.setRotation(0f, drone.getState().getHeading(), 0f);
     		drone.setIconGameItem(droneIconItem);
+    		
+    		droneIdItem.setPosition(drone.getState().getPosition().getX()-drone.droneIconLength/2.5f, 2*drone.hoogte, drone.getState().getPosition().getZ()+drone.droneIconLength/2.5f);
+    		droneIdItem.setRotation(0f, 0f, 0f);
+    		drone.setIdGameItem(droneIdItem);
+    		
             //droneItems.add(droneItem);
         }
 
@@ -186,6 +194,7 @@ public class DummyGame implements IGameLogic {
         for( Drone drone : droneController.getDrones().values()) {
             gameItems.add(drone.getGameItem());
             gameItems.add(drone.getIconGameItem());
+            gameItems.add(drone.getIdGameItem());
         }
       
     	        
@@ -213,6 +222,7 @@ public class DummyGame implements IGameLogic {
        //PACKAGE VISUAL
        packageService.visualise();
        
+       GameEngine.setVersnelling(10);
        
        
     }
@@ -255,7 +265,6 @@ public class DummyGame implements IGameLogic {
     		
     		//Update Drones
     		droneController.startTimePassed(autopilotModule,renderer,totTime());
-    		System.out.println("");
     		droneController.completeTimePassed(autopilotModule,interval);
     		
     		//Update visual drone objects
@@ -266,6 +275,8 @@ public class DummyGame implements IGameLogic {
     			//drone.getGameItem().setRotation((float)Math.PI/2, (float)Math.PI/2, 0);
     			drone.getIconGameItem().setPosition(drone.getState().getPosition().getX(), drone.hoogte , drone.getState().getPosition().getZ());
     			drone.getIconGameItem().setRotation(0f, drone.getState().getHeading(), 0f);
+    			drone.getIdGameItem().setPosition(drone.getState().getPosition().getX()-drone.droneIconLength/2.5f, 2*drone.hoogte, drone.getState().getPosition().getZ()+drone.droneIconLength/2.5f);
+    			
     		}
     		
     		
