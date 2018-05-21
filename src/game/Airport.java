@@ -96,7 +96,7 @@ public class Airport {
 				0f,
 				Color.BLACK,
 				false,
-				1);
+				1,0,0);
 		
 		Mesh airportmesh = new Mesh(airport1.positions(),null,airport1.indices(),airport1.textCoordsAirport(),this.texture);
 		this.mesh = airportmesh;

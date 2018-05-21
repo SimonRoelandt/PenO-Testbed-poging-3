@@ -13,12 +13,14 @@ public class Square {
 	private float y3;
 	private float x4;
 	private float y4;
+	private float xpos;
+	private float ypos;
 	private float[] colorfront;
 	private Color color; 
 	private float textureScale;
 	
 
-	public Square(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float hoogte, Color color, boolean texture, float textureScale) {
+	public Square(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float hoogte, Color color, boolean texture, float textureScale, float xpos, float ypos) {
 	this.x1 = x1;
 	this.y1 = y1;
 	this.x2 = x2;
@@ -27,6 +29,8 @@ public class Square {
 	this.y3 = y3;
 	this.x4 = x4;
 	this.y4 = y4;
+	this.xpos = xpos;
+	this.ypos = ypos;
 	this.hoogte = hoogte;
 	this.color = color;
 	this.textureScale = textureScale;
@@ -81,10 +85,10 @@ public class Square {
 	
 	public float[] textCoords() {
 		float[] textCoords = new float[] {
-				0,0,
-				0,textureScale,
-				textureScale,textureScale,
-				textureScale,0,
+				xpos,ypos,
+				xpos,textureScale+ypos,
+				xpos+textureScale,textureScale+ypos,
+				xpos+textureScale,ypos,
 				
 				
 		};

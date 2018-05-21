@@ -24,6 +24,12 @@ public class Drone {
 	private Mesh droneIconMesh;
 	private GameItem droneIconGameItem;
 	
+	//ID
+	public Texture idTexture;
+	public float droneIdLength = 80f;
+	private Mesh droneIdMesh;
+	private GameItem droneIdGameItem;
+	
 	//Fysica
 	public Fysica fysica = new Fysica();
 
@@ -297,9 +303,10 @@ public class Drone {
 	
 	public void visualise() {
 		texture = new Texture("res/droneIcon.png");
+		idTexture = new Texture("res/numbers.png");
 	}
 	
-	public Mesh generateMesh() {
+	public Mesh generateIconMesh() {
 		
 		Square droneIcon = new Square(droneIconLength/2,droneIconLength/2,
 				-droneIconLength/2,droneIconLength/2,
@@ -308,7 +315,7 @@ public class Drone {
 				hoogte,
 				Color.BLACK,
 				false,
-				1);
+				1,0,0);
 		
 		Mesh droneIconMesh = new Mesh(droneIcon.positions(),null,droneIcon.indices(),droneIcon.textCoords(),this.texture);
 		this.droneIconMesh = droneIconMesh;
@@ -316,10 +323,34 @@ public class Drone {
 
 	}
 	
-	public GameItem generateGameItem() {
+	public Mesh generateIdMesh() {
+		
+		Square droneId = new Square(droneIdLength/2,droneIdLength/2,
+				-droneIdLength/2,droneIdLength/2,
+				-droneIdLength/2,-droneIdLength/2,
+				droneIdLength/2,-droneIdLength/2,
+				hoogte,
+				Color.BLACK,
+				false,
+				1/8f,1/8f*(this.id),0);
+		
+		Mesh droneIdMesh = new Mesh(droneId.positions(),null,droneId.indices(),droneId.textCoords(),this.idTexture);
+		this.droneIdMesh = droneIdMesh;
+		return droneIdMesh;
+
+	}
+	
+	public GameItem generateIconGameItem() {
 		GameItem droneIconItem = new GameItem(droneIconMesh, false, true, true);
 		droneIconItem.setId(texture.id);
 		this.droneIconGameItem = droneIconItem;
+		return droneIconGameItem;
+	}
+	
+	public GameItem generateIdGameItem() {
+		GameItem droneIdItem = new GameItem(droneIdMesh, false, true, true);
+		droneIdItem.setId(idTexture.id);
+		this.droneIconGameItem = droneIdItem;
 		return droneIconGameItem;
 	}
 	
@@ -464,6 +495,14 @@ public class Drone {
 	
 	public GameItem getIconGameItem() {
 		return this.droneIconGameItem;
+	}
+	
+	public void setIdGameItem(GameItem gameItem) {
+		this.droneIdGameItem = gameItem;
+	}
+	
+	public GameItem getIdGameItem() {
+		return this.droneIdGameItem;
 	}
 	
 	public int getId() {
