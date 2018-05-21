@@ -528,11 +528,12 @@ public class Renderer {
         }
         
      // create and save image
+        /*
         BufferedImage image = new BufferedImage(
              window.getWidth(), window.getHeight(), BufferedImage.TYPE_INT_RGB);
         image.setRGB(0, 0, window.getWidth(), window.getHeight(), rgbArray, 0, window.getWidth());
         this.screenshot = image;
-        
+        */
         
         
         
