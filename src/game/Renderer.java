@@ -517,6 +517,10 @@ public class Renderer {
 
         // fill rgbArray for BufferedImage
         int[] rgbArray = new int[window.getWidth() * window.getHeight()];
+        
+        /*
+         * voor echte afbeelding
+         * 
         for(int y = 0; y < window.getHeight(); ++y) {
             for(int x = 0; x < window.getWidth(); ++x) {
                 int r = (int)(imageData.get() * 255) << 16;
@@ -526,7 +530,7 @@ public class Renderer {
                 rgbArray[i] = r + g + b;
             }
         }
-        
+        */
      // create and save image
         BufferedImage image = new BufferedImage(
              window.getWidth(), window.getHeight(), BufferedImage.TYPE_INT_RGB);

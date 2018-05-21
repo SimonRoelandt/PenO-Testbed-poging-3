@@ -16,6 +16,7 @@ import GUI.GUI;
 import drone.Drone;
 import engine.Balk;
 import engine.CubeLoader;
+import engine.GameEngine;
 import engine.GameItem;
 import engine.Ground;
 import engine.IGameLogic;
@@ -221,6 +222,7 @@ public class DummyGame implements IGameLogic {
        //PACKAGE VISUAL
        packageService.visualise();
        
+       GameEngine.setVersnelling(10);
        
        
     }
