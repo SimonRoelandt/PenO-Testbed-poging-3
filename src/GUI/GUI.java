@@ -27,6 +27,7 @@ import org.lwjgl.util.vector.Vector3f;
 import drone.Airfoil;
 import drone.Drone;
 import drone.Engine;
+import engine.GameEngine;
 import engine.GameItem;
 
 import javax.swing.*;
@@ -529,6 +530,7 @@ public class GUI {
 			System.out.println("");
 			System.out.println("");
 			System.out.println("============================= START SIMULATION ===============");
+			GameEngine.pause=!GameEngine.pause;
 		}
 	}
 	
