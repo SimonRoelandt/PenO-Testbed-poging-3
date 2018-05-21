@@ -206,7 +206,8 @@ public class Renderer {
         //create the pixel buffer
         
 
-        window.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        window.setClearColor(135/255f, 206/255f, 235/255f, 1.0f);
+      
     }
 
     public void clear() {
@@ -238,7 +239,7 @@ public class Renderer {
         //Render each gameItem
         
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        window.setClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        window.setClearColor(135/255f, 206/255f, 235/255f, 1.0f);
 
         //CHASE
         if (view == "chase") {
