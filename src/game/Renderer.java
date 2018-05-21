@@ -467,7 +467,7 @@ public class Renderer {
       if (view == "side") {
     	  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferTop);
     	  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    	  glBlitFramebuffer(0,0,imageWidth, imageHeight, 0, 0, imageWidth, imageHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    	  glBlitFramebuffer(0,0,imageWidth, imageHeight, 0, imageHeight, imageWidth, 0, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
     	  
     	  
     	  /*
